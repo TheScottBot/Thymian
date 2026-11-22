@@ -59,6 +59,10 @@ Project skeleton (CWE1).
 - Stale indicator (CWE6): a small clock symbol before the temperature once the
   weather is over an hour old, tinted to the text colour and read out by
   TalkBack; refreshes run offline too, so it appears and the failure is logged.
+- Diagnostics (CWE6): last refresh, location source, last error, next
+  scheduled refresh and the recent history on the settings screen, with Copy
+  diagnostics putting a plain report with no location on the clipboard.
+- The typography check also rejects on device test names that dex cannot hold.
 
 ### Fixed
 

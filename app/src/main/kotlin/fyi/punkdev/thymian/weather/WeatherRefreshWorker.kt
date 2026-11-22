@@ -82,6 +82,17 @@ class WeatherRefreshWorker(
             WorkManager.getInstance(context).enqueueUniquePeriodicWork(PERIODIC_WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, request)
         }
 
+        /** When the periodic refresh next runs, or null when it is not scheduled. Blocking. */
+        fun nextPeriodicRefresh(context: Context): Instant? =
+            WorkManager
+                .getInstance(context)
+                .getWorkInfosForUniqueWork(PERIODIC_WORK_NAME)
+                .get()
+                .firstOrNull { workInfo -> !workInfo.state.isFinished }
+                ?.nextScheduleTimeMillis
+                ?.takeIf { millis -> millis in 1 until Long.MAX_VALUE }
+                ?.let { millis -> Instant.ofEpochMilli(millis) }
+
         /** Queues one refresh; a request already queued is kept, so repeated triggers do not pile up. */
         fun refreshNow(
             context: Context,

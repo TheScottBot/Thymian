@@ -1,7 +1,9 @@
 package fyi.punkdev.thymian.domain.diagnostics
 
+import fyi.punkdev.thymian.domain.location.LocationSourceUsed
 import fyi.punkdev.thymian.domain.settings.KeyValueStore
 import fyi.punkdev.thymian.domain.weather.RefreshOutcome
+import fyi.punkdev.thymian.domain.weather.WeatherSnapshot
 import java.time.Instant
 
 /** One thing that happened, by category only (datum 0.15): no coordinates, place names or weather values. */
@@ -116,4 +118,26 @@ object BatteryGuidance {
         manufacturer: String,
         brand: String,
     ): Boolean = listOf(manufacturer, brand).any { name -> name.trim().lowercase() in xiaomiNames }
+}
+
+/** The diagnostics section's summary (specification 1.3); the next refresh comes from the scheduler. */
+data class DiagnosticsSummary(
+    val lastRefresh: Instant?,
+    val locationSource: LocationSourceUsed?,
+    val lastError: DiagnosticEvent?,
+) {
+    companion object {
+        private val ERROR_KINDS = setOf("location_unavailable", "weather_unavailable")
+
+        fun from(
+            weather: WeatherSnapshot?,
+            events: List<DiagnosticEvent>,
+        ): DiagnosticsSummary =
+            DiagnosticsSummary(
+                lastRefresh = weather?.fetchedAt,
+                locationSource = weather?.locationSource,
+                // A throttled attempt is the guard working, not a failure.
+                lastError = events.lastOrNull { event -> event.kind in ERROR_KINDS },
+            )
+    }
 }

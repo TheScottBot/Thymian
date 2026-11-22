@@ -1284,3 +1284,11 @@ cancels its scheduled work until the app is next started. HyperOS memory
 cleaning is widely reported to force stop apps; that is unverified here and is
 what the battery guidance (Autostart, No restrictions) is meant to prevent.
 Recorded for the guidance screen (batch C3) and for field use.
+
+22 November 2026, batch C2: the diagnostics section and Copy diagnostics, with
+the next refresh read from `WorkInfo.getNextScheduleTimeMillis()` (present in
+WorkManager 2.12.0, read from the AAR). On the emulator it showed the last
+refresh, "Fixed place", the earlier network failure as the last error, the
+next refresh 14 minutes after the last attempt, and the history with throttled
+attempts. A third dex failure from a comma in an on device test name led to a
+new typography rule that rejects such names before the build reaches dexing.

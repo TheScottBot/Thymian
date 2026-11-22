@@ -11,7 +11,7 @@ repository root.
 | Everything below | `./gradlew check assembleDebug` | Mac and CI | The whole automated gate |
 | Domain unit tests | `./gradlew :domain:test` | Mac and CI, JVM only | Domain rules; the import boundary that keeps Android out of `domain` |
 | Typography scanner tests | `./gradlew :typography-check:test` | Mac and CI, JVM only | Each typography rule and exemption, against planted violations |
-| Typography check | `./gradlew :typography-check:checkTypography` | Mac and CI | Every tracked and untracked file except the explicit list in `config/typography-excluded-paths.txt` |
+| Typography check | `./gradlew :typography-check:checkTypography` | Mac and CI | Every tracked and untracked file except the explicit list in `config/typography-excluded-paths.txt`; also on device test names with characters dex cannot hold, since CI never dexes on device tests |
 | ktlint | `./gradlew ktlintCheck` | Mac and CI | Kotlin sources and build scripts, official Kotlin style |
 | Android lint | `./gradlew :app:lintDebug :domain:lint` | Mac and CI | App and domain, warnings as errors |
 | On device tests | `ANDROID_SERIAL=emulator-5554 ./gradlew connectedDebugAndroidTest` | Mac, on the API 34 emulator; not in CI, which has no device | The locale date pattern from Android's own data, and the renderer's RemoteViews applied as a launcher would |
@@ -35,6 +35,7 @@ before it is trusted.
 | Android lint | Reported three real issues on first run, 22 November 2026, before they were fixed |
 | Release signing guard | Run without the variables, 22 November 2026 |
 | Open-Meteo mutation test | With the temperature range check removed it passed at first, because random byte changes never formed an out of range number; boundary number substitution was added, and it then failed with "temperature 99.0", 22 November 2026 |
+| On device test name rule | A comma planted in an on device test name was reported at its line, 22 November 2026 |
 | Place search mutation test | With the coordinate check removed from the place search parser it failed, 22 November 2026 |
 | Weather icon conversion | A one dp change planted in a committed drawable was not caught at first because Gradle called the tests up to date; the drawables, lookup and SVGs were declared as test inputs, and the planted change then failed the test, 22 November 2026 |
 | On device tests | Failed first because nothing they call existed; then the en-GB date test failed on real locale data (below), 22 November 2026 |

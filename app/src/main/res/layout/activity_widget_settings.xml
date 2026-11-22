@@ -40,6 +40,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" />
 
+        <LinearLayout
+            android:id="@+id/settings_diagnostics"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical" />
+
         <Button
             android:id="@+id/settings_save"
             android:layout_width="match_parent"

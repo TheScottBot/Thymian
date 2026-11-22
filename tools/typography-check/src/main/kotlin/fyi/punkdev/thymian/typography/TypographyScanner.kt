@@ -9,6 +9,7 @@ enum class TypographyRule(
     EM_DASH("em dash (U+2014)"),
     EN_DASH("en dash (U+2013)"),
     HYPHEN_RUN("double or triple hyphen run"),
+    DEX_UNSAFE_TEST_NAME("on device test name with a character dex cannot hold"),
 }
 
 /** One offending character or run, located by 1 based line and column. */
@@ -33,16 +34,30 @@ object TypographyScanner {
     // A command line flag token such as --no-daemon, exempted by the datum.
     private val flagPrefixCharacters = setOf(' ', '\t', '(', '`', '"', '\'')
 
+    // Dex refuses some characters in method names, so a backtick test name with one fails only at the
+    // dexing step of an on device build, which CI never runs; it broke the build three times in CWE2 to CWE6.
+    private val backtickNamePattern = Regex("fun `([^`]*)`")
+    private val dexUnsafeCharacters = setOf(',', '\'', '.', ';', ':', '/', '[', ']', '<', '>')
+    private const val ON_DEVICE_TEST_PATH = "/androidTest/"
+
     fun scanText(
         relativePath: String,
         text: String,
     ): List<TypographyViolation> =
         text.split('\n').flatMapIndexed { lineIndex, rawLine ->
             val line = rawLine.removeSuffix("\r")
-            findViolationsInLine(line).map { (columnIndex, rule) ->
+            val dexViolations = if (ON_DEVICE_TEST_PATH in relativePath) dexUnsafeTestNamesIn(line) else emptyList()
+            (findViolationsInLine(line) + dexViolations).map { (columnIndex, rule) ->
                 TypographyViolation(relativePath, lineIndex + 1, columnIndex + 1, rule)
             }
         }
+
+    private fun dexUnsafeTestNamesIn(line: String): List<Pair<Int, TypographyRule>> =
+        backtickNamePattern
+            .findAll(line)
+            .filter { name -> name.groupValues[1].any { nameCharacter -> nameCharacter in dexUnsafeCharacters } }
+            .map { name -> name.range.first + "fun ".length to TypographyRule.DEX_UNSAFE_TEST_NAME }
+            .toList()
 
     /**
      * Scans each listed file under [repositoryRoot], skipping [excludedPaths]

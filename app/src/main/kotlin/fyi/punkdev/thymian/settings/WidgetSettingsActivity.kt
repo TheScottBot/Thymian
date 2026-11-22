@@ -2,6 +2,8 @@ package fyi.punkdev.thymian.settings
 
 import android.app.Activity
 import android.appwidget.AppWidgetManager
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
@@ -12,6 +14,7 @@ import android.view.WindowInsets
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import fyi.punkdev.thymian.R
 import fyi.punkdev.thymian.composition.CompositionRoot
 import fyi.punkdev.thymian.domain.WidgetState
@@ -70,6 +73,8 @@ class WidgetSettingsActivity : Activity() {
             ) { permission -> requestPermissions(arrayOf(permission), LOCATION_PERMISSION_REQUEST) }
         findViewById<LinearLayout>(R.id.settings_location).addView(locationSection.view)
 
+        showDiagnostics()
+
         val controlsContainer = findViewById<LinearLayout>(R.id.settings_controls)
         SettingControls(this) { updatedSettings ->
             currentSettings = updatedSettings
@@ -77,6 +82,32 @@ class WidgetSettingsActivity : Activity() {
         }.build(currentSettings).forEach { control -> controlsContainer.addView(control) }
         findViewById<View>(R.id.settings_save).setOnClickListener { saveAndFinish() }
         refreshPreview()
+    }
+
+    /** Reads the scheduler off the main thread, then shows the section. */
+    private fun showDiagnostics() {
+        searchExecutor.execute {
+            val nextRefresh = runCatching { WeatherRefreshWorker.nextPeriodicRefresh(this) }.getOrNull()
+            val weather = CompositionRoot.weatherSnapshotStore(this).load()
+            val events = CompositionRoot.diagnosticsHistory(this).events()
+            mainExecutor.execute {
+                if (isDestroyed) return@execute
+                val section =
+                    DiagnosticsSection(
+                        this,
+                        packageManager.getPackageInfo(packageName, 0).versionName.orEmpty(),
+                        weather,
+                        events,
+                        nextRefresh,
+                    ) { reportText ->
+                        getSystemService(
+                            ClipboardManager::class.java,
+                        ).setPrimaryClip(ClipData.newPlainText(getString(R.string.diagnostics_heading), reportText))
+                        Toast.makeText(this, R.string.diagnostics_copied, Toast.LENGTH_SHORT).show()
+                    }
+                findViewById<LinearLayout>(R.id.settings_diagnostics).addView(section.view)
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(

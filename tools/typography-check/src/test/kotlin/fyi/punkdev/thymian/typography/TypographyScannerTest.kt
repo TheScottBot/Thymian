@@ -118,4 +118,26 @@ class TypographyScannerTest {
 
         assertEquals("excluded path must be explicit, not a pattern: third_party/*", failure.message)
     }
+
+    @Test
+    fun `an on device test name with a character dex cannot hold is reported`() {
+        val source =
+            "class Example {\n    @Test\n    fun `keeps the place, name`() = Unit\n" +
+                "    fun `it's fine`() = Unit\n    fun `plain words only`() = Unit\n}\n"
+
+        assertEquals(
+            listOf(
+                TypographyViolation("app/src/androidTest/kotlin/Example.kt", 3, 9, TypographyRule.DEX_UNSAFE_TEST_NAME),
+                TypographyViolation("app/src/androidTest/kotlin/Example.kt", 4, 9, TypographyRule.DEX_UNSAFE_TEST_NAME),
+            ),
+            TypographyScanner.scanText("app/src/androidTest/kotlin/Example.kt", source),
+        )
+    }
+
+    @Test
+    fun `JVM test names may use commas because they never go through dex`() {
+        val source = "    fun `parses a, b and c`() = Unit\n"
+
+        assertEquals(emptyList<TypographyViolation>(), TypographyScanner.scanText("domain/src/test/kotlin/Example.kt", source))
+    }
 }
