@@ -2,7 +2,6 @@ package fyi.punkdev.thymian.settings
 
 import android.content.Context
 import android.text.format.DateUtils
-import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -61,48 +60,31 @@ class DiagnosticsSection(
                 ).reversed()
                 .joinToString(separator = "\n") { event -> "${describeTime(event.occurredAt)} ${event.kind} ${event.detail}" }
         val reportText = DiagnosticsReport.asText(appVersion, events)
-        val details =
-            LinearLayout(context).apply {
-                orientation = LinearLayout.VERTICAL
-                tag = DETAILS_TAG
-                visibility = View.GONE
-                lines.forEach { line -> addView(TextView(context).apply { text = line }) }
-                if (recent.isNotEmpty()) {
-                    addView(
-                        TextView(context).apply {
-                            text = recent
-                            setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
-                        },
-                    )
-                }
-                addView(
-                    Button(context).apply {
-                        text = context.getString(R.string.diagnostics_copy)
-                        setOnClickListener { onCopy(reportText) }
-                    },
-                )
-            }
-        val heading =
-            TextView(context).apply {
-                tag = HEADING_TAG
-                text = context.getString(R.string.diagnostics_show)
-                isClickable = true
-                isFocusable = true
-                minHeight = (MINIMUM_TOUCH_DP * context.resources.displayMetrics.density).toInt()
-                gravity = Gravity.CENTER_VERTICAL
-                setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium)
-                setOnClickListener {
-                    val opening = details.visibility != View.VISIBLE
-                    details.visibility = if (opening) View.VISIBLE else View.GONE
-                    text = context.getString(if (opening) R.string.diagnostics_hide else R.string.diagnostics_show)
-                }
-            }
         view =
-            LinearLayout(context).apply {
-                orientation = LinearLayout.VERTICAL
-                addView(heading)
-                addView(details)
-            }
+            CollapsibleSection(
+                context,
+                showLabel = context.getString(R.string.diagnostics_show),
+                hideLabel = context.getString(R.string.diagnostics_hide),
+                details =
+                    LinearLayout(context).apply {
+                        orientation = LinearLayout.VERTICAL
+                        lines.forEach { line -> addView(TextView(context).apply { text = line }) }
+                        if (recent.isNotEmpty()) {
+                            addView(
+                                TextView(context).apply {
+                                    text = recent
+                                    setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
+                                },
+                            )
+                        }
+                        addView(
+                            Button(context).apply {
+                                text = context.getString(R.string.diagnostics_copy)
+                                setOnClickListener { onCopy(reportText) }
+                            },
+                        )
+                    },
+            ).view
     }
 
     private fun describeTime(instant: Instant): String =
@@ -124,11 +106,8 @@ class DiagnosticsSection(
         )
 
     companion object {
-        const val HEADING_TAG = "diagnostics_heading"
-        const val DETAILS_TAG = "diagnostics_details"
+        const val HEADING_TAG = CollapsibleSection.HEADING_TAG
+        const val DETAILS_TAG = CollapsibleSection.DETAILS_TAG
         private const val RECENT_EVENTS_SHOWN = 10
-
-        // Android's recommended minimum touch target.
-        private const val MINIMUM_TOUCH_DP = 48
     }
 }

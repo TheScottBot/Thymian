@@ -1292,3 +1292,15 @@ refresh, "Fixed place", the earlier network failure as the last error, the
 next refresh 14 minutes after the last attempt, and the history with throttled
 attempts. A third dex failure from a comma in an on device test name led to a
 new typography rule that rejects such names before the build reaches dexing.
+
+22 November 2026, batch C3: the HyperOS battery guidance as a closed section
+(deviation D12), built on a drawer shared with diagnostics. Not shown on the
+emulator or the Pixel, as intended; whether its wording matches the Xiaomi's
+menus is for field use.
+
+CWE6 Done when (24 hours of unattended refreshes on the Xiaomi, recovery after
+airplane mode, and diagnostics that explain every failure it hit): the Xiaomi
+is not available before delivery. On the emulator, offline refreshes recorded
+`failure=NETWORK` and showed the stale symbol, and refreshes succeeded again
+once the network returned; diagnostics showed both. A 24 hour Pixel run of the
+real refresh, for comparison, is owed to the owner.

@@ -51,6 +51,8 @@ a gate was cleared. Rows recording observations by the agent say so.
 | 2026-11-22 | Emulator API 34 | CWE6 C1 debug | Force stop | Agent, over adb | The launcher fell back to the initial layout (no weather, no tap actions) until the next update; force stop also cancels scheduled work |
 | 2026-11-22 | Emulator API 34 and Pixel 10 Pro | CWE6 C2 debug | On device tests, 52 | Agent, instrumentation runner | All pass on both |
 | 2026-11-22 | Emulator API 34 | CWE6 C2 debug | Diagnostics section opened | Agent, over adb | Last refresh, fixed place source, the earlier network failure as last error, next refresh 30 minutes on, and the history including throttled attempts |
+| 2026-11-22 | Emulator API 34 and Pixel 10 Pro | CWE6 C3 debug | On device tests, 56 | Agent, instrumentation runner | All pass on both |
+| 2026-11-22 | Emulator API 34 | CWE6 C3 debug | Settings screen on a phone that is not Xiaomi | Agent, over adb | No battery guidance shown; diagnostics closed behind its heading above Save |
 
 Correction, 22 November 2026: during the CWE2 check the owner reported that no
 Thymian widget had been on the Pixel's home screen, and placed one then. The

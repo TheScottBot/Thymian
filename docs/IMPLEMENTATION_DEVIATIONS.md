@@ -76,6 +76,14 @@ decision that allowed it, and the covering test. Newest last.
 - **Decision:** that direction, 22 November 2026.
 - **Covering test:** none; CWE7's check that the steps work from a clean checkout follows `docs/BUILDING.md`.
 
+## D12. Battery guidance is a settings section, with unverified HyperOS wording
+
+- **Rule:** specification 1.3: a guidance screen for the HyperOS Autostart and battery settings identified in CWP7.
+- **Instead:** a closed section on the settings screen, shown on Xiaomi, Redmi and POCO phones, naming Autostart and No restrictions and opening the app's standard system settings page. It gives no exact menu paths and says names can differ.
+- **Why:** CWP7 could not run on the Xiaomi (CWD30), so no HyperOS menu was checked and none is invented (datum 0.2). A section beside diagnostics, closed by default, keeps the settings screen short, as asked for diagnostics.
+- **Decision:** CWD30 for the missing evidence; the section form follows the direction to keep diagnostics in a closed drawer, 22 November 2026.
+- **Covering test:** `BatteryGuidanceSectionTest`; `BatteryGuidanceTest` for the manufacturer check.
+
 ## D10. Refresh loop fix landed before its test
 
 - **Rule:** datum 0.4: a failing test before the implementation.

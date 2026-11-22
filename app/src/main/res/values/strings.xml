@@ -8,6 +8,10 @@
     <string name="colour_hex_description">%1$s as six hex digits</string>
     <string name="weather_stale_suffix">, last updated over an hour ago</string>
     <string name="diagnostics_heading">Diagnostics</string>
+    <string name="battery_guidance_heading">Keep the weather refreshing on Xiaomi</string>
+    <string name="battery_guidance_hide">Hide Xiaomi battery guidance</string>
+    <string name="battery_guidance_text">HyperOS can stop apps running in the background, which stops the weather refreshing every 30 minutes. In Thymian\'s app settings, turn on Autostart and set the battery saver to No restrictions. The exact names can differ between HyperOS versions.</string>
+    <string name="battery_guidance_open_settings">Open app settings</string>
     <string name="diagnostics_show">Show diagnostics</string>
     <string name="diagnostics_hide">Hide diagnostics</string>
     <string name="diagnostics_last_refresh">Last refresh: %1$s</string>

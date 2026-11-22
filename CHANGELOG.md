@@ -64,6 +64,9 @@ Project skeleton (CWE1).
   default behind Show diagnostics, with Copy diagnostics putting a plain report
   with no location on the clipboard.
 - The typography check also rejects on device test names that dex cannot hold.
+- HyperOS battery guidance (CWE6): on Xiaomi, Redmi and POCO phones only, a
+  closed section naming Autostart and No restrictions with a button to the
+  app's system settings.
 
 ### Fixed
 

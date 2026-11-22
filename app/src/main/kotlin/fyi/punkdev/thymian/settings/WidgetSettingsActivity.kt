@@ -5,7 +5,10 @@ import android.appwidget.AppWidgetManager
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.util.Log
@@ -74,6 +77,10 @@ class WidgetSettingsActivity : Activity() {
         findViewById<LinearLayout>(R.id.settings_location).addView(locationSection.view)
 
         showDiagnostics()
+        BatteryGuidanceSection
+            .forDevice(this, Build.MANUFACTURER, Build.BRAND) {
+                startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", packageName, null)))
+            }?.let { section -> findViewById<LinearLayout>(R.id.settings_battery_guidance).addView(section.view) }
 
         val controlsContainer = findViewById<LinearLayout>(R.id.settings_controls)
         SettingControls(this) { updatedSettings ->
