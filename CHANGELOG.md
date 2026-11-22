@@ -33,6 +33,10 @@ Project skeleton (CWE1).
 - Settings screen (CWE3): opens when a widget is added and from the launcher's
   reconfigure action; one control per declared setting; a live preview of the
   renderer's own output; saves per widget.
+- Responsive sizing (CWE4): Small, Wide and Tall layouts composed from the
+  clock block and a weather block (hidden until weather arrives); one layout
+  per size the launcher reports; clock text scaled to the space, hiding the
+  date before the digits get too small; re-rendered on resize.
 - Project documents: README, BUILDING, LICENSE, NOTICE, DEPENDENCIES, TESTING,
   IMPLEMENTATION_DEVIATIONS, PRIVACY, SECURITY, HARDWARE_COMPATIBILITY and
   FIELD_NOTES.

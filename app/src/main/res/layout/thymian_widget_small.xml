@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The widget root: fully transparent by default (specification 1.3). Size layouts arrive in CWE4. -->
+<!--
+    Small: clock and date only (specification 2.4). The padding matches
+    SizeLayoutPolicy's HORIZONTAL_PADDING_DP and VERTICAL_PADDING_DP, which size the
+    text to the space inside it; change both together.
+-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
     android:clipToOutline="true"
-    android:paddingHorizontal="16dp">
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="4dp">
 
     <include
         layout="@layout/clock_block"

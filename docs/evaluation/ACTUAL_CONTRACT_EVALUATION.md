@@ -1122,3 +1122,22 @@ works great".)
    the home screen may round corners further.
 
 **Answered 22 November 2026: keep 0 to 32 dp and add a note under the slider.**
+
+## 15. CWE4 notes
+
+22 November 2026. The renderer builds Android's responsive RemoteViews tree,
+one layout per size the launcher reports, falling back to the portrait and
+landscape bounds when exact sizes are missing. On the API 34 emulator the widget
+was resized through 4 by 1, 2 by 1, 2 by 2 and 4 by 2 (evidence in
+`docs/evaluation/evidence/cwe4/`): each size re-rendered (`reason=resized` in
+the log), the expected layout was used, the clock text scaled with the space,
+and nothing clipped or overlapped. The estimated font ratios in
+`SizeLayoutPolicy` (marked as estimates in the code) held at every size tried;
+they stay as they are until a size shows clipping.
+
+The weather block is in the Wide and Tall layouts but hidden until CWE5 gives it
+data, so the Tall layout currently centres the clock alone.
+
+CWE4 Done when (dragging through every size never clips, overlaps or leaves text
+unreadably small): emulator, seen by the agent; Pixel, owed to the owner; Xiaomi,
+not available before delivery.

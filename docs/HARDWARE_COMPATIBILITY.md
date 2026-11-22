@@ -31,6 +31,9 @@ a gate was cleared. Rows recording observations by the agent say so.
 | 2026-11-22 | Pixel 10 Pro | CWE3 debug | On device tests, 21 | Agent, instrumentation runner | All pass |
 | 2026-11-22 | Emulator API 34 | CWE3 debug | First add opens settings; two widgets with different settings; reconfigure one through the launcher's pencil | Agent, over adb | Independent; reconfigure loads saved settings; corner radius 0 still drawn rounded by the launcher |
 | 2026-11-22 | Pixel 10 Pro | CWE3 debug | Two widgets with different settings | Owner | "two clock on pixel works great" |
+| 2026-11-22 | Emulator API 34 | CWE4 debug | On device tests, 30 | Agent, Gradle connected run | All pass |
+| 2026-11-22 | Pixel 10 Pro | CWE4 debug | On device tests, 30 | Agent, instrumentation runner | All pass |
+| 2026-11-22 | Emulator API 34 | CWE4 debug | Resized through 4 by 1, 2 by 1, 2 by 2 and 4 by 2 | Agent, over adb | Wide, Small width, Tall and Wide layouts chosen; text scaled; no clipping or overlap |
 
 Correction, 22 November 2026: during the CWE2 check the owner reported that no
 Thymian widget had been on the Pixel's home screen, and placed one then. The

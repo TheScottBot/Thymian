@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The weather block (specification 1.2 and 2.2): a small place name above an icon
+    and a large temperature, aligned to the end. Hidden until CWE5 gives it data;
+    size layouts include it and never copy its views.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/weather_block"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="end"
+    android:orientation="vertical"
+    android:visibility="gone">
+
+    <TextView
+        android:id="@+id/weather_place"
+        style="@style/WidgetText.Date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <!--
+        Not a compound drawable, as lint suggests: the icon is sized with the widget
+        and tinted to the text colour, which RemoteViews can do to an ImageView but
+        not to a TextView's compound drawable.
+    -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
+
+        <!-- Not read on its own: CWE5 gives the temperature a description that includes the condition. -->
+        <ImageView
+            android:id="@+id/weather_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:importantForAccessibility="no" />
+
+        <TextView
+            android:id="@+id/weather_temperature"
+            style="@style/WidgetText.Digits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>

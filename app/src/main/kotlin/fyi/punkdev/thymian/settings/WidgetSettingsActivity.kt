@@ -14,6 +14,7 @@ import fyi.punkdev.thymian.composition.CompositionRoot
 import fyi.punkdev.thymian.domain.WidgetState
 import fyi.punkdev.thymian.domain.settings.WidgetSettings
 import fyi.punkdev.thymian.domain.settings.WidgetSettingsStore
+import fyi.punkdev.thymian.widget.ReportedWidgetSizes
 import fyi.punkdev.thymian.widget.WidgetRenderer
 
 /**
@@ -56,8 +57,12 @@ class WidgetSettingsActivity : Activity() {
     }
 
     private fun refreshPreview() {
+        // The preview shows the widget at its first reported size, so its layout and text sizes match.
+        val previewState = currentWidgetState()
+        val previewSize = previewState.sizes.firstOrNull() ?: WidgetRenderer.DEFAULT_SIZE
+        val previewViews = WidgetRenderer.renderForSize(this, previewState, currentLocale(), previewSize)
         previewContainer.removeAllViews()
-        previewContainer.addView(renderedWidget().apply(this, previewContainer))
+        previewContainer.addView(previewViews.apply(this, previewContainer))
     }
 
     private fun saveAndFinish() {
@@ -68,7 +73,12 @@ class WidgetSettingsActivity : Activity() {
         finish()
     }
 
-    private fun renderedWidget() = WidgetRenderer.render(this, WidgetState(currentSettings), resources.configuration.locales[0])
+    private fun renderedWidget() = WidgetRenderer.render(this, currentWidgetState(), currentLocale())
+
+    private fun currentWidgetState() =
+        WidgetState(currentSettings, ReportedWidgetSizes.from(AppWidgetManager.getInstance(this).getAppWidgetOptions(appWidgetId)))
+
+    private fun currentLocale() = resources.configuration.locales[0]
 
     private fun keepClearOfSystemBars(scrollingContent: View) {
         // targetSdk 37 draws edge to edge, so the screen pads itself clear of the bars.

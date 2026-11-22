@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import fyi.punkdev.thymian.composition.CompositionRoot
 import fyi.punkdev.thymian.domain.WidgetState
@@ -23,6 +24,15 @@ class ThymianWidgetProvider : AppWidgetProvider() {
         appWidgetIds: IntArray,
     ) {
         renderAll(context, appWidgetManager, appWidgetIds, reason = "update")
+    }
+
+    override fun onAppWidgetOptionsChanged(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int,
+        newOptions: Bundle,
+    ) {
+        renderAll(context, appWidgetManager, intArrayOf(appWidgetId), reason = "resized")
     }
 
     override fun onDeleted(
@@ -55,7 +65,8 @@ class ThymianWidgetProvider : AppWidgetProvider() {
         val locale = context.resources.configuration.locales[0]
         val settingsStore = CompositionRoot.widgetSettingsStore(context)
         for (appWidgetId in appWidgetIds) {
-            val widgetState = WidgetState(settingsStore.load(appWidgetId))
+            val reportedSizes = ReportedWidgetSizes.from(appWidgetManager.getAppWidgetOptions(appWidgetId))
+            val widgetState = WidgetState(settingsStore.load(appWidgetId), reportedSizes)
             appWidgetManager.updateAppWidget(appWidgetId, WidgetRenderer.render(context, widgetState, locale))
         }
         Log.i(LOG_TAG, "event=widgets_rendered reason=$reason instance_count=${appWidgetIds.size}")

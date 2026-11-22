@@ -21,3 +21,10 @@ class WidgetStateSettingsTest {
         assertEquals(ClockMode.TWELVE_HOUR, WidgetState(settings).clockMode)
     }
 }
+
+class WidgetStateSizesTest {
+    @Test
+    fun `a widget state with no reported sizes leaves the choice of size to the renderer`() {
+        assertEquals(emptyList<fyi.punkdev.thymian.domain.sizing.WidgetSize>(), WidgetState().sizes)
+    }
+}
