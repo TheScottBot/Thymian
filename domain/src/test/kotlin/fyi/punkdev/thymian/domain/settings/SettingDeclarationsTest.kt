@@ -88,4 +88,11 @@ class SettingDeclarationsTest {
         assertEquals(ClockMode.TWENTY_FOUR_HOUR, chosen[clockMode])
         assertEquals(2, clockMode.selectedIndexIn(chosen))
     }
+
+    @Test
+    fun `the corner radius setting notes that the home screen may round corners further`() {
+        // CWD35: the Pixel launcher clips widgets to its own radius, so small values may not show there.
+        assertEquals("The home screen may round corners further.", SettingDeclarations.CORNER_RADIUS_DP.note)
+        assertEquals(null, SettingDeclarations.BACKGROUND_OPACITY_PERCENT.note)
+    }
 }

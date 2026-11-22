@@ -678,6 +678,7 @@ the revised recommendation. The questions are kept as asked, as history.
 | CWD32 | The Xiaomi only receives release builds signed with the release keystore |
 | CWD33 | App and widget icon is Thyme's icon (8.6), decided when first raised |
 | CWD34 | Date line keeps the locale's punctuation, including the comma on API 34 en-GB (section 13) |
+| CWD35 | Corner radius keeps 0 to 32 dp, with a note under the slider that the home screen may round corners further (section 14) |
 
 ### CWD3. Font rendering approach (still blocked on the CWP2 spike)
 
@@ -1102,6 +1103,8 @@ Thymian widget had been placed and placed one then. See
 CWE3 Done when (two widgets on each phone hold different appearances and
 changing one does not affect the other): emulator, seen by the agent; Pixel,
 owed to the owner; Xiaomi, not available before delivery.
+(Pixel result, 22 November 2026, in the owner's words: "two clock on pixel
+works great".)
 
 ### CWD35. Corner radius below the launcher's own
 
@@ -1117,3 +1120,5 @@ owed to the owner; Xiaomi, not available before delivery.
    Xiaomi. A note in the label costs nothing.
 5. Recommendation: keep 0 to 32 dp and add a short line under the slider saying
    the home screen may round corners further.
+
+**Answered 22 November 2026: keep 0 to 32 dp and add a note under the slider.**

@@ -105,4 +105,17 @@ class SettingControlsTest {
 
             assertEquals(0x000000, latestSettings[SettingDeclarations.TEXT_COLOUR])
         }
+
+    @Test
+    fun `a setting note is shown with its control`() =
+        onMainThread {
+            val noteTexts =
+                buildControls()
+                    .single { control -> control.tag == SettingDeclarations.CORNER_RADIUS_DP.key }
+                    .descendants()
+                    .filterIsInstance<android.widget.TextView>()
+                    .map { textView -> textView.text.toString() }
+
+            assertEquals(true, "The home screen may round corners further." in noteTexts)
+        }
 }

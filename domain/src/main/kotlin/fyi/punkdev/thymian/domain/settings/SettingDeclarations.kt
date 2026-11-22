@@ -48,7 +48,15 @@ object SettingDeclarations {
         )
 
     val CORNER_RADIUS_DP =
-        WholeNumberSetting(key = "corner_radius_dp", label = "Corner radius", defaultValue = 16, bounds = 0..32, unitLabel = "dp")
+        WholeNumberSetting(
+            key = "corner_radius_dp",
+            label = "Corner radius",
+            defaultValue = 16,
+            bounds = 0..32,
+            unitLabel = "dp",
+            // CWD35: some launchers, the Pixel's among them, clip widgets to their own radius.
+            note = "The home screen may round corners further.",
+        )
 
     val TEXT_COLOUR = ColourSetting(key = "text_colour", label = "Text colour", defaultValue = 0xFFFFFF)
 

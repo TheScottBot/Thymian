@@ -38,7 +38,7 @@ class SettingControls(
 
     fun build(initialSettings: WidgetSettings): List<View> {
         currentSettings = initialSettings
-        return SettingDeclarations.all.map { declaration -> controlFor(declaration).apply { tag = declaration.key } }
+        return SettingDeclarations.all.map { declaration -> withNote(declaration, controlFor(declaration)).apply { tag = declaration.key } }
     }
 
     private fun controlFor(declaration: SettingDeclaration<*>): View =
@@ -48,6 +48,19 @@ class SettingControls(
             is ColourSetting -> colourControl(declaration)
             is ChoiceSetting<*> -> choiceControl(declaration)
         }
+
+    private fun withNote(
+        declaration: SettingDeclaration<*>,
+        control: View,
+    ): View {
+        val note = declaration.note ?: return control
+        val noteText =
+            TextView(context).apply {
+                text = note
+                setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Small)
+            }
+        return verticalGroup(control, noteText)
+    }
 
     private fun update(changedSettings: WidgetSettings) {
         currentSettings = changedSettings

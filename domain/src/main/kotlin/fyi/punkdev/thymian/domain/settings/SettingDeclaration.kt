@@ -1,14 +1,15 @@
 package fyi.punkdev.thymian.domain.settings
 
 /**
- * One setting, declared once: key, type, default, bounds and display label
- * (specification 2.2). Persistence, defaults, validation and the settings screen
+ * One setting, declared once: key, type, default, bounds, display label and an
+ * optional note shown under its control (specification 2.2). Persistence, defaults, validation and the settings screen
  * controls are all derived from these declarations.
  */
 sealed class SettingDeclaration<T : Any>(
     val key: String,
     val label: String,
     val defaultValue: T,
+    val note: String? = null,
 ) {
     /** Brings any value inside this setting's bounds; the one place validation happens. */
     abstract fun normalise(value: T): T
@@ -39,7 +40,8 @@ class WholeNumberSetting(
     defaultValue: Int,
     val bounds: IntRange,
     val unitLabel: String,
-) : SettingDeclaration<Int>(key, label, defaultValue) {
+    note: String? = null,
+) : SettingDeclaration<Int>(key, label, defaultValue, note) {
     override fun normalise(value: Int): Int = value.coerceIn(bounds)
 
     override fun encode(value: Int): String = value.toString()
