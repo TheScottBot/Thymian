@@ -1206,3 +1206,9 @@ settings gave one refresh and one follow on update, then nothing for 45 seconds.
 Lesson for CWE6: the periodic schedule must be enqueued from places that do not
 fire again when components change, and `KEEP` policies alone do not stop a loop
 that re-enqueues after each run completes.
+
+CWE5 Done when (a manual refresh on both phones shows correct weather and place
+name for automatic location, and for a fixed location in another city):
+emulator, fixed place (Berlin) seen by the agent; Pixel, automatic location, in
+the owner's words "Steady, weather shows"; Pixel with a fixed place in another
+city, in the owner's words "Changed correctly"; Xiaomi, not available before delivery.
