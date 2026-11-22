@@ -17,3 +17,5 @@ dependencyResolutionManagement {
 rootProject.name = "thymian"
 
 include(":domain")
+include(":typography-check")
+project(":typography-check").projectDir = file("tools/typography-check")
