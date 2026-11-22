@@ -318,6 +318,16 @@ The shadow could not be judged here because the wallpaper is dark; a light
 wallpaper run on the Pixel is still owed for CWP3 and was not done, since it
 would change the author's wallpaper.
 
+(Added 22 November 2026: the light wallpaper run was done the same day, after
+the wallpaper was changed on the Pixel to a mid teal with a light green pattern.
+Evidence: `docs/evaluation/evidence/cwp2/pixel10pro-api37-home-widget-light-wallpaper.png`.
+The background stayed fully transparent with no backdrop or corner clipping.
+Row 2's shadow gives the text a visibly darker edge against the light green
+pattern compared with row 1, which has none. Row 4, `sans-serif-light`, is the
+thinnest and least legible line at 15 sp over the busy pattern; the CWD3 font
+is fine for the large time digits but small text in it leans hard on the
+shadow, which CWE2 should check by eye. The spike was uninstalled afterwards.)
+
 Conclusion accepted from runs 1 and 2: on both stock launchers tested
 (Pixel launcher 14 on the API 34 emulator and Pixel launcher 17 on the Pixel 10
 Pro), a bundled font never reaches the home screen widget, whether set by
@@ -332,6 +342,12 @@ the delivered widget in real use, recorded in `FIELD_NOTES.md`.
 
 Not started; needs both phones. Nothing read from source settles launcher
 backdrops or corner clipping.
+
+(Update, 22 November 2026: run on the API 34 emulator over its default light and
+dark wallpaper, and on the Pixel 10 Pro over a dark and a light patterned
+wallpaper, using the CWP2 spike widget. Fully transparent on both, with no
+backdrop, blur or corner clipping added by either launcher. Evidence and the
+shadow observations are in 4.4. The Xiaomi is not available before delivery.)
 
 ## 6. CWP4: RemoteViews capability check
 
@@ -979,9 +995,9 @@ so no password is written to disk or seen by the agent.
 | Claim | Status |
 |---|---|
 | No runtime typeface setter; XML font may or may not render | Confirmed for the setter. XML bundled font: refuted on stock Android, falls back to Roboto on the API 34 emulator and the Pixel (4.4 runs 1 and 2); HyperOS pending |
-| Style shadow renders on both launchers | Confirmed on the API 34 emulator; Pixel not judgeable over a dark wallpaper; HyperOS pending |
-| HyperOS adds no backdrop | Pending spike |
-| Pixel clips corners | Pending spike |
+| Style shadow renders on both launchers | Confirmed on the API 34 emulator and the Pixel (light wallpaper run, 4.4); HyperOS not available before delivery |
+| HyperOS adds no backdrop | Not available before delivery (CWD30); first evidence will be field use |
+| Pixel clips corners | Refuted for a transparent widget: no clipping seen on the Pixel or the emulator (5); clipping of a coloured background with a corner radius is checked in CWE3 |
 | Shadow not changeable at runtime | Confirmed from source |
 | TextClock self updates, date at midnight, no app process | Confirmed from source (inferred); device check in CWE2 |
 | Responsive layouts and reconfiguration on API 34 | Confirmed: both API 31 |
