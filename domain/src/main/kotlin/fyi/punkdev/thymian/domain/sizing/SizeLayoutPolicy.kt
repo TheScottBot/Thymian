@@ -24,9 +24,18 @@ data class ClockBlockSizing(
     val dateFits: Boolean,
 )
 
+/** Text and icon sizes for the weather block: temperature like the digits, place name like the date. */
+data class WeatherBlockSizing(
+    val temperatureDp: Int,
+    val placeDp: Int,
+    val iconDp: Int,
+)
+
+/** [weather] is null for the Small bucket, which has no weather block (specification 2.4). */
 data class SizeLayout(
     val bucket: SizeBucket,
     val clock: ClockBlockSizing,
+    val weather: WeatherBlockSizing?,
 )
 
 /**
@@ -68,7 +77,33 @@ object SizeLayoutPolicy {
         val clockWidth = if (bucket == SizeBucket.WIDE) usableWidth * WIDE_CLOCK_WIDTH_SHARE else usableWidth
         val clockHeightShare = if (bucket == SizeBucket.TALL) TALL_CLOCK_HEIGHT_SHARE else 1f
         val clockHeight = (size.heightDp * clockHeightShare - VERTICAL_PADDING_DP).coerceAtLeast(0f)
-        return SizeLayout(bucket, clockSizingFor(clockWidth, clockHeight))
+        val clock = clockSizingFor(clockWidth, clockHeight)
+        val weather =
+            when (bucket) {
+                SizeBucket.SMALL -> {
+                    null
+                }
+
+                // Side by side, the weather mirrors the clock so the two halves match, as in the reference.
+                SizeBucket.WIDE -> {
+                    WeatherBlockSizing(clock.digitsDp, clock.dateDp, clock.digitsDp)
+                }
+
+                SizeBucket.TALL -> {
+                    val weatherHeight = (size.heightDp * (1f - TALL_CLOCK_HEIGHT_SHARE) - VERTICAL_PADDING_DP).coerceAtLeast(0f)
+                    tallWeatherSizingFor(usableWidth, weatherHeight)
+                }
+            }
+        return SizeLayout(bucket, clock, weather)
+    }
+
+    private fun tallWeatherSizingFor(
+        weatherWidth: Float,
+        weatherHeight: Float,
+    ): WeatherBlockSizing {
+        val temperature = min(weatherWidth / CLOCK_WIDTH_PER_DIGIT_SIZE, weatherHeight / CLOCK_HEIGHT_PER_DIGIT_SIZE_WITH_DATE)
+        val temperatureDp = floor(temperature).toInt().coerceIn(MINIMUM_DIGITS_DP, MAXIMUM_DIGITS_DP)
+        return WeatherBlockSizing(temperatureDp, smallTextFor(temperatureDp, DATE_TO_DIGITS), temperatureDp)
     }
 
     private fun bucketFor(size: WidgetSize): SizeBucket =

@@ -35,6 +35,8 @@ a gate was cleared. Rows recording observations by the agent say so.
 | 2026-11-22 | Pixel 10 Pro | CWE4 debug | On device tests, 30 | Agent, instrumentation runner | All pass |
 | 2026-11-22 | Emulator API 34 | CWE4 debug | Resized through 4 by 1, 2 by 1, 2 by 2 and 4 by 2 | Agent, over adb | Wide, Small width, Tall and Wide layouts chosen; text scaled; no clipping or overlap |
 | 2026-11-22 | Pixel 10 Pro | CWE4 debug | Widget dragged through several sizes, checked for clipping | Owner | "Looks fine" |
+| 2026-11-22 | Emulator API 34 | CWE5 D1 debug | On device tests, 39 | Agent, Gradle connected run | All pass |
+| 2026-11-22 | Emulator API 34 | CWE5 D1 debug | Refresh after placing a widget, location granted by adb | Agent, over adb | Worker ran; no fix on the emulator, so `location_unavailable reason=NO_FIX` logged and the widget kept rendering |
 
 Correction, 22 November 2026: during the CWE2 check the owner reported that no
 Thymian widget had been on the Pixel's home screen, and placed one then. The

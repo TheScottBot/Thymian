@@ -59,6 +59,8 @@ kotlin {
 
 dependencies {
     implementation(project(":domain"))
+    // Background refresh (specification 2.3 guidance; docs/DEPENDENCIES.md).
+    implementation(libs.androidx.work.runtime)
 
     // On device tests for what only Android can answer, such as locale date patterns and RemoteViews.
     androidTestImplementation(libs.androidx.test.core)

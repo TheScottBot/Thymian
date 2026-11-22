@@ -43,6 +43,11 @@ Project skeleton (CWE1).
   mutation test.
 - Weather icons (CWE5): 23 Meteocons monochrome icons vendored verbatim with
   digests, converted to vector drawables by a tested one time tool.
+- Weather on the widget (CWE5): HTTPS Open-Meteo source with a bounded read,
+  platform location and Geocoder adapters, the last good weather kept between
+  refreshes, a one off refresh when a widget is placed or saved, and the weather
+  block showing place, tinted icon and temperature in each widget's unit with a
+  spoken description.
 - Project documents: README, BUILDING, LICENSE, NOTICE, DEPENDENCIES, TESTING,
   IMPLEMENTATION_DEVIATIONS, PRIVACY, SECURITY, HARDWARE_COMPATIBILITY and
   FIELD_NOTES.

@@ -14,11 +14,11 @@ library, which AGP's built in Kotlin adds.
 |---|---|---|---|
 | Kotlin standard library | 2.4.21 | Apache 2.0 | Kotlin is the required language (specification 2.3); the library is part of it |
 | kotlinx-serialization-json (with kotlinx-serialization-core) | 1.13.0 | Apache 2.0 | See below |
+| androidx.work:work-runtime | 2.12.0 | Apache 2.0 | See below |
 
 The debug APK is 2,701,916 bytes as built on 22 November 2026.
 
-Planned, recorded in full when added: WorkManager 2.12.0 (CWE6, specification
-2.3 guidance). JetBrains Mono is not used (CWD3).
+JetBrains Mono is not used (CWD3).
 
 ## Test only libraries
 
@@ -33,6 +33,18 @@ On device tests only; never in the app.
 Only Android's own locale data and RemoteViews can answer what these tests
 check, so a JVM test cannot replace them. Maintained by Google; newest stable
 releases on Google Maven, 22 November 2026.
+
+### WorkManager 2.12.0
+
+- **Provides:** background work that survives process death, reboots and (per the Plan soak, 9.1 and 6.1) app updates, with a network constraint; used for the weather refresh.
+- **Why the platform is not enough:** JobScheduler alone would need hand written persistence, constraint handling and rescheduling that WorkManager already does; the specification names it as guidance (2.3).
+- **Maintenance:** Google, AndroidX; 2.12.0 is the latest stable, 23 September 2026.
+- **Licence:** Apache 2.0.
+- **Platform support:** API 23 and later; uses JobScheduler on this app's minimum API 34.
+- **Security:** no network access of its own; runs only this app's workers.
+- **Test strategy:** the Plan soak on the Pixel; scheduling policy tests with a fake time source in CWE6.
+- **Replacement cost:** moderate; the worker classes are small.
+- **Added early:** CWE5 uses it for a one off refresh when a widget is placed or saved; the 30 minute schedule is CWE6.
 
 ### kotlinx-serialization-json 1.13.0
 

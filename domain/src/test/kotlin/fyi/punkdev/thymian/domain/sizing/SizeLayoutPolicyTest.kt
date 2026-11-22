@@ -94,4 +94,30 @@ class SizeLayoutPolicyTest {
         assertEquals(SizeBucket.TALL, layout.bucket)
         assertEquals(56, layout.clock.digitsDp)
     }
+
+    @Test
+    fun `the small layout has no weather block`() {
+        assertEquals(null, SizeLayoutPolicy.layoutFor(WidgetSize(130f, 94f)).weather)
+    }
+
+    @Test
+    fun `the wide layout sizes the weather like the clock beside it`() {
+        val layout = SizeLayoutPolicy.layoutFor(WidgetSize(360f, 80f))
+        val weather = checkNotNull(layout.weather)
+
+        assertEquals(layout.clock.digitsDp, weather.temperatureDp)
+        assertEquals(layout.clock.dateDp, weather.placeDp)
+        assertEquals(layout.clock.digitsDp, weather.iconDp)
+    }
+
+    @Test
+    fun `the tall layout sizes the weather to the lower part of the height`() {
+        val layout = SizeLayoutPolicy.layoutFor(WidgetSize(280f, 170f))
+        val weather = checkNotNull(layout.weather)
+
+        assertEquals(SizeBucket.TALL, layout.bucket)
+        assertEquals(58, layout.clock.digitsDp)
+        assertEquals(47, weather.temperatureDp)
+        assertEquals(12, weather.placeDp)
+    }
 }

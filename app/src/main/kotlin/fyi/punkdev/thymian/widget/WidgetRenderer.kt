@@ -13,7 +13,10 @@ import fyi.punkdev.thymian.domain.settings.SettingDeclarations
 import fyi.punkdev.thymian.domain.settings.WidgetAppearance
 import fyi.punkdev.thymian.domain.sizing.SizeBucket
 import fyi.punkdev.thymian.domain.sizing.SizeLayoutPolicy
+import fyi.punkdev.thymian.domain.sizing.WeatherBlockSizing
 import fyi.punkdev.thymian.domain.sizing.WidgetSize
+import fyi.punkdev.thymian.domain.weather.TemperatureFormat
+import fyi.punkdev.thymian.domain.weather.WeatherSnapshot
 import java.util.Locale
 
 /**
@@ -64,8 +67,54 @@ object WidgetRenderer {
         remoteViews.setTextViewTextSize(R.id.clock_suffix, TypedValue.COMPLEX_UNIT_DIP, sizeLayout.clock.suffixDp.toFloat())
         val dateShown = widgetState.settings[SettingDeclarations.SHOW_DATE] && sizeLayout.clock.dateFits
         remoteViews.setViewVisibility(R.id.clock_date, if (dateShown) View.VISIBLE else View.GONE)
+        sizeLayout.weather?.let { weatherSizing -> remoteViews.applyWeather(widgetState, weatherSizing) }
         return remoteViews
     }
+
+    /**
+     * The weather block: place name, condition icon tinted to the text colour, and
+     * the temperature in this widget's unit (specification 1.3). Hidden until the
+     * first refresh, and when every element in it is switched off.
+     */
+    private fun RemoteViews.applyWeather(
+        widgetState: WidgetState,
+        weatherSizing: WeatherBlockSizing,
+    ) {
+        val snapshot: WeatherSnapshot? = widgetState.weather
+        val settings = widgetState.settings
+        val placeName = snapshot?.placeName
+        val placeShown = settings[SettingDeclarations.SHOW_PLACE_NAME] && placeName != null
+        val iconShown = settings[SettingDeclarations.SHOW_CONDITION_ICON]
+        val temperatureShown = settings[SettingDeclarations.SHOW_TEMPERATURE]
+        if (snapshot == null || !(placeShown || iconShown || temperatureShown)) {
+            setViewVisibility(R.id.weather_block, View.GONE)
+            return
+        }
+        setViewVisibility(R.id.weather_block, View.VISIBLE)
+
+        setViewVisibility(R.id.weather_place, visibleWhen(placeShown))
+        setTextViewText(R.id.weather_place, placeName.orEmpty())
+        setTextViewTextSize(R.id.weather_place, TypedValue.COMPLEX_UNIT_DIP, weatherSizing.placeDp.toFloat())
+
+        val weather = snapshot.currentWeather
+        setViewVisibility(R.id.weather_icon, visibleWhen(iconShown))
+        setImageViewResource(R.id.weather_icon, WeatherIconDrawables.forIconName(weather.condition.iconName(weather.isDay)))
+        setInt(R.id.weather_icon, "setColorFilter", WidgetAppearance.from(settings).textArgb)
+        setViewLayoutWidth(R.id.weather_icon, weatherSizing.iconDp.toFloat(), TypedValue.COMPLEX_UNIT_DIP)
+        setViewLayoutHeight(R.id.weather_icon, weatherSizing.iconDp.toFloat(), TypedValue.COMPLEX_UNIT_DIP)
+
+        val unit = settings[SettingDeclarations.TEMPERATURE_UNIT]
+        setViewVisibility(R.id.weather_temperature, visibleWhen(temperatureShown))
+        setTextViewText(R.id.weather_temperature, TemperatureFormat.format(weather.temperatureCelsius, unit))
+        setTextViewTextSize(R.id.weather_temperature, TypedValue.COMPLEX_UNIT_DIP, weatherSizing.temperatureDp.toFloat())
+        // The icon is not read on its own, so the temperature carries the condition (specification 1.4).
+        setContentDescription(
+            R.id.weather_temperature,
+            "${weather.condition.description}, ${TemperatureFormat.spoken(weather.temperatureCelsius, unit)}",
+        )
+    }
+
+    private fun visibleWhen(shown: Boolean): Int = if (shown) View.VISIBLE else View.GONE
 
     private fun layoutFor(bucket: SizeBucket): Int =
         when (bucket) {

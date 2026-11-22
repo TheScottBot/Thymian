@@ -1177,3 +1177,11 @@ masks of opaque black shapes, an exact equivalent, so the conversion step
 rewrites them and leaves any other mask for the converter to refuse. All 23
 load on the emulator and the Pixel; their look is checked by eye once the
 weather block shows them (batch D).
+
+22 November 2026, batch D1: the refresh pipeline (resolve, fetch, name, keep),
+its adapters and the weather block. On the API 34 emulator, with location
+granted through adb, a refresh ran when a widget was placed and logged
+`outcome=location_unavailable reason=NO_FIX`: the emulator has no network
+location provider, as in the Plan spike (7.2), so the success path waits for
+the fixed place (batch D2) on the emulator and the permission flow on the Pixel.
+WorkManager joined the dependencies here for the one off refresh.

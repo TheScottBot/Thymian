@@ -14,8 +14,9 @@ import fyi.punkdev.thymian.composition.CompositionRoot
 import fyi.punkdev.thymian.domain.WidgetState
 import fyi.punkdev.thymian.domain.settings.WidgetSettings
 import fyi.punkdev.thymian.domain.settings.WidgetSettingsStore
-import fyi.punkdev.thymian.widget.ReportedWidgetSizes
+import fyi.punkdev.thymian.weather.WeatherRefreshWorker
 import fyi.punkdev.thymian.widget.WidgetRenderer
+import fyi.punkdev.thymian.widget.WidgetUpdater
 
 /**
  * The settings screen for one widget instance, opened by the launcher when the
@@ -70,13 +71,14 @@ class WidgetSettingsActivity : Activity() {
         AppWidgetManager.getInstance(this).updateAppWidget(appWidgetId, renderedWidget())
         setResult(RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId))
         Log.i(LOG_TAG, "event=widget_settings_saved")
+        WeatherRefreshWorker.refreshNow(this)
         finish()
     }
 
     private fun renderedWidget() = WidgetRenderer.render(this, currentWidgetState(), currentLocale())
 
-    private fun currentWidgetState() =
-        WidgetState(currentSettings, ReportedWidgetSizes.from(AppWidgetManager.getInstance(this).getAppWidgetOptions(appWidgetId)))
+    // The saved state for this widget, with the settings being edited in place of its stored ones.
+    private fun currentWidgetState() = WidgetUpdater.widgetStateFor(this, appWidgetId).copy(settings = currentSettings)
 
     private fun currentLocale() = resources.configuration.locales[0]
 
