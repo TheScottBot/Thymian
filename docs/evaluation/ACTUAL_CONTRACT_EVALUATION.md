@@ -1318,7 +1318,8 @@ weather icon's decorative marking made it fail for the wide and tall layouts.
 Attribution (CWD21) is on the settings screen beside the preview since CWE5;
 the app icon has been in place since CWE1 (deviation D5). Owed to the owner:
 TalkBack on the Pixel, and the BUILDING.md steps from a clean checkout once the
-work is committed.
+work is committed. (TalkBack on the Pixel, 22 November 2026, in the owner's
+words: "Reads correctly". The clean checkout was run by the agent; below.)
 
 Clean checkout, 22 November 2026: a fresh clone of commit d9c1fe7 into the
 scratch directory ran `./gradlew check assembleDebug` successfully (266 files,
@@ -1326,3 +1327,67 @@ scratch directory ran `./gradlew check assembleDebug` successfully (266 files,
 `adb install -r`, following `docs/BUILDING.md`. The debug APK is now 9,071,708
 bytes, up from 2,701,916 in CWE1, from WorkManager, kotlinx-serialization and
 the drawables, with no shrinking on debug builds.
+
+## 19. Verify stage
+
+### 19.1 Reproduction report, 22 November 2026
+
+Datum Part 1, Stage three. Run on the development Mac.
+
+| Item | Value |
+|---|---|
+| Machine | macOS 27.2.1 (26B7131), arm64 |
+| JDK | OpenJDK 25.0.4, JetBrains runtime bundled with Android Studio 2026.2 |
+| Gradle | 9.9.2, wrapper with pinned checksum |
+| Kotlin | 2.4.21; AGP 9.5.1; compileSdk and targetSdk 37; minSdk 34 |
+| Android SDK | Platform 37 (revision 2), build tools 36.0.0, platform tools 37.0.3 |
+| Command | `./gradlew --warning-mode all check assembleDebug assembleDebugAndroidTest` from fresh build directories |
+| Result | BUILD SUCCESSFUL, 99 tasks, 20 seconds |
+| Domain tests | 128, 0 skipped, 0 failures |
+| Typography scanner tests | 14, 0 skipped, 0 failures |
+| Icon conversion tests | 7, 0 skipped, 0 failures |
+| Typography check | 267 files scanned, 8 excluded, 0 violations |
+| Android lint (app and domain) | No issues found, warnings as errors |
+| ktlint | Clean |
+| Gradle and Kotlin warnings | 0 |
+| On device tests | 58 on the API 34 emulator and 58 on the Pixel 10 Pro, all pass, run through the instrumentation runner |
+| Memory and undefined behaviour analysis | Not applicable, Kotlin on the JVM (CWD20, D3) |
+| Fuzzing | Seeded mutation tests over recorded fixtures, 9,000 forecast and 6,000 place search mutations (CWD20) |
+| Tests skipped | None |
+| CI | Last run 45024676180 passed at commit e198db4; later commits not yet pushed, so CWV1 in CI is owed |
+
+### 19.2 CWV2 device checklist
+
+Pixel 10 Pro (Android 17, Pixel launcher 17), API 34 emulator (Pixel launcher
+14). The Xiaomi 11T Pro column is not available before delivery for every item
+(CWD30); field use goes in `docs/FIELD_NOTES.md`. "Owner" entries are in the
+owner's own words, from `docs/HARDWARE_COMPATIBILITY.md`.
+
+| # | Check | Pixel 10 Pro | API 34 emulator |
+|---|---|---|---|
+| 1 | Added from the picker, settings open, fully transparent by default | Owner: placed and settings worked; transparency seen in spikes and CWE2 | Seen: settings open on first add, opacity 0 |
+| 2 | Transparency over light, dark and busy wallpaper, legible with the shadow | Seen over dark and light patterned wallpaper (spike run 2 and light run) | Seen over the default wallpaper |
+| 3 | Resized through every bucket with no clipping | Owner: "Looks fine" | Seen: 4 by 1, 2 by 1, 2 by 2, 4 by 2 |
+| 4 | Clock across a minute, across midnight, after a time zone change; UK date order on a UK locale | Owner: clock looks good in en-GB; time zone and midnight not run on the owner's phone | Minute and time zone seen (CWE2). Midnight: date rolled to "Mon, November 23", but after a manual clock change the 12:00 tick was missed and the clock showed 11:59 until 12:01 (finding below) |
+| 5 | 12 hour, 24 hour and follow device | Forced modes by on device tests; owner's phone is 24 hour | Seen: follow device 12 to 24 (CWE2) |
+| 6 | Automatic location, fixed place, back; clock tap opens alarms; weather tap refreshes | Owner: "Steady, weather shows", "Changed correctly"; taps not yet tried by the owner | Fixed place seen; taps seen (CWE6) |
+| 7 | Airplane mode: last data stays, stale indicator after the threshold, recovers | Not run | Seen with the weather aged 75 minutes: network failure logged, stale symbol shown, refreshed once back online |
+| 8 | Reboot: back with settings, resumes refreshing | Not run | Seen: widget returned with its settings and weather; boot receiver re-established the schedule |
+| 9 | Two instances stay independent | Owner: "two clock on pixel works great" | Seen (CWE3) |
+| 10 | Reconfigure without removing | Owner, implied by item 9 and the location checks; not separately recorded | Seen through the launcher's pencil (CWE3) |
+| 11 | TalkBack reads time, date, temperature, condition and place | Owner: "Reads correctly" | On device test of descriptions |
+| 12 | 24 hours of unattended refreshes in diagnostics | Owed: the Plan soak and the real refresh are running | Not meaningful on the emulator |
+
+Finding, item 4: on the emulator, after setting the clock by hand to 23:59:30,
+the widget still showed 11:59 at 00:00:15 and showed "Mon, November 23" and
+12:01 at 00:01:15. The time and date views are platform TextClocks running in
+the launcher with no app code (CWP2), and normal minute ticks were seen on time
+in CWE2, so the missed minute appears to follow the manual clock jump. Not a
+defect Thymian can act on; a natural midnight on the Pixel would settle it.
+
+### 19.3 Gates still open
+
+- CI run of the current tree (push owed).
+- Pixel: items 4 (midnight, time zone), 6 (taps), 7, 8 and 12.
+- Release build installed over a previous release build (CWE1).
+- Every Xiaomi item: not available before delivery.
