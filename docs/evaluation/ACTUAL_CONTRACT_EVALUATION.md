@@ -362,6 +362,46 @@ user through the launcher's long press menu.
 Size bucket thresholds: **open**, settled after the HyperOS cell size is
 measured on the Xiaomi during the spike.
 
+### 6.1 Cell sizes and size bucket thresholds, 22 November 2026
+
+Read from source: the Android widget layout guide
+(https://developer.android.com/develop/ui/views/appwidgets/layouts) gives, for a
+Pixel 4 on a 5 by 4 grid, portrait sizes of (73n minus 16) by (118m minus 16) dp
+and landscape sizes of (142n minus 15) by (66m minus 15) dp, and says width
+thresholds should come from portrait and height thresholds from landscape. It
+also warns that a launcher may not report `OPTION_APPWIDGET_SIZES`.
+
+Run for real: the soak widget (9.1) logs the options the launcher reports. On
+the Pixel 10 Pro, a 3 by 1 widget reported `min_dp=276x48`, `max_dp=587x94`, and
+exact sizes 276.6 by 94.1 dp (portrait) and 587.8 by 48.4 dp (landscape). So one
+Pixel cell is about 92 dp wide and 94 dp tall in portrait, and 48 dp tall in
+landscape. The Pixel launcher does report exact sizes.
+
+Not available: HyperOS cell sizes (CWD30). The Xiaomi 11T Pro's screen is about
+393 dp wide (1080 pixels at its stock density, which is unconfirmed on the
+device), so a 5 column grid gives cells of roughly 70 to 75 dp, and the
+reference 5 by 1 widget is roughly 350 to 370 dp wide.
+
+Thresholds proposed, as single named constants in the domain module so tuning
+is a one line change, applied to the portrait width and height the launcher
+reports:
+
+| Bucket | Rule | Pixel 10 Pro cells | Likely Xiaomi cells |
+|---|---|---|---|
+| Tall | height at least 150 dp and width below 300 dp | 2 or 3 wide, 2 or more tall | 3 or 4 wide, 2 or more tall |
+| Wide | width at least 240 dp, and not Tall | 3 or more wide | 4 or more wide |
+| Small | everything else | 1 or 2 wide | 3 or fewer wide |
+
+These are a starting point for CWE4, where text scaling and element hiding make
+each bucket fit, judged by eye on the Pixel. Xiaomi tuning comes from field use.
+The decision is a domain rule with tests at every boundary (2.4), so changing a
+constant later is cheap.
+
+Also observed during this run: reinstalling the soak spike over itself with
+`adb install -r` left its WorkManager job registered with JobScheduler (six
+matching entries before and after), which is the first evidence for 1.4's
+survival across an app update. The next scheduled run confirms it (9.1).
+
 ## 7. CWP5: location, permissions and place names
 
 ### 7.1 Read from source
