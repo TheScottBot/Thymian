@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Shared shadow, the candidate for the fixed legibility shadow (CWD9). -->
+    <style name="SpikeShadowedText">
+        <item name="android:textColor">#FFFFFFFF</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:shadowColor">#99000000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">4</item>
+    </style>
+
+    <!-- Tests whether a bundled font reaches the launcher when set through a style. -->
+    <style name="SpikeShadowedBundledFontText" parent="SpikeShadowedText">
+        <item name="android:fontFamily">@font/jetbrains_mono_light</item>
+    </style>
+</resources>
