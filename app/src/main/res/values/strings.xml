@@ -2,4 +2,9 @@
 <resources>
     <string name="app_name">Thymian</string>
     <string name="widget_description">Transparent clock and weather</string>
+    <string name="settings_title">Widget settings</string>
+    <string name="settings_save">Save</string>
+    <string name="setting_value_with_unit">%1$s: %2$d %3$s</string>
+    <string name="colour_hex_description">%1$s as six hex digits</string>
+    <string name="settings_preview_description">Preview of the widget with these settings</string>
 </resources>

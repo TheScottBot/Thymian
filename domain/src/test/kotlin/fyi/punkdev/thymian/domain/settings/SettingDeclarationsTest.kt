@@ -77,4 +77,15 @@ class SettingDeclarationsTest {
             assertEquals(defaults.valueOf(declaration), changed.valueOf(declaration), declaration.key)
         }
     }
+
+    @Test
+    fun `a choice setting lists its option labels and selects by position`() {
+        val clockMode = SettingDeclarations.CLOCK_MODE
+
+        assertEquals(listOf("Follow device", "12 hour", "24 hour"), clockMode.optionLabels)
+        assertEquals(0, clockMode.selectedIndexIn(WidgetSettings.defaults()))
+        val chosen = clockMode.withOptionAt(WidgetSettings.defaults(), optionIndex = 2)
+        assertEquals(ClockMode.TWENTY_FOUR_HOUR, chosen[clockMode])
+        assertEquals(2, clockMode.selectedIndexIn(chosen))
+    }
 }

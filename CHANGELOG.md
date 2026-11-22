@@ -30,6 +30,9 @@ Project skeleton (CWE1).
   and label; stored per widget in SharedPreferences with clamping, a length
   bound and a schema version; background colour, opacity, corner radius, text
   colour and date visibility rendered; settings deleted with their widget.
+- Settings screen (CWE3): opens when a widget is added and from the launcher's
+  reconfigure action; one control per declared setting; a live preview of the
+  renderer's own output; saves per widget.
 - Project documents: README, BUILDING, LICENSE, NOTICE, DEPENDENCIES, TESTING,
   IMPLEMENTATION_DEVIATIONS, PRIVACY, SECURITY, HARDWARE_COMPATIBILITY and
   FIELD_NOTES.

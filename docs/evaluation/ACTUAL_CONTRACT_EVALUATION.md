@@ -1081,3 +1081,39 @@ CWE2 Done when, 22 November 2026:
 fine, placed it" for the Pixel, but during this check the owner said no
 Thymian widget had been placed and placed one then. See
 `docs/HARDWARE_COMPATIBILITY.md`.)
+
+## 14. CWE3 notes
+
+22 November 2026, on the API 34 emulator (Pixel launcher 14), evidence in
+`docs/evaluation/evidence/cwe3/`:
+
+- Adding the widget opens the settings screen, starting from the defaults.
+- Two placed widgets held different settings (blue background at 60 percent
+  following the device clock; transparent with pink text in 24 hour time).
+- The launcher's reconfigure action (the pencil shown because the widget
+  declares `reconfigurable`) reopened the first widget's settings with its saved
+  values; hiding its date and saving changed only that widget.
+- Found: with corner radius set to 0, the preview (in the app) was square but
+  the launcher still drew rounded corners. The Pixel launcher clips widgets to
+  its own system radius, so radii below it have no visible effect there.
+  Appendix A's claim that "the Pixel launcher clips widget corners to a system
+  radius" is confirmed for a coloured background. Raised as CWD35.
+
+CWE3 Done when (two widgets on each phone hold different appearances and
+changing one does not affect the other): emulator, seen by the agent; Pixel,
+owed to the owner; Xiaomi, not available before delivery.
+
+### CWD35. Corner radius below the launcher's own
+
+1. Blocked: what the corner radius setting promises.
+2. Why: the Pixel launcher rounds every widget to its system radius, so a
+   setting below that (0 to roughly 16 dp) shows no change on the home screen,
+   though the preview does. HyperOS behaviour is unknown.
+3. Options: keep 0 to 32 dp and accept that small values only show on
+   launchers that do not clip; raise the minimum to the system radius; label the
+   setting so it is clear the launcher may round corners anyway.
+4. Trade offs: keeping the range is honest on launchers that do not clip,
+   possibly HyperOS. Raising the minimum hides an option that may work on the
+   Xiaomi. A note in the label costs nothing.
+5. Recommendation: keep 0 to 32 dp and add a short line under the slider saying
+   the home screen may round corners further.

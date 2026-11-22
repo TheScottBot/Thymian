@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Provisional sizes: the reference is 5 by 1; buckets and resize limits are settled in CWE4. -->
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:configure="fyi.punkdev.thymian.settings.WidgetSettingsActivity"
     android:description="@string/widget_description"
     android:initialLayout="@layout/thymian_widget"
     android:minHeight="40dp"
@@ -12,4 +13,5 @@
     android:targetCellHeight="1"
     android:targetCellWidth="4"
     android:updatePeriodMillis="0"
-    android:widgetCategory="home_screen" />
+    android:widgetCategory="home_screen"
+    android:widgetFeatures="reconfigurable" />

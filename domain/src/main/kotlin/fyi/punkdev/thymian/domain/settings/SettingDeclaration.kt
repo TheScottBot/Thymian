@@ -82,4 +82,14 @@ class ChoiceSetting<E : Enum<E>>(
     override fun encode(value: E): String = value.name
 
     override fun decode(storedText: String): E? = options.firstOrNull { option -> option.value.name == storedText }?.value
+
+    val optionLabels: List<String> get() = options.map { option -> option.label }
+
+    // By position, so a generated control needs no knowledge of the option type.
+    fun selectedIndexIn(settings: WidgetSettings): Int = options.indexOfFirst { option -> option.value == settings[this] }
+
+    fun withOptionAt(
+        settings: WidgetSettings,
+        optionIndex: Int,
+    ): WidgetSettings = settings.with(this, options[optionIndex].value)
 }
