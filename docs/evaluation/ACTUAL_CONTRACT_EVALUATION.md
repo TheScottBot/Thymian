@@ -680,6 +680,7 @@ the revised recommendation. The questions are kept as asked, as history.
 | CWD34 | Date line keeps the locale's punctuation, including the comma on API 34 en-GB (section 13) |
 | CWD35 | Corner radius keeps 0 to 32 dp, with a note under the slider that the home screen may round corners further (section 14) |
 | CWD36 | One location for the whole app; temperature unit stays per widget (section 16) |
+| CWD37 | Approximate location only, as specified; revisit from field use (section 16) |
 
 ### CWD3. Font rendering approach (still blocked on the CWP2 spike)
 
@@ -1212,3 +1213,28 @@ name for automatic location, and for a fixed location in another city):
 emulator, fixed place (Berlin) seen by the agent; Pixel, automatic location, in
 the owner's words "Steady, weather shows"; Pixel with a fixed place in another
 city, in the owner's words "Changed correctly"; Xiaomi, not available before delivery.
+
+### CWD37. Precise location for the place name
+
+Raised 22 November 2026 by the owner, who asked whether location could be more
+precise.
+
+1. Blocked: whether Thymian asks for precise location.
+2. Why: specification 1.3 requires the coarsest accuracy that gives a correct
+   place name and forecast. Approximate location snaps to a grid of roughly
+   2 km, so the place name can be a neighbouring district or town, which is
+   arguably not a correct place name.
+3. Options: keep approximate only; ask for precise and use it everywhere; ask
+   for precise but use it only for the on device place name, still sending
+   Open-Meteo coordinates rounded to two decimal places (about 1 km).
+4. Trade offs: approximate is the most private and already right for the
+   forecast. Precise gives the right town name; the Android prompt still lets
+   the user choose approximate; a fix may cost slightly more battery.
+   Rounding before Open-Meteo means no more precision leaves the phone, except
+   to the platform Geocoder. PRIVACY.md and specification 1.3 would change.
+5. Recommendation: precise for the place name only, Open-Meteo still rounded,
+   done at the start of CWE6.
+
+**Answered 22 November 2026: keep approximate location.** Revisit if the
+phone's user wants a more precise place name once Thymian is in use; any such
+request goes in `docs/FIELD_NOTES.md`.
