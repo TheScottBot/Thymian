@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import fyi.punkdev.thymian.composition.CompositionRoot
-import fyi.punkdev.thymian.weather.WeatherRefreshWorker
 
 /**
  * Receives the system's widget callbacks and delegates; it holds no rendering,
@@ -22,8 +21,10 @@ class ThymianWidgetProvider : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray,
     ) {
+        // Never start work from here: WorkManager toggles this app's components when it
+        // schedules, Android answers a component change with a widget update, and that
+        // update would schedule again, a loop seen at one refresh a second on 22 November 2026.
         WidgetUpdater.renderAll(context, reason = "update", onlyAppWidgetIds = appWidgetIds)
-        WeatherRefreshWorker.refreshNow(context)
     }
 
     override fun onAppWidgetOptionsChanged(

@@ -1192,3 +1192,17 @@ live search for Berlin returned 10 candidates; choosing Berlin, Germany as the
 fixed place and saving gave a refresh with `location_source=FIXED_CHOSEN`, and
 the widget showed "Berlin", the overcast day icon tinted white, and "5°", in
 the reference layout. The Pixel permission flow is the owner's to run.
+
+22 November 2026, after D2, reported by the owner: the widget flickered every
+second on both devices. The log showed a loop: `onUpdate` queued a WorkManager
+refresh; scheduling work makes WorkManager enable and disable some of this
+app's components; Android answers a component state change with a widget
+update; that update queued another refresh. Each pass fetched the weather, so
+both devices called Open-Meteo about once a second for roughly four minutes,
+well under the free tier but not acceptable. Force stopping did not end it.
+Fixed by never scheduling from `onUpdate` (deviation D10) and by a refresh
+throttle (10 minute minimum gap for automatic refreshes). After the fix, saving
+settings gave one refresh and one follow on update, then nothing for 45 seconds.
+Lesson for CWE6: the periodic schedule must be enqueued from places that do not
+fire again when components change, and `KEEP` policies alone do not stop a loop
+that re-enqueues after each run completes.

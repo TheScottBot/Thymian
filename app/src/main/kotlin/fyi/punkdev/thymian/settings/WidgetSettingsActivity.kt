@@ -17,6 +17,7 @@ import fyi.punkdev.thymian.composition.CompositionRoot
 import fyi.punkdev.thymian.domain.WidgetState
 import fyi.punkdev.thymian.domain.settings.WidgetSettings
 import fyi.punkdev.thymian.domain.settings.WidgetSettingsStore
+import fyi.punkdev.thymian.domain.weather.RefreshTrigger
 import fyi.punkdev.thymian.weather.WeatherRefreshWorker
 import fyi.punkdev.thymian.widget.WidgetRenderer
 import fyi.punkdev.thymian.widget.WidgetUpdater
@@ -108,7 +109,7 @@ class WidgetSettingsActivity : Activity() {
         AppWidgetManager.getInstance(this).updateAppWidget(appWidgetId, renderedWidget())
         setResult(RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId))
         Log.i(LOG_TAG, "event=widget_settings_saved")
-        WeatherRefreshWorker.refreshNow(this)
+        WeatherRefreshWorker.refreshNow(this, RefreshTrigger.USER_REQUESTED)
         finish()
     }
 

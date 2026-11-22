@@ -9,7 +9,9 @@ import fyi.punkdev.thymian.domain.location.LocationResolver
 import fyi.punkdev.thymian.domain.location.PlaceSearch
 import fyi.punkdev.thymian.domain.settings.KeyValueWidgetSettingsStore
 import fyi.punkdev.thymian.domain.settings.WidgetSettingsStore
+import fyi.punkdev.thymian.domain.weather.KeyValueRefreshAttemptStore
 import fyi.punkdev.thymian.domain.weather.KeyValueWeatherSnapshotStore
+import fyi.punkdev.thymian.domain.weather.RefreshThrottle
 import fyi.punkdev.thymian.domain.weather.RefreshWeather
 import fyi.punkdev.thymian.domain.weather.WeatherSnapshotStore
 import fyi.punkdev.thymian.location.GeocoderPlaceNameSource
@@ -44,6 +46,12 @@ object CompositionRoot {
         HttpPlaceSearch(
             context.resources.configuration.locales[0]
                 .language,
+        )
+
+    fun refreshThrottle(context: Context): RefreshThrottle =
+        RefreshThrottle(
+            KeyValueRefreshAttemptStore(SharedPreferencesKeyValueStore(context.applicationContext, WEATHER_PREFERENCES_NAME)),
+            systemClock,
         )
 
     fun refreshWeather(context: Context): RefreshWeather {

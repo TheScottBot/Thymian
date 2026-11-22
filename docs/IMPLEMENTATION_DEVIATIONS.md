@@ -75,3 +75,11 @@ decision that allowed it, and the covering test. Newest last.
 - **Why:** directed on 22 November 2026 that the README stays lean, with anything further in its own linked document.
 - **Decision:** that direction, 22 November 2026.
 - **Covering test:** none; CWE7's check that the steps work from a clean checkout follows `docs/BUILDING.md`.
+
+## D10. Refresh loop fix landed before its test
+
+- **Rule:** datum 0.4: a failing test before the implementation.
+- **Instead:** on 22 November 2026 the widget provider stopped starting a refresh from `onUpdate` before any test was written; the refresh throttle and its tests followed straight after, test first.
+- **Why:** a live loop (WorkManager scheduling toggles the app's components, Android answers with a widget update, the update scheduled a refresh) was calling Open-Meteo once a second from both test devices, and force stopping did not end it. Stopping live traffic to a third party came before the test.
+- **Decision:** taken in the moment and reported to the owner the same turn.
+- **Covering test:** `RefreshThrottleTest`, which keeps any future loop to one automatic refresh per 10 minutes; the loop itself was confirmed gone on both devices by watching the log after the fix.

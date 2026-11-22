@@ -52,6 +52,12 @@ Project skeleton (CWE1).
   through a two step permission flow with an explanation before each prompt, or
   a fixed place from a bounded Open-Meteo place search; Open-Meteo and GeoNames
   credited beside the preview.
+
+### Fixed
+
+- A refresh loop that re-fetched the weather once a second: the widget update
+  callback no longer schedules work, and a throttle limits automatic refreshes
+  to one per 10 minutes.
 - Project documents: README, BUILDING, LICENSE, NOTICE, DEPENDENCIES, TESTING,
   IMPLEMENTATION_DEVIATIONS, PRIVACY, SECURITY, HARDWARE_COMPATIBILITY and
   FIELD_NOTES.
