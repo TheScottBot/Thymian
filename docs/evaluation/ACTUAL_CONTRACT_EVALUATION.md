@@ -1167,3 +1167,13 @@ recent last known fix used as it is (CWD25).
    widget, since conversion is local.
 
 **Answered 22 November 2026: one location for the whole app.**
+
+22 November 2026, batch C: the 23 Meteocons icons were vendored from the npm
+tarball after its SHA-512 matched the published integrity, and converted with
+`Svg2Vector` from sdk-common 32.5.1. The converter refused every Meteocons mask
+as "semitransparent" because it only accepts a mask element filled solid white
+(read from its source, `SvgClipPathNode.validate`); Meteocons masks are alpha
+masks of opaque black shapes, an exact equivalent, so the conversion step
+rewrites them and leaves any other mask for the converter to refuse. All 23
+load on the emulator and the Pixel; their look is checked by eye once the
+weather block shows them (batch D).

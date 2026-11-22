@@ -41,6 +41,8 @@ Project skeleton (CWE1).
   night icons, temperature formatting with local unit conversion, the location
   fallback chain, and a bounded Open-Meteo forecast parser with a seeded
   mutation test.
+- Weather icons (CWE5): 23 Meteocons monochrome icons vendored verbatim with
+  digests, converted to vector drawables by a tested one time tool.
 - Project documents: README, BUILDING, LICENSE, NOTICE, DEPENDENCIES, TESTING,
   IMPLEMENTATION_DEVIATIONS, PRIVACY, SECURITY, HARDWARE_COMPATIBILITY and
   FIELD_NOTES.

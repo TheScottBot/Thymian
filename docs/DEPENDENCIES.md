@@ -18,8 +18,7 @@ library, which AGP's built in Kotlin adds.
 The debug APK is 2,701,916 bytes as built on 22 November 2026.
 
 Planned, recorded in full when added: WorkManager 2.12.0 (CWE6, specification
-2.3 guidance), Meteocons 3.0.0-next.10 icons (CWE5, CWD22). JetBrains Mono is
-not used (CWD3).
+2.3 guidance). JetBrains Mono is not used (CWD3).
 
 ## Test only libraries
 
@@ -51,6 +50,7 @@ releases on Google Maven, 22 November 2026.
 
 | Material | Source | Licence | Notes |
 |---|---|---|---|
+| Weather icons | Meteocons 3.0.0-next.10, `@meteocons/svg-static`, monochrome style; 23 icons vendored verbatim in `third_party/meteocons/` with per file digests in its PROVENANCE.md | MIT, Copyright (c) 2020-present Bas Milius | Converted to `app/src/main/res/drawable/weather_*.xml` by the icon conversion tool below (CWD22, CWD23, CWD24) |
 | App and widget icon | Thyme `internal/render/appicon.go` and `internal/theme/theme.go` at commit 01823cb9e7a296d501131b3958fae30871fc4b8c | MIT, Copyright (c) 2026 TheScottBot | Geometry and colours redrawn as an Android vector drawable (CWD33); no file copied |
 
 ## Build and test tools
@@ -102,6 +102,20 @@ These run on the developer's Mac and in CI. None ships in the app.
 - **Licence:** MIT.
 - **Security:** build time only.
 - **Replacement cost:** low; ktfmt is the alternative.
+
+## One time conversion tool
+
+`tools/icon-conversion`, run with `./gradlew :icon-conversion:convertWeatherIcons`.
+It ships in nothing built (datum 0.13). It uses Android's own SVG converter,
+`Svg2Vector` from `com.android.tools:sdk-common` 32.5.1 (Apache 2.0), the
+release AGP 9.5.1 depends on. Its tests run in `check` and fail if the committed
+drawables or `WeatherIconDrawables.kt` differ from a fresh conversion.
+
+Two exact equivalences are applied to each SVG on the way in, never to the
+vendored files: `currentColor` becomes white, so the widget can tint icons to
+the text colour; and an alpha mask whose shapes are all opaque black is
+rewritten as a solid white mask, which `Svg2Vector` accepts as a clip path. Any
+warning from the converter stops the run.
 
 ## Continuous integration actions
 

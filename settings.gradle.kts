@@ -19,4 +19,6 @@ rootProject.name = "thymian"
 include(":app")
 include(":domain")
 include(":typography-check")
+include(":icon-conversion")
+project(":icon-conversion").projectDir = file("tools/icon-conversion")
 project(":typography-check").projectDir = file("tools/typography-check")

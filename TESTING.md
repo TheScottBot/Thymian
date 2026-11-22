@@ -15,6 +15,7 @@ repository root.
 | ktlint | `./gradlew ktlintCheck` | Mac and CI | Kotlin sources and build scripts, official Kotlin style |
 | Android lint | `./gradlew :app:lintDebug :domain:lint` | Mac and CI | App and domain, warnings as errors |
 | On device tests | `ANDROID_SERIAL=emulator-5554 ./gradlew connectedDebugAndroidTest` | Mac, on the API 34 emulator; not in CI, which has no device | The locale date pattern from Android's own data, and the renderer's RemoteViews applied as a launcher would |
+| Weather icon conversion | `./gradlew :icon-conversion:test` | Mac and CI, JVM only | Every condition has a drawable; committed drawables and lookup match a fresh conversion; icons are tintable; masks become clip paths |
 | Release signing guard | `./gradlew :app:assembleRelease` with the variables unset | Mac | Fails before compiling, naming each missing input |
 
 CI is `.github/workflows/ci.yml`; it runs `./gradlew check assembleDebug` on
@@ -34,6 +35,7 @@ before it is trusted.
 | Android lint | Reported three real issues on first run, 22 November 2026, before they were fixed |
 | Release signing guard | Run without the variables, 22 November 2026 |
 | Open-Meteo mutation test | With the temperature range check removed it passed at first, because random byte changes never formed an out of range number; boundary number substitution was added, and it then failed with "temperature 99.0", 22 November 2026 |
+| Weather icon conversion | A one dp change planted in a committed drawable was not caught at first because Gradle called the tests up to date; the drawables, lookup and SVGs were declared as test inputs, and the planted change then failed the test, 22 November 2026 |
 | On device tests | Failed first because nothing they call existed; then the en-GB date test failed on real locale data (below), 22 November 2026 |
 
 ## On device tests on the Pixel
