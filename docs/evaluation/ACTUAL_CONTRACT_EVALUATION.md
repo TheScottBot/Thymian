@@ -1141,3 +1141,4 @@ data, so the Tall layout currently centres the clock alone.
 CWE4 Done when (dragging through every size never clips, overlaps or leaves text
 unreadably small): emulator, seen by the agent; Pixel, owed to the owner; Xiaomi,
 not available before delivery.
+(Pixel result, 22 November 2026, in the owner's words: "Looks fine".)
