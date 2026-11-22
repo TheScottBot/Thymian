@@ -7,6 +7,14 @@ tag also names the gates cleared at that commit.
 
 ## [Unreleased]
 
+### Added
+
+- A home screen icon. With a widget placed it opens that widget's settings;
+  with none it explains how to add one and offers to add it directly. HyperOS
+  hides the widgets of an app that has never been opened, and with no icon
+  Thymian could not be opened, so on the Xiaomi the widget never appeared in
+  the widget list.
+
 ## [1.0.0] - 2026-11-22
 
 Tagged `v1.0.0` at commit 2059b3b. Release APK `thymian-1.0.0.apk`, SHA-256

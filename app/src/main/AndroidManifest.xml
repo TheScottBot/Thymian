@@ -16,6 +16,17 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
 
+        <!-- The home screen icon: HyperOS hides the widgets of an app that has never been opened. -->
+        <activity
+            android:name=".frontdoor.FrontDoorActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.DeviceDefault.DayNight">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".settings.WidgetSettingsActivity"
             android:exported="true"

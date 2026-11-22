@@ -32,11 +32,17 @@ Android 14 or later.
 4. Change the look if you like, then tap Save. The weather appears within a
    minute.
 
-Tap the clock to open your alarms, and tap the weather to refresh it.
+Tap the clock to open your alarms, and tap the weather to refresh it. The
+Thymian icon in the app list opens the widget's settings, or offers to add the
+widget if none is placed.
 
 ### On a Xiaomi, Redmi or POCO phone
 
-HyperOS can stop apps running in the background, which stops the weather
+If Thymian is missing from the widget list, open the Thymian icon in the app
+list once, then look again; HyperOS hides widgets from apps that have never
+been opened. The icon can also add the widget for you.
+
+HyperOS can also stop apps running in the background, which stops the weather
 refreshing. Open the widget's settings and tap Keep the weather refreshing on
 Xiaomi for what to change.
 
