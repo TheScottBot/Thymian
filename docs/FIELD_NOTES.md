@@ -51,3 +51,8 @@ turn, logging `tap_failed` for each refusal and `tap_fallback` for the next
 target. On the Xiaomi it should log the refusal, then
 `tap_fallback side=clock target=clock_app package=com.android.deskclock`, and
 open the Clock app. Still to confirm on the Xiaomi.
+
+Also added: a setting, off by default, for the time to open a chosen app, as
+the weather side already can. On the Xiaomi, choosing Clock there skips the
+alarm list entirely. Diagnostics log it as `target=chosen_app` without naming
+the app.

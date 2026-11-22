@@ -32,6 +32,7 @@ object ClockTapResolver {
         when (target) {
             ClockTapTarget.ShowAlarms -> Intent(AlarmClock.ACTION_SHOW_ALARMS)
             is ClockTapTarget.ClockApp -> context.packageManager.getLaunchIntentForPackage(target.packageName)
+            is ClockTapTarget.ChosenApp -> context.packageManager.getLaunchIntentForPackage(target.packageName)
             ClockTapTarget.NoTarget -> null
         }?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 }

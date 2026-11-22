@@ -1,11 +1,19 @@
 package fyi.punkdev.thymian.domain.tap
 
 import fyi.punkdev.thymian.domain.diagnostics.DiagnosticsReport
+import fyi.punkdev.thymian.domain.settings.SettingDeclarations
+import fyi.punkdev.thymian.domain.settings.WidgetSettings
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class ClockTapTargetTest {
+    private val clockAppChosen =
+        WidgetSettings
+            .defaults()
+            .with(SettingDeclarations.CLOCK_TAP_OPENS_APP, true)
+            .with(SettingDeclarations.CLOCK_TAP_APP_PACKAGE, "com.android.deskclock")
+
     @Test
     fun `the clock opens the alarm list when the phone has something to show it`() {
         assertEquals(
@@ -65,6 +73,42 @@ class ClockTapTargetTest {
             emptyList<ClockTapTarget>(),
             ClockTapTarget.candidates(showAlarmsHandled = false, launchableClockPackages = emptySet()),
         )
+    }
+
+    @Test
+    fun `by default the clock tap has no chosen app`() {
+        assertEquals(null, ClockTapTarget.chosenApp(WidgetSettings.defaults()) { true })
+    }
+
+    @Test
+    fun `with the option on and an app chosen the clock tap opens that app`() {
+        // Asked for on 22 November 2026, so the Xiaomi can bypass the alarm list it refuses to open.
+        assertEquals(ClockTapTarget.ChosenApp("com.android.deskclock"), ClockTapTarget.chosenApp(clockAppChosen) { true })
+    }
+
+    @Test
+    fun `with the option on but no app chosen the clock tap has no chosen app`() {
+        val settings = WidgetSettings.defaults().with(SettingDeclarations.CLOCK_TAP_OPENS_APP, true)
+
+        assertEquals(null, ClockTapTarget.chosenApp(settings) { true })
+    }
+
+    @Test
+    fun `a chosen clock app that can no longer be opened is not used`() {
+        assertEquals(null, ClockTapTarget.chosenApp(clockAppChosen) { false })
+    }
+
+    @Test
+    fun `a clock app chosen while the option is off is kept but not used`() {
+        val settings = clockAppChosen.with(SettingDeclarations.CLOCK_TAP_OPENS_APP, false)
+
+        assertEquals(null, ClockTapTarget.chosenApp(settings) { true })
+        assertEquals("com.android.deskclock", settings[SettingDeclarations.CLOCK_TAP_APP_PACKAGE])
+    }
+
+    @Test
+    fun `a chosen app is described for diagnostics without naming it`() {
+        assertEquals("clock_tap target=chosen_app", ClockTapTarget.ChosenApp("com.example.clock").diagnosticLine)
     }
 
     @Test

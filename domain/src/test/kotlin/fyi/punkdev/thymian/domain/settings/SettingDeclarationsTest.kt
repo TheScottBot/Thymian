@@ -40,6 +40,14 @@ class SettingDeclarationsTest {
     }
 
     @Test
+    fun `on a new widget the clock tap opens no chosen app and none is chosen`() {
+        val defaults = WidgetSettings.defaults()
+
+        assertEquals(false, defaults[SettingDeclarations.CLOCK_TAP_OPENS_APP])
+        assertEquals("", defaults[SettingDeclarations.CLOCK_TAP_APP_PACKAGE])
+    }
+
+    @Test
     fun `a chosen app is kept only when it is a package name`() {
         val appPackage = SettingDeclarations.WEATHER_TAP_APP_PACKAGE
 

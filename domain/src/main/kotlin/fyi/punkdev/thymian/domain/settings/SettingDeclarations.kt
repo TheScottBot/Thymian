@@ -67,6 +67,17 @@ object SettingDeclarations {
 
     val elementVisibility: List<ToggleSetting> = listOf(SHOW_DATE, SHOW_PLACE_NAME, SHOW_CONDITION_ICON, SHOW_TEMPERATURE)
 
+    // Off by default: touching the time opens the alarm list or the clock app, and a chosen app only when asked.
+    // Asked for on 22 November 2026, because the Xiaomi refuses to open its alarm list for other apps.
+    val CLOCK_TAP_OPENS_APP =
+        ToggleSetting(key = "clock_tap_opens_app", label = "Touching the time opens an app of your choice", defaultValue = false)
+    val CLOCK_TAP_APP_PACKAGE =
+        AppPackageSetting(
+            key = "clock_tap_app_package",
+            label = "App the time opens",
+            note = "Used instead of the alarm list. If it cannot open, the alarm list is tried.",
+        )
+
     // Off by default: touching the weather refreshes it, and opens an app as well only when asked.
     val WEATHER_TAP_OPENS_APP =
         ToggleSetting(key = "weather_tap_opens_app", label = "Touching the weather also opens an app", defaultValue = false)
@@ -86,5 +97,5 @@ object SettingDeclarations {
             BACKGROUND_OPACITY_PERCENT,
             CORNER_RADIUS_DP,
             TEXT_COLOUR,
-        ) + elementVisibility + listOf(WEATHER_TAP_OPENS_APP, WEATHER_TAP_APP_PACKAGE)
+        ) + elementVisibility + listOf(CLOCK_TAP_OPENS_APP, CLOCK_TAP_APP_PACKAGE, WEATHER_TAP_OPENS_APP, WEATHER_TAP_APP_PACKAGE)
 }

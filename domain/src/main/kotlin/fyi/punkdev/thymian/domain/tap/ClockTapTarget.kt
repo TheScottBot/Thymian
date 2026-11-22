@@ -1,5 +1,8 @@
 package fyi.punkdev.thymian.domain.tap
 
+import fyi.punkdev.thymian.domain.settings.SettingDeclarations
+import fyi.punkdev.thymian.domain.settings.WidgetSettings
+
 /**
  * What touching the clock opens (CWD12). The alarm list where the phone can
  * show one; otherwise the clock app itself, because on the Xiaomi touching the
@@ -19,6 +22,13 @@ sealed interface ClockTapTarget {
         val packageName: String,
     ) : ClockTapTarget {
         override val detail = "target=clock_app package=$packageName"
+    }
+
+    /** The app picked in the widget's settings. Diagnostics never name it, as for the weather side. */
+    data class ChosenApp(
+        val packageName: String,
+    ) : ClockTapTarget {
+        override val detail = "target=chosen_app"
     }
 
     data object NoTarget : ClockTapTarget {
@@ -51,6 +61,16 @@ sealed interface ClockTapTarget {
                     .filter { packageName -> packageName in launchableClockPackages }
                     .forEach { packageName -> add(ClockApp(packageName)) }
             }
+
+        /** The app picked in settings, when the option is on, an app is picked and it can still be opened. */
+        fun chosenApp(
+            settings: WidgetSettings,
+            isLaunchable: (packageName: String) -> Boolean,
+        ): ChosenApp? {
+            val chosenPackage = settings[SettingDeclarations.CLOCK_TAP_APP_PACKAGE]
+            val opensApp = settings[SettingDeclarations.CLOCK_TAP_OPENS_APP] && chosenPackage.isNotEmpty() && isLaunchable(chosenPackage)
+            return if (opensApp) ChosenApp(chosenPackage) else null
+        }
 
         fun choose(
             showAlarmsHandled: Boolean,

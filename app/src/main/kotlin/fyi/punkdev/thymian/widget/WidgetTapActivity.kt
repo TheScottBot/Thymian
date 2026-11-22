@@ -9,6 +9,7 @@ import android.util.Log
 import fyi.punkdev.thymian.composition.CompositionRoot
 import fyi.punkdev.thymian.domain.diagnostics.DiagnosticEvent
 import fyi.punkdev.thymian.domain.tap.ClockTapAttempts
+import fyi.punkdev.thymian.domain.tap.ClockTapTarget
 import fyi.punkdev.thymian.domain.tap.TapEvents
 import fyi.punkdev.thymian.domain.tap.TapSide
 import fyi.punkdev.thymian.domain.tap.WeatherTapAction
@@ -39,7 +40,10 @@ class WidgetTapActivity : Activity() {
     private fun handleClockTap() {
         // Resolved at the moment of the tap, so a clock app installed or removed since the last render is honoured.
         // On the Xiaomi the alarm list resolved but refused with a SecurityException, so each refusal moves on.
-        ClockTapAttempts.attempt(Instant.now(), ClockTapResolver.candidates(this), ::record) { target ->
+        // An app chosen in settings goes first; if it cannot open, the phone's own targets follow.
+        val chosenApp = intent.getStringExtra(APP_PACKAGE_EXTRA)?.let { packageName -> ClockTapTarget.ChosenApp(packageName) }
+        val candidates = listOfNotNull(chosenApp) + ClockTapResolver.candidates(this)
+        ClockTapAttempts.attempt(Instant.now(), candidates, ::record) { target ->
             val openClock = ClockTapResolver.intentFor(this, target)
             if (openClock == null) "app_not_found" else startFailureReason(openClock)
         }
@@ -87,10 +91,19 @@ class WidgetTapActivity : Activity() {
         private const val WEATHER_TAP_ACTION = "fyi.punkdev.thymian.action.WEATHER_TAP"
         private const val APP_PACKAGE_EXTRA = "fyi.punkdev.thymian.extra.APP_PACKAGE"
 
-        fun clockTapIntent(context: Context): Intent =
-            Intent(context, WidgetTapActivity::class.java)
-                .setAction(CLOCK_TAP_ACTION)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        /** As for the weather, a chosen app is also written into the intent's data so the system keeps it apart. */
+        fun clockTapIntent(
+            context: Context,
+            chosenApp: ClockTapTarget.ChosenApp?,
+        ): Intent {
+            val tapIntent = Intent(context, WidgetTapActivity::class.java).setAction(CLOCK_TAP_ACTION)
+            chosenApp?.let { app ->
+                tapIntent
+                    .setData(Uri.fromParts("thymian-tap", app.packageName, null))
+                    .putExtra(APP_PACKAGE_EXTRA, app.packageName)
+            }
+            return tapIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
 
         /**
          * The chosen app is also written into the intent's data, because the system

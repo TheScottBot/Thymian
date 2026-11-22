@@ -12,6 +12,12 @@ tag also names the gates cleared at that commit.
 Supported: Android 14 (API 34) and later. Built against API 37. It installs
 over 1.0.2.
 
+### Added
+
+- An option, off by default, for touching the time to open an app of your
+  choice instead of the alarm list. If that app can't be opened, the time
+  falls back to the alarm list and then the clock app.
+
 ### Fixed
 
 - Touching the clock still did nothing on the Xiaomi. The phone says it can

@@ -63,8 +63,21 @@ class SettingControlsTest {
                     .filterIsInstance<TextView>()
                     .map { textView -> textView.text.toString() }
 
-            assertTrue(themedContext.getString(R.string.weather_app_none_chosen) in appControlTexts.joinToString("\n"))
-            assertTrue(themedContext.getString(R.string.weather_app_choose) in appControlTexts)
+            assertTrue(themedContext.getString(R.string.chosen_app_none_chosen) in appControlTexts.joinToString("\n"))
+            assertTrue(themedContext.getString(R.string.chosen_app_choose) in appControlTexts)
+        }
+
+    @Test
+    fun `the clock has its own app control offering a choice`() =
+        onMainThread {
+            val appControlTexts =
+                buildControls()
+                    .single { control -> control.tag == SettingDeclarations.CLOCK_TAP_APP_PACKAGE.key }
+                    .descendants()
+                    .filterIsInstance<TextView>()
+                    .map { textView -> textView.text.toString() }
+
+            assertTrue(themedContext.getString(R.string.chosen_app_choose) in appControlTexts)
         }
 
     @Test

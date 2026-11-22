@@ -41,6 +41,22 @@ class ClockTapAttemptsTest {
     }
 
     @Test
+    fun `a chosen app that refuses falls back to the phone's own targets`() {
+        val chosen = ClockTapTarget.ChosenApp("com.example.clock")
+        val (opened, recorded) = attempted(listOf(chosen, ClockTapTarget.ShowAlarms), mapOf(chosen to "app_not_found"))
+
+        assertEquals(listOf(chosen, ClockTapTarget.ShowAlarms), opened)
+        assertEquals(
+            listOf(
+                "tapped side=clock target=chosen_app",
+                "tap_failed side=clock reason=app_not_found",
+                "tap_fallback side=clock target=show_alarms",
+            ),
+            recorded.map { event -> "${event.kind} ${event.detail}" },
+        )
+    }
+
+    @Test
     fun `an alarm list that opens stops the attempts`() {
         val (opened, recorded) = attempted(listOf(ClockTapTarget.ShowAlarms, deskClock), emptyMap())
 

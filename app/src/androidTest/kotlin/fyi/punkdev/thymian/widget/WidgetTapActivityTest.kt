@@ -2,14 +2,17 @@ package fyi.punkdev.thymian.widget
 
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import fyi.punkdev.thymian.composition.CompositionRoot
+import fyi.punkdev.thymian.domain.tap.ClockTapTarget
 import fyi.punkdev.thymian.domain.tap.WeatherTapAction
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -19,13 +22,18 @@ class WidgetTapActivityTest {
     private val context: Context = ApplicationProvider.getApplicationContext()
 
     // The tap starts a real refresh, whose own event may land after the tap's, so only tap events are read.
-    private fun lastEventAfterTap(action: WeatherTapAction): String {
-        ActivityScenario.launch<WidgetTapActivity>(WidgetTapActivity.weatherTapIntent(context, action)).close()
-        return CompositionRoot
-            .diagnosticsHistory(context)
+    private fun lastEventAfterTap(action: WeatherTapAction): String =
+        tapEventsAfter(WidgetTapActivity.weatherTapIntent(context, action)).last()
+
+    private fun tapEventsAfter(tapIntent: Intent): List<String> {
+        val history = CompositionRoot.diagnosticsHistory(context)
+        val eventsBefore = history.events().size
+        ActivityScenario.launch<WidgetTapActivity>(tapIntent).close()
+        return history
             .events()
-            .last { event -> event.kind in setOf("tapped", "tap_failed") }
-            .let { event -> "${event.kind} ${event.detail}" }
+            .drop(eventsBefore)
+            .filter { event -> event.kind in setOf("tapped", "tap_failed", "tap_fallback") }
+            .map { event -> "${event.kind} ${event.detail}" }
     }
 
     @Test
@@ -60,5 +68,25 @@ class WidgetTapActivityTest {
         val second = WidgetTapActivity.weatherTapIntent(context, WeatherTapAction.RefreshAndOpen("com.example.second"))
 
         assertFalse(first.filterEquals(second))
+    }
+
+    @Test
+    fun `a clock tap whose chosen app has gone is logged and falls back`() {
+        val tapEvents =
+            tapEventsAfter(WidgetTapActivity.clockTapIntent(context, ClockTapTarget.ChosenApp("fyi.punkdev.thymian.no.such.app")))
+
+        assertEquals(
+            listOf("tapped side=clock target=chosen_app", "tap_failed side=clock reason=app_not_found"),
+            tapEvents.take(2),
+        )
+        assertTrue(tapEvents[2].startsWith("tap_fallback side=clock "))
+    }
+
+    @Test
+    fun `clock taps with and without a chosen app are told apart by the system`() {
+        val withoutChoice = WidgetTapActivity.clockTapIntent(context, chosenApp = null)
+        val withChoice = WidgetTapActivity.clockTapIntent(context, ClockTapTarget.ChosenApp("com.example.clock"))
+
+        assertFalse(withoutChoice.filterEquals(withChoice))
     }
 }

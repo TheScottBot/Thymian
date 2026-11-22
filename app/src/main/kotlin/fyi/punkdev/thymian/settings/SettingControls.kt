@@ -142,25 +142,25 @@ class SettingControls(
             val appName =
                 when {
                     packageName.isEmpty() -> {
-                        context.getString(R.string.weather_app_none_chosen)
+                        context.getString(R.string.chosen_app_none_chosen)
                     }
 
                     else -> {
                         LaunchableApps.labelFor(context, packageName)
-                            ?: context.getString(R.string.weather_app_not_installed, packageName)
+                            ?: context.getString(R.string.chosen_app_not_installed, packageName)
                     }
                 }
-            chosenApp.text = context.getString(R.string.weather_app_chosen, declaration.label, appName)
+            chosenApp.text = context.getString(R.string.chosen_app_chosen, declaration.label, appName)
         }
         describe(currentSettings[declaration])
         val chooseButton =
             Button(context).apply {
-                text = context.getString(R.string.weather_app_choose)
+                text = context.getString(R.string.chosen_app_choose)
                 setOnClickListener {
                     val apps = LaunchableApps.list(context)
                     AlertDialog
                         .Builder(context)
-                        .setTitle(R.string.weather_app_dialog_title)
+                        .setTitle(R.string.chosen_app_dialog_title)
                         .setItems(apps.map { app -> app.label }.toTypedArray()) { _, chosenIndex ->
                             val chosenPackage = apps[chosenIndex].packageName
                             describe(chosenPackage)

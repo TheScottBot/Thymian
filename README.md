@@ -32,9 +32,10 @@ Android 14 or later.
 4. Change the look if you like, then tap Save. The weather appears within a
    minute.
 
-Tap the clock to open your alarms, or the clock app if the phone has no alarm
-list, and tap the weather to refresh it. In the widget's settings, the weather
-can also open an app of your choice, such as a weather app. The
+Tap the clock to open your alarms, or the clock app if the phone won't open
+the alarm list, and tap the weather to refresh it. In the widget's settings,
+the clock can open an app of your choice instead, and the weather can open one
+as well as refreshing. The
 Thymian icon in the app list opens the widget's settings, or offers to add the
 widget if none is placed.
 

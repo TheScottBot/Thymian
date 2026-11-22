@@ -17,6 +17,7 @@ import fyi.punkdev.thymian.domain.sizing.SizeBucket
 import fyi.punkdev.thymian.domain.sizing.SizeLayoutPolicy
 import fyi.punkdev.thymian.domain.sizing.WeatherBlockSizing
 import fyi.punkdev.thymian.domain.sizing.WidgetSize
+import fyi.punkdev.thymian.domain.tap.ClockTapTarget
 import fyi.punkdev.thymian.domain.tap.WeatherTapAction
 import fyi.punkdev.thymian.domain.weather.Staleness
 import fyi.punkdev.thymian.domain.weather.TemperatureFormat
@@ -136,17 +137,18 @@ object WidgetRenderer {
         context: Context,
         settings: WidgetSettings,
     ) {
+        val isLaunchable = { packageName: String -> context.packageManager.getLaunchIntentForPackage(packageName) != null }
         setOnClickPendingIntent(
             R.id.clock_block,
             PendingIntent.getActivity(
                 context,
                 ALARMS_REQUEST_CODE,
-                WidgetTapActivity.clockTapIntent(context),
+                WidgetTapActivity.clockTapIntent(context, ClockTapTarget.chosenApp(settings, isLaunchable)),
                 PendingIntent.FLAG_IMMUTABLE,
             ),
         )
         val weatherAction =
-            WeatherTapAction.choose(settings) { packageName -> context.packageManager.getLaunchIntentForPackage(packageName) != null }
+            WeatherTapAction.choose(settings, isLaunchable)
         setOnClickPendingIntent(
             R.id.weather_block,
             PendingIntent.getActivity(
