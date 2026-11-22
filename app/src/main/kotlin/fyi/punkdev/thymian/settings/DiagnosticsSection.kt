@@ -27,6 +27,7 @@ class DiagnosticsSection(
     weather: WeatherSnapshot?,
     events: List<DiagnosticEvent>,
     nextRefresh: Instant?,
+    deviceFacts: List<String> = emptyList(),
     private val onCopy: (reportText: String) -> Unit,
 ) {
     val view: View
@@ -59,7 +60,7 @@ class DiagnosticsSection(
                     RECENT_EVENTS_SHOWN,
                 ).reversed()
                 .joinToString(separator = "\n") { event -> "${describeTime(event.occurredAt)} ${event.kind} ${event.detail}" }
-        val reportText = DiagnosticsReport.asText(appVersion, events)
+        val reportText = DiagnosticsReport.asText(appVersion, events, deviceFacts)
         view =
             CollapsibleSection(
                 context,

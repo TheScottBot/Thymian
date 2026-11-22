@@ -5,6 +5,12 @@
     <string name="settings_title">Widget settings</string>
     <!-- The home screen icon's screen, shown when no widget is placed yet. -->
     <string name="front_door_explanation">Thymian is a home screen widget. To add it, long press an empty part of the home screen, choose Widgets and find Thymian, or tap the button below. Once it is placed, this icon opens its settings.</string>
+    <!-- The app the weather tap may open as well as refreshing. -->
+    <string name="weather_app_chosen">%1$s: %2$s</string>
+    <string name="weather_app_none_chosen">None chosen</string>
+    <string name="weather_app_not_installed">%1$s, not installed</string>
+    <string name="weather_app_choose">Choose app</string>
+    <string name="weather_app_dialog_title">Open which app?</string>
     <string name="front_door_add_widget">Add the widget to the home screen</string>
     <string name="settings_save">Save</string>
     <string name="setting_value_with_unit">%1$s: %2$d %3$s</string>

@@ -25,6 +25,7 @@ import fyi.punkdev.thymian.domain.settings.WidgetSettings
 import fyi.punkdev.thymian.domain.settings.WidgetSettingsStore
 import fyi.punkdev.thymian.domain.weather.RefreshTrigger
 import fyi.punkdev.thymian.weather.WeatherRefreshWorker
+import fyi.punkdev.thymian.widget.ClockTapResolver
 import fyi.punkdev.thymian.widget.WidgetRenderer
 import fyi.punkdev.thymian.widget.WidgetUpdater
 
@@ -97,6 +98,7 @@ class WidgetSettingsActivity : Activity() {
             val nextRefresh = runCatching { WeatherRefreshWorker.nextPeriodicRefresh(this) }.getOrNull()
             val weather = CompositionRoot.weatherSnapshotStore(this).load()
             val events = CompositionRoot.diagnosticsHistory(this).events()
+            val deviceFacts = listOf(ClockTapResolver.target(this).diagnosticLine)
             mainExecutor.execute {
                 if (isDestroyed) return@execute
                 val section =
@@ -106,6 +108,7 @@ class WidgetSettingsActivity : Activity() {
                         weather,
                         events,
                         nextRefresh,
+                        deviceFacts,
                     ) { reportText ->
                         getSystemService(
                             ClipboardManager::class.java,

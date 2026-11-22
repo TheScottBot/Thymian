@@ -1,8 +1,6 @@
 package fyi.punkdev.thymian.widget
 
-import android.content.ComponentName
 import android.content.Context
-import android.content.pm.PackageManager
 import android.view.View
 import android.widget.FrameLayout
 import androidx.test.core.app.ApplicationProvider
@@ -15,8 +13,6 @@ import fyi.punkdev.thymian.domain.sizing.WidgetSize
 import fyi.punkdev.thymian.domain.weather.CurrentWeather
 import fyi.punkdev.thymian.domain.weather.WeatherCondition
 import fyi.punkdev.thymian.domain.weather.WeatherSnapshot
-import fyi.punkdev.thymian.weather.WeatherTapReceiver
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -47,17 +43,5 @@ class WidgetTapTargetsTest {
 
         assertTrue(widgetView.findViewById<View>(R.id.clock_block).hasOnClickListeners())
         assertTrue(widgetView.findViewById<View>(R.id.weather_block).hasOnClickListeners())
-    }
-
-    @Test
-    fun `the tap refresh receiver cannot be reached by other apps`() {
-        // A refresh the user asks for skips the throttle, so only this app's own tap may send it.
-        val receiverInfo =
-            context.packageManager.getReceiverInfo(
-                ComponentName(context, WeatherTapReceiver::class.java),
-                PackageManager.ComponentInfoFlags.of(0),
-            )
-
-        assertFalse(receiverInfo.exported)
     }
 }

@@ -7,13 +7,16 @@ import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.SeekBar
 import android.widget.Switch
+import android.widget.TextView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import fyi.punkdev.thymian.R
 import fyi.punkdev.thymian.domain.ClockMode
 import fyi.punkdev.thymian.domain.settings.SettingDeclarations
 import fyi.punkdev.thymian.domain.settings.WidgetSettings
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -48,6 +51,20 @@ class SettingControlsTest {
             val controlKeys = buildControls().map { control -> control.tag }
 
             assertEquals(SettingDeclarations.all.map { declaration -> declaration.key }, controlKeys)
+        }
+
+    @Test
+    fun `the app control says no app is chosen on a new widget and offers a choice`() =
+        onMainThread {
+            val appControlTexts =
+                buildControls()
+                    .single { control -> control.tag == SettingDeclarations.WEATHER_TAP_APP_PACKAGE.key }
+                    .descendants()
+                    .filterIsInstance<TextView>()
+                    .map { textView -> textView.text.toString() }
+
+            assertTrue(themedContext.getString(R.string.weather_app_none_chosen) in appControlTexts.joinToString("\n"))
+            assertTrue(themedContext.getString(R.string.weather_app_choose) in appControlTexts)
         }
 
     @Test

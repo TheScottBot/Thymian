@@ -67,6 +67,16 @@ object SettingDeclarations {
 
     val elementVisibility: List<ToggleSetting> = listOf(SHOW_DATE, SHOW_PLACE_NAME, SHOW_CONDITION_ICON, SHOW_TEMPERATURE)
 
+    // Off by default: touching the weather refreshes it, and opens an app as well only when asked.
+    val WEATHER_TAP_OPENS_APP =
+        ToggleSetting(key = "weather_tap_opens_app", label = "Touching the weather also opens an app", defaultValue = false)
+    val WEATHER_TAP_APP_PACKAGE =
+        AppPackageSetting(
+            key = "weather_tap_app_package",
+            label = "App to open",
+            note = "The weather still refreshes when the app opens.",
+        )
+
     /** In the order the settings screen shows them. */
     val all: List<SettingDeclaration<*>> =
         listOf(
@@ -76,5 +86,5 @@ object SettingDeclarations {
             BACKGROUND_OPACITY_PERCENT,
             CORNER_RADIUS_DP,
             TEXT_COLOUR,
-        ) + elementVisibility
+        ) + elementVisibility + listOf(WEATHER_TAP_OPENS_APP, WEATHER_TAP_APP_PACKAGE)
 }

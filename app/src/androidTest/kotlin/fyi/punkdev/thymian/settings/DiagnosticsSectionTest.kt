@@ -102,6 +102,25 @@ class DiagnosticsSectionTest {
         }
 
     @Test
+    fun `copy diagnostics includes what the phone offers the clock tap`() =
+        onMainThread {
+            var copied: String? = null
+            val section =
+                DiagnosticsSection(
+                    themedContext,
+                    "0.1.0",
+                    snapshot,
+                    events,
+                    nextRefresh = null,
+                    deviceFacts = listOf("clock_tap target=clock_app package=com.android.deskclock"),
+                ) { reportText -> copied = reportText }
+
+            section.view.copyButton().performClick()
+
+            assertTrue(checkNotNull(copied).contains("clock_tap target=clock_app package=com.android.deskclock"))
+        }
+
+    @Test
     fun `the details start closed and open from the heading`() =
         onMainThread {
             val section = DiagnosticsSection(themedContext, "0.1.0", snapshot, events, nextRefresh = null) { }

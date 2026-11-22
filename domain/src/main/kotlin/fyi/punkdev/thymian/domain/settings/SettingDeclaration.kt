@@ -68,6 +68,29 @@ class ColourSetting(
     }
 }
 
+/**
+ * An app, stored as its package name; empty means none chosen. Anything that is
+ * not a package name reads back as none, so a damaged value never opens an app.
+ */
+class AppPackageSetting(
+    key: String,
+    label: String,
+    note: String? = null,
+) : SettingDeclaration<String>(key, label, defaultValue = "", note) {
+    override fun normalise(value: String): String = if (isPackageName(value)) value else ""
+
+    override fun encode(value: String): String = normalise(value)
+
+    override fun decode(storedText: String): String? = if (storedText.isEmpty() || isPackageName(storedText)) storedText else null
+
+    private fun isPackageName(candidate: String): Boolean = candidate.length <= MAXIMUM_LENGTH && PACKAGE_NAME.matches(candidate)
+
+    private companion object {
+        const val MAXIMUM_LENGTH = 255
+        val PACKAGE_NAME = Regex("[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)+")
+    }
+}
+
 data class ChoiceOption<E : Enum<E>>(
     val value: E,
     val label: String,

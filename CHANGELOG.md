@@ -7,6 +7,31 @@ tag also names the gates cleared at that commit.
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-11-22
+
+Supported: Android 14 (API 34) and later. Built against API 37. Download and
+open it the same way as before; it installs over 1.0.1.
+
+### Added
+
+- An option, off by default, for touching the weather to open an app of your
+  choice as well as refreshing.
+- Copy diagnostics records every touch on either side of the widget and what
+  came of it, including failures.
+
+### Changed
+
+- Both sides of the widget now open a small invisible Thymian screen first,
+  which logs the touch and then acts on it. HyperOS can drop the background
+  message the weather tap used to send when Autostart is off; it does not
+  stop this.
+
+### Fixed
+
+- Touching the clock did nothing on phones where nothing shows the alarm
+  list, such as the Xiaomi. It now opens the clock app there instead. Copy
+  diagnostics states which one the phone offers.
+
 ## [1.0.1] - 2026-11-22
 
 Supported: Android 14 (API 34) and later. Built against API 37. Download and

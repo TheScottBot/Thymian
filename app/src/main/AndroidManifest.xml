@@ -10,6 +10,23 @@
     <!-- Re-establishes the refresh schedule and refreshes once after a reboot (specification 1.4). -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!-- Lets the clock tap check what can show the alarm list, or which clock app is installed. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SHOW_ALARMS" />
+        </intent>
+        <package android:name="com.android.deskclock" />
+        <package android:name="com.google.android.deskclock" />
+        <package android:name="com.sec.android.app.clockpackage" />
+        <package android:name="com.oneplus.deskclock" />
+        <package android:name="com.coloros.alarmclock" />
+        <!-- Lists the apps the weather tap may open, for the settings screen's app choice. -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
+
     <application
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:icon="@mipmap/ic_launcher"
@@ -50,10 +67,14 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/thymian_widget_info" />
         </receiver>
-        <!-- Only this app's own weather tap may ask for a refresh that skips the throttle. -->
-        <receiver
-            android:name=".weather.WeatherTapReceiver"
-            android:exported="false" />
+        <!-- Both widget taps: logged, then acted on. Only this app's own taps may ask for a refresh that skips the throttle. -->
+        <activity
+            android:name=".widget.WidgetTapActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.NoDisplay" />
 
         <receiver
             android:name=".weather.RefreshScheduleReceiver"

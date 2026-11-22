@@ -103,9 +103,12 @@ object DiagnosticsReport {
     fun asText(
         appVersion: String,
         events: List<DiagnosticEvent>,
+        deviceFacts: List<String> = emptyList(),
     ): String =
         buildString {
             appendLine("Thymian diagnostics, version $appVersion")
+            // What this phone offers, such as the clock tap target; category words only, as for events.
+            deviceFacts.forEach { fact -> appendLine(fact) }
             events.forEach { event -> appendLine("${event.occurredAt} ${event.kind} ${event.detail}") }
         }
 }
@@ -127,7 +130,7 @@ data class DiagnosticsSummary(
     val lastError: DiagnosticEvent?,
 ) {
     companion object {
-        private val ERROR_KINDS = setOf("location_unavailable", "weather_unavailable")
+        private val ERROR_KINDS = setOf("location_unavailable", "weather_unavailable", "tap_failed")
 
         fun from(
             weather: WeatherSnapshot?,

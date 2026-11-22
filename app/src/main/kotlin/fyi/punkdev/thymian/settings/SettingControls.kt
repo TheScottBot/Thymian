@@ -1,5 +1,6 @@
 package fyi.punkdev.thymian.settings
 
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.text.Editable
@@ -8,6 +9,7 @@ import android.text.InputType
 import android.text.TextWatcher
 import android.util.TypedValue
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
@@ -17,6 +19,7 @@ import android.widget.SeekBar
 import android.widget.Switch
 import android.widget.TextView
 import fyi.punkdev.thymian.R
+import fyi.punkdev.thymian.domain.settings.AppPackageSetting
 import fyi.punkdev.thymian.domain.settings.ChoiceSetting
 import fyi.punkdev.thymian.domain.settings.ColourSetting
 import fyi.punkdev.thymian.domain.settings.SettingDeclaration
@@ -47,6 +50,7 @@ class SettingControls(
             is WholeNumberSetting -> wholeNumberControl(declaration)
             is ColourSetting -> colourControl(declaration)
             is ChoiceSetting<*> -> choiceControl(declaration)
+            is AppPackageSetting -> appControl(declaration)
         }
 
     private fun withNote(
@@ -128,6 +132,44 @@ class SettingControls(
                 }
             }
         return verticalGroup(labelFor(declaration), options)
+    }
+
+    /** Shows the chosen app and offers every app with a home screen icon, by name. */
+    private fun appControl(declaration: AppPackageSetting): View {
+        val chosenApp = TextView(context)
+
+        fun describe(packageName: String) {
+            val appName =
+                when {
+                    packageName.isEmpty() -> {
+                        context.getString(R.string.weather_app_none_chosen)
+                    }
+
+                    else -> {
+                        LaunchableApps.labelFor(context, packageName)
+                            ?: context.getString(R.string.weather_app_not_installed, packageName)
+                    }
+                }
+            chosenApp.text = context.getString(R.string.weather_app_chosen, declaration.label, appName)
+        }
+        describe(currentSettings[declaration])
+        val chooseButton =
+            Button(context).apply {
+                text = context.getString(R.string.weather_app_choose)
+                setOnClickListener {
+                    val apps = LaunchableApps.list(context)
+                    AlertDialog
+                        .Builder(context)
+                        .setTitle(R.string.weather_app_dialog_title)
+                        .setItems(apps.map { app -> app.label }.toTypedArray()) { _, chosenIndex ->
+                            val chosenPackage = apps[chosenIndex].packageName
+                            describe(chosenPackage)
+                            update(currentSettings.with(declaration, chosenPackage))
+                        }.setNegativeButton(android.R.string.cancel, null)
+                        .show()
+                }
+            }
+        return verticalGroup(chosenApp, chooseButton)
     }
 
     private fun colourControl(declaration: ColourSetting): View {

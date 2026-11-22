@@ -32,6 +32,25 @@ class SettingDeclarationsTest {
     }
 
     @Test
+    fun `on a new widget the weather tap only refreshes and no app is chosen`() {
+        val defaults = WidgetSettings.defaults()
+
+        assertEquals(false, defaults[SettingDeclarations.WEATHER_TAP_OPENS_APP])
+        assertEquals("", defaults[SettingDeclarations.WEATHER_TAP_APP_PACKAGE])
+    }
+
+    @Test
+    fun `a chosen app is kept only when it is a package name`() {
+        val appPackage = SettingDeclarations.WEATHER_TAP_APP_PACKAGE
+
+        assertEquals("com.example.weather", appPackage.decode("com.example.weather"))
+        assertEquals(null, appPackage.decode("not a package"))
+        assertEquals(null, appPackage.decode("nodots"))
+        assertEquals(null, appPackage.decode("a.".repeat(200) + "b"))
+        assertEquals("", WidgetSettings.defaults().with(appPackage, "com.example/../weather")[appPackage])
+    }
+
+    @Test
     fun `every optional element is shown on a new widget`() {
         val defaults = WidgetSettings.defaults()
 
