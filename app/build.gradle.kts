@@ -9,8 +9,10 @@ val releaseKeystoreFile = File(System.getProperty("user.home"), "Keystores/thymi
 val releaseKeyAlias = "thymian"
 val keystorePasswordVariable = "THYMIAN_KEYSTORE_PASSWORD"
 val keyPasswordVariable = "THYMIAN_KEY_PASSWORD"
-val keystorePassword: String? = providers.environmentVariable(keystorePasswordVariable).orNull
-val keyPassword: String? = providers.environmentVariable(keyPasswordVariable).orNull
+// Named apart from the signing config's own storePassword and keyPassword: inside its block, a
+// value with the same name resolves to the config's property and would assign it to itself.
+val releaseKeystorePasswordFromEnvironment: String? = providers.environmentVariable(keystorePasswordVariable).orNull
+val releaseKeyPasswordFromEnvironment: String? = providers.environmentVariable(keyPasswordVariable).orNull
 
 android {
     namespace = "fyi.punkdev.thymian"
@@ -30,8 +32,8 @@ android {
         create("release") {
             storeFile = releaseKeystoreFile
             keyAlias = releaseKeyAlias
-            storePassword = keystorePassword
-            this.keyPassword = keyPassword
+            storePassword = releaseKeystorePasswordFromEnvironment
+            keyPassword = releaseKeyPasswordFromEnvironment
         }
     }
 
@@ -72,12 +74,23 @@ val verifyReleaseSigningInputs =
     tasks.register("verifyReleaseSigningInputs") {
         group = "verification"
         description = "Stops a release build early when the keystore or its passwords are missing."
+        // Checks the signing config Gradle will actually use, not only the environment: on
+        // 22 November 2026 a shadowed name left the key password unset while both variables were set.
+        val releaseSigningConfig = android.signingConfigs.getByName("release")
         doLast {
             val problems =
                 buildList {
                     if (!releaseKeystoreFile.isFile) add("release keystore not found at ${releaseKeystoreFile.absolutePath}")
-                    if (keystorePassword.isNullOrEmpty()) add("environment variable $keystorePasswordVariable is not set")
-                    if (keyPassword.isNullOrEmpty()) add("environment variable $keyPasswordVariable is not set")
+                    if (releaseKeystorePasswordFromEnvironment.isNullOrEmpty()) {
+                        add(
+                            "environment variable $keystorePasswordVariable is not set",
+                        )
+                    }
+                    if (releaseKeyPasswordFromEnvironment.isNullOrEmpty()) add("environment variable $keyPasswordVariable is not set")
+                    if (releaseSigningConfig.storeFile == null) add("the release signing config has no keystore file")
+                    if (releaseSigningConfig.storePassword.isNullOrEmpty()) add("the release signing config has no keystore password")
+                    if (releaseSigningConfig.keyAlias.isNullOrEmpty()) add("the release signing config has no key alias")
+                    if (releaseSigningConfig.keyPassword.isNullOrEmpty()) add("the release signing config has no key password")
                 }
             if (problems.isNotEmpty()) {
                 throw GradleException(

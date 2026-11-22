@@ -1422,3 +1422,13 @@ Install section and `docs/INSTALLING.md` was removed; earlier mentions of it
 above are history.)
 
 **Answered 22 November 2026: 1.0.0**, with versionCode 1.
+
+22 November 2026, first release attempt: `scripts/release.sh` failed at
+`:app:validateSigningRelease` with "Keystore file not set for signing config
+release". A temporary print showed the keystore file, alias and keystore
+password set but the key password unset: `this.keyPassword = keyPassword`
+inside the signing config block resolved its right hand side to the config's
+own property, assigning it to itself. The pre build guard had checked only the
+environment variables. Fixed by renaming the values and making the guard read
+the signing config; the stronger guard was seen to fail on the bug before the
+rename and pass after, with dummy passwords. No real password was used.

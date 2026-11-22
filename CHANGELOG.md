@@ -99,6 +99,9 @@ answered; deviations are D1 to D12 in docs/IMPLEMENTATION_DEVIATIONS.md.
 - A refresh loop that re-fetched the weather once a second: the widget update
   callback no longer schedules work, and a throttle limits automatic refreshes
   to one per 10 minutes.
+- Release signing left the key password unset, because a value named like the
+  signing config's own property assigned the property to itself; the values
+  are renamed and the pre build guard now checks the signing config itself.
 - Project documents: README, BUILDING, LICENSE, NOTICE, DEPENDENCIES, TESTING,
   IMPLEMENTATION_DEVIATIONS, PRIVACY, SECURITY, HARDWARE_COMPATIBILITY and
   FIELD_NOTES.
