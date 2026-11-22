@@ -22,6 +22,10 @@ Project skeleton (CWE1).
 - Release signing from `THYMIAN_KEYSTORE_PASSWORD` and `THYMIAN_KEY_PASSWORD`,
   failing early when either is missing.
 - GitHub Actions workflow running every check and uploading the debug APK.
+- Clock block (CWE2): date above large digits with a smaller am or pm suffix,
+  in the shared sans-serif-light text style with the fixed shadow; 12 hour,
+  24 hour and follow device modes; the date pattern from the device locale;
+  re-rendered when the locale changes; on device tests.
 - Project documents: README, BUILDING, LICENSE, NOTICE, DEPENDENCIES, TESTING,
   IMPLEMENTATION_DEVIATIONS, PRIVACY, SECURITY, HARDWARE_COMPATIBILITY and
   FIELD_NOTES.

@@ -1028,3 +1028,37 @@ During the Pixel attempt a run of adb taps was sent without a fresh screenshot
 after the home screen layout had changed; a long press put the owner's weather
 widget into resize mode. The owner confirmed afterwards that nothing had moved.
 From then on every adb tap on the Pixel follows a fresh screenshot.
+
+## 13. CWE2 notes
+
+22 November 2026. Clock block built and checked on the API 34 emulator (evidence
+in `docs/evaluation/evidence/cwe2/`): it ticks across a minute boundary with no
+app code running, follows the device switching to 24 hour time (digits become
+`HH:mm` and the suffix empties), and follows a time zone change at once. The
+date on en-US reads "Sun, November 22".
+
+Found: Android's en-GB best pattern for `EEEdMMMM` differs by version, with a
+comma on API 34 (`EEE, d MMMM`, "Sun, 22 November") and none on the Pixel at
+API 37 (`EEE d MMMM`, "Sun 22 November"). The Xiaomi runs API 34, so it will
+most likely show the comma, while the specification's example "Tue 11 July" has
+none. Raised as CWD34.
+
+Found during the same session, for the CWP7 soak (9.1): at 13:11 the second run
+had not happened; JobScheduler showed the connectivity constraint unsatisfied
+while the Pixel was on mobile data without Wi-Fi.
+
+### CWD34. Comma in the date line
+
+1. Blocked: whether the date line keeps Android's locale punctuation.
+2. Why: CWD13 says follow the locale, and the en-GB locale data on API 34 has a
+   comma after the weekday, while the specification's example has none and the
+   Pixel's newer data has none.
+3. Options: follow the locale exactly (comma on the Xiaomi); remove a comma
+   that directly follows the weekday for every locale; follow the locale but
+   remove that comma for English locales only.
+4. Trade offs: exact locale data is simplest and honest to CWD13 but differs
+   between the two phones. Removing the comma everywhere is one small rule in
+   the domain, tested, but edits other languages' conventions too. English only
+   keeps other locales untouched at the cost of a locale check.
+5. Recommendation: follow the locale exactly, as CWD13 decided; the comma is
+   the Xiaomi's own convention for British English.

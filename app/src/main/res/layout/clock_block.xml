@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The clock block (specification 1.2 and 2.2): a small date line above large
+    digits with a smaller am or pm suffix on the same baseline. Size layouts
+    include this block; its views are never duplicated. Formats are set by
+    WidgetRenderer, so the values here only show in previews.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/clock_block"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextClock
+        android:id="@+id/clock_date"
+        style="@style/WidgetText.Date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:format12Hour="EEE d MMMM"
+        android:format24Hour="EEE d MMMM" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:baselineAligned="true"
+        android:orientation="horizontal">
+
+        <TextClock
+            android:id="@+id/clock_digits"
+            style="@style/WidgetText.Digits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:format12Hour="h:mm"
+            android:format24Hour="HH:mm" />
+
+        <TextClock
+            android:id="@+id/clock_suffix"
+            style="@style/WidgetText.Suffix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:format12Hour="a"
+            android:format24Hour="" />
+    </LinearLayout>
+</LinearLayout>

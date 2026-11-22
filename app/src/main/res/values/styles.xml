@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        The one shared text style for every widget text view (specification 2.2).
+        RemoteViews cannot set a typeface or a shadow at run time, so both live
+        here. The font is the system light sans serif because a bundled font does
+        not reach the launcher (CWD3). The shadow is fixed, not a setting (CWD9).
+    -->
+    <style name="WidgetText">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textColor">#FFFFFFFF</item>
+        <item name="android:shadowColor">#99000000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">4</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <!-- Sizes are provisional; CWE4 scales text with the widget's size. -->
+    <style name="WidgetText.Date">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="WidgetText.Digits">
+        <item name="android:textSize">52sp</item>
+    </style>
+
+    <style name="WidgetText.Suffix">
+        <item name="android:textSize">16sp</item>
+    </style>
+</resources>

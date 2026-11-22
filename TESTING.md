@@ -14,6 +14,7 @@ repository root.
 | Typography check | `./gradlew :typography-check:checkTypography` | Mac and CI | Every tracked and untracked file except the explicit list in `config/typography-excluded-paths.txt` |
 | ktlint | `./gradlew ktlintCheck` | Mac and CI | Kotlin sources and build scripts, official Kotlin style |
 | Android lint | `./gradlew :app:lintDebug :domain:lint` | Mac and CI | App and domain, warnings as errors |
+| On device tests | `ANDROID_SERIAL=emulator-5554 ./gradlew connectedDebugAndroidTest` | Mac, on the API 34 emulator; not in CI, which has no device | The locale date pattern from Android's own data, and the renderer's RemoteViews applied as a launcher would |
 | Release signing guard | `./gradlew :app:assembleRelease` with the variables unset | Mac | Fails before compiling, naming each missing input |
 
 CI is `.github/workflows/ci.yml`; it runs `./gradlew check assembleDebug` on
@@ -32,6 +33,25 @@ before it is trusted.
 | ktlint | Reported real formatting violations in existing sources on first run, 22 November 2026, before they were fixed |
 | Android lint | Reported three real issues on first run, 22 November 2026, before they were fixed |
 | Release signing guard | Run without the variables, 22 November 2026 |
+| On device tests | Failed first because nothing they call existed; then the en-GB date test failed on real locale data (below), 22 November 2026 |
+
+## On device tests on the Pixel
+
+Gradle's connected test task uninstalls the app afterwards, which would remove
+a placed widget, so on the Pixel the tests run through the instrumentation
+runner instead:
+
+```bash
+./gradlew assembleDebug assembleDebugAndroidTest
+adb -s 61310DLCH000ZB install -r app/build/outputs/apk/debug/app-debug.apk
+adb -s 61310DLCH000ZB install -r app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+adb -s 61310DLCH000ZB shell am instrument -w fyi.punkdev.thymian.test/androidx.test.runner.AndroidJUnitRunner
+```
+
+Android's locale data differs by version: on 22 November 2026 the en-GB date
+pattern was `EEE, d MMMM` on the API 34 emulator and `EEE d MMMM` on the Pixel
+(API 37). The date test therefore checks field order and month width, with
+the comma optional.
 
 ## Testing deviations
 

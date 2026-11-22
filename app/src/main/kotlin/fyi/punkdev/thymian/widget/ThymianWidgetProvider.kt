@@ -1,10 +1,56 @@
 package fyi.punkdev.thymian.widget
 
+import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.util.Log
+import fyi.punkdev.thymian.domain.WidgetState
 
 /**
- * Receives the system's widget callbacks. Deliberately empty in CWE1: the
- * initial layout from the provider info is all the placeholder needs. It stays
- * thin when rendering arrives, delegating every callback (specification 2.2).
+ * Receives the system's widget callbacks and delegates to the renderer; it holds
+ * no rendering, networking or settings logic (specification 2.2). A locale change
+ * re-renders because the date pattern is chosen per locale when rendering, while
+ * time, time zone and the device's 12 or 24 hour setting are followed by the
+ * clock views themselves.
  */
-class ThymianWidgetProvider : AppWidgetProvider()
+class ThymianWidgetProvider : AppWidgetProvider() {
+    override fun onUpdate(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetIds: IntArray,
+    ) {
+        renderAll(context, appWidgetManager, appWidgetIds, reason = "update")
+    }
+
+    override fun onReceive(
+        context: Context,
+        intent: Intent,
+    ) {
+        super.onReceive(context, intent)
+        if (intent.action == Intent.ACTION_LOCALE_CHANGED) {
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, ThymianWidgetProvider::class.java))
+            renderAll(context, appWidgetManager, appWidgetIds, reason = "locale_changed")
+        }
+    }
+
+    private fun renderAll(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetIds: IntArray,
+        reason: String,
+    ) {
+        val locale = context.resources.configuration.locales[0]
+        for (appWidgetId in appWidgetIds) {
+            // Settings per instance arrive in CWE3; until then every instance uses the defaults.
+            appWidgetManager.updateAppWidget(appWidgetId, WidgetRenderer.render(context, WidgetState(), locale))
+        }
+        Log.i(LOG_TAG, "event=widgets_rendered reason=$reason instance_count=${appWidgetIds.size}")
+    }
+
+    private companion object {
+        const val LOG_TAG = "Thymian"
+    }
+}

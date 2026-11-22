@@ -23,6 +23,7 @@ android {
         targetSdk = 37
         versionCode = 1
         versionName = "0.1.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -58,6 +59,11 @@ kotlin {
 
 dependencies {
     implementation(project(":domain"))
+
+    // On device tests for what only Android can answer, such as locale date patterns and RemoteViews.
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.ext.junit)
 }
 
 val verifyReleaseSigningInputs =

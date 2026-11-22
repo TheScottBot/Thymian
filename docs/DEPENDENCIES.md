@@ -20,6 +20,20 @@ Planned, recorded in full when added: WorkManager 2.12.0 (CWE6, specification
 2.3 guidance), Meteocons 3.0.0-next.10 icons (CWE5, CWD22). JetBrains Mono is
 not used (CWD3).
 
+## Test only libraries
+
+On device tests only; never in the app.
+
+| Library | Version | Licence | Why |
+|---|---|---|---|
+| androidx.test:core | 1.7.0 | Apache 2.0 | Application context for on device tests |
+| androidx.test:runner | 1.7.0 | Apache 2.0 | The instrumentation runner |
+| androidx.test.ext:junit | 1.3.0 (brings JUnit 4.13.2, EPL 1.0) | Apache 2.0 | JUnit 4 runner for Android; JUnit 6 does not run on devices |
+
+Only Android's own locale data and RemoteViews can answer what these tests
+check, so a JVM test cannot replace them. Maintained by Google; newest stable
+releases on Google Maven, 22 November 2026.
+
 ## Material derived from other projects
 
 | Material | Source | Licence | Notes |
