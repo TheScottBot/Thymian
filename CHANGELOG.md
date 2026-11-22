@@ -7,6 +7,11 @@ tag also names the gates cleared at that commit.
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-11-22
+
+Supported: Android 14 (API 34) and later. Built against API 37. Download and
+open it the same way as 1.0.0; it installs over it.
+
 ### Added
 
 - A home screen icon. With a widget placed it opens that widget's settings;
