@@ -13,6 +13,7 @@ library, which AGP's built in Kotlin adds.
 | Component | Version | Licence | Why the platform is not enough |
 |---|---|---|---|
 | Kotlin standard library | 2.4.21 | Apache 2.0 | Kotlin is the required language (specification 2.3); the library is part of it |
+| kotlinx-serialization-json (with kotlinx-serialization-core) | 1.13.0 | Apache 2.0 | See below |
 
 The debug APK is 2,701,916 bytes as built on 22 November 2026.
 
@@ -33,6 +34,18 @@ On device tests only; never in the app.
 Only Android's own locale data and RemoteViews can answer what these tests
 check, so a JVM test cannot replace them. Maintained by Google; newest stable
 releases on Google Maven, 22 November 2026.
+
+### kotlinx-serialization-json 1.13.0
+
+- **Provides:** parsing of Open-Meteo responses into a JSON tree in the pure Kotlin domain module, where the size bound, required fields, types and ranges are then checked (datum 0.10).
+- **Why the platform is not enough:** Android's `org.json` exists only on the device, so a parser using it could not be tested and mutation tested on the JVM in the domain module (specification 2.1). Writing a JSON parser by hand would be riskier than a widely reviewed one.
+- **How it is used:** only `Json.parseToJsonElement` and the tree types; no compiler plugin and no reflection.
+- **Maintenance:** JetBrains; 1.13.0 released 11 November 2026, built on Kotlin 2.4.10, compatible with the project's Kotlin 2.4.21.
+- **Licence:** Apache 2.0.
+- **Size:** json 300,818 bytes and core 416,403 bytes as jars, before shrinking.
+- **Security:** parses untrusted network text; the body is bounded to 64 KiB before parsing, and the seeded mutation test, including 20,000 deep nesting, runs on every push.
+- **Test strategy:** `OpenMeteoForecastTest` and `OpenMeteoForecastMutationTest`.
+- **Replacement cost:** low; one file uses it.
 
 ## Material derived from other projects
 

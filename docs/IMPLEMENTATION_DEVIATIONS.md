@@ -18,7 +18,7 @@ decision that allowed it, and the covering test. Newest last.
 - **Instead:** responses over 64 KiB are refused before parsing; the fields used are required and range checked; unknown fields are tolerated and counted in the log.
 - **Why:** Open-Meteo is a third party contract that already returns metadata Thymian does not use and may add more; rejecting them would blank the weather until a new build is sideloaded.
 - **Decision:** CWD19, 22 November 2026.
-- **Covering test:** arrives with the parser in CWE5.
+- **Covering test:** `OpenMeteoForecastTest`, `unknown fields are tolerated and counted`, and the size bound in `a body over 64 KiB is refused before parsing`.
 
 ## D3. No sanitiser or fuzzing engine
 
@@ -26,7 +26,7 @@ decision that allowed it, and the covering test. Newest last.
 - **Instead:** memory analysis is recorded as not applicable; a seeded mutation test over recorded fixtures in plain JUnit runs on every push.
 - **Why:** Kotlin on the JVM is memory safe and has no sanitiser; a fuzzing engine would add a dependency for a small parser.
 - **Decision:** CWD20, 22 November 2026.
-- **Covering test:** arrives with the parser in CWE5.
+- **Covering test:** `OpenMeteoForecastMutationTest`, 9,000 seeded mutations plus deep nesting, proven against a planted missing range check on 22 November 2026.
 
 ## D4. Spikes not deleted before CWE1 began
 

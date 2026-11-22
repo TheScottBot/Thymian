@@ -33,6 +33,7 @@ before it is trusted.
 | ktlint | Reported real formatting violations in existing sources on first run, 22 November 2026, before they were fixed |
 | Android lint | Reported three real issues on first run, 22 November 2026, before they were fixed |
 | Release signing guard | Run without the variables, 22 November 2026 |
+| Open-Meteo mutation test | With the temperature range check removed it passed at first, because random byte changes never formed an out of range number; boundary number substitution was added, and it then failed with "temperature 99.0", 22 November 2026 |
 | On device tests | Failed first because nothing they call existed; then the en-GB date test failed on real locale data (below), 22 November 2026 |
 
 ## On device tests on the Pixel
@@ -58,7 +59,8 @@ the comma optional.
 - Memory and undefined behaviour analysis does not apply: Kotlin on the JVM is
   memory safe and has no sanitiser (CWD20).
 - Fuzzing uses a seeded mutation test over recorded fixtures in plain JUnit
-  instead of a fuzzing engine (CWD20). It arrives with the parser in CWE5.
+  instead of a fuzzing engine (CWD20): `OpenMeteoForecastMutationTest`, seed
+  20261122, run by `./gradlew :domain:test` on every push.
 
 ## Gates belonging to the owner
 

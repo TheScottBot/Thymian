@@ -679,6 +679,7 @@ the revised recommendation. The questions are kept as asked, as history.
 | CWD33 | App and widget icon is Thyme's icon (8.6), decided when first raised |
 | CWD34 | Date line keeps the locale's punctuation, including the comma on API 34 en-GB (section 13) |
 | CWD35 | Corner radius keeps 0 to 32 dp, with a note under the slider that the home screen may round corners further (section 14) |
+| CWD36 | One location for the whole app; temperature unit stays per widget (section 16) |
 
 ### CWD3. Font rendering approach (still blocked on the CWP2 spike)
 
@@ -1164,3 +1165,5 @@ recent last known fix used as it is (CWD25).
    multiplies requests and complicates the fallback and diagnostics.
 5. Recommendation: one location for the whole app; temperature unit stays per
    widget, since conversion is local.
+
+**Answered 22 November 2026: one location for the whole app.**

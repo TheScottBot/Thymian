@@ -20,6 +20,9 @@ kotlin {
 }
 
 dependencies {
+    // JSON tree parsing for provider responses; no compiler plugin needed (docs/DEPENDENCIES.md).
+    implementation(libs.kotlinx.serialization.json)
+
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.platform.launcher)

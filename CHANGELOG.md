@@ -37,6 +37,10 @@ Project skeleton (CWE1).
   clock block and a weather block (hidden until weather arrives); one layout
   per size the launcher reports; clock text scaled to the space, hiding the
   date before the digits get too small; re-rendered on resize.
+- Weather rules (CWE5): the weather condition table with Meteocons day and
+  night icons, temperature formatting with local unit conversion, the location
+  fallback chain, and a bounded Open-Meteo forecast parser with a seeded
+  mutation test.
 - Project documents: README, BUILDING, LICENSE, NOTICE, DEPENDENCIES, TESTING,
   IMPLEMENTATION_DEVIATIONS, PRIVACY, SECURITY, HARDWARE_COMPATIBILITY and
   FIELD_NOTES.
