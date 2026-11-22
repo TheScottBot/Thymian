@@ -22,6 +22,6 @@ Project skeleton (CWE1).
 - Release signing from `THYMIAN_KEYSTORE_PASSWORD` and `THYMIAN_KEY_PASSWORD`,
   failing early when either is missing.
 - GitHub Actions workflow running every check and uploading the debug APK.
-- Project documents: README, LICENSE, NOTICE, DEPENDENCIES, TESTING,
+- Project documents: README, BUILDING, LICENSE, NOTICE, DEPENDENCIES, TESTING,
   IMPLEMENTATION_DEVIATIONS, PRIVACY, SECURITY, HARDWARE_COMPATIBILITY and
   FIELD_NOTES.

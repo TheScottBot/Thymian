@@ -67,3 +67,11 @@ decision that allowed it, and the covering test. Newest last.
 - **Why:** datum 0.17 items 19 and 20, and the Xiaomi being with its user in Germany, who will not run test builds.
 - **Decision:** CWD18 and CWD30, 22 November 2026.
 - **Covering test:** none; HARDWARE_COMPATIBILITY.md records what ran where.
+
+## D9. Build, install and release steps live outside the README
+
+- **Rule:** specification CWE7: README sections covering how to build, sign and install over USB, and how to get the debug APK from the workflow.
+- **Instead:** those steps are in `docs/BUILDING.md`, linked from a lean README.
+- **Why:** directed on 22 November 2026 that the README stays lean, with anything further in its own linked document.
+- **Decision:** that direction, 22 November 2026.
+- **Covering test:** none; CWE7's check that the steps work from a clean checkout follows `docs/BUILDING.md`.
