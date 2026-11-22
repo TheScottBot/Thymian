@@ -109,6 +109,7 @@ class WidgetSettingsActivity : Activity() {
         AppWidgetManager.getInstance(this).updateAppWidget(appWidgetId, renderedWidget())
         setResult(RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId))
         Log.i(LOG_TAG, "event=widget_settings_saved")
+        WeatherRefreshWorker.ensurePeriodic(this)
         WeatherRefreshWorker.refreshNow(this, RefreshTrigger.USER_REQUESTED)
         finish()
     }

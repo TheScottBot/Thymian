@@ -2,6 +2,8 @@ package fyi.punkdev.thymian.composition
 
 import android.content.Context
 import fyi.punkdev.thymian.domain.TimeSource
+import fyi.punkdev.thymian.domain.diagnostics.DiagnosticsHistory
+import fyi.punkdev.thymian.domain.diagnostics.KeyValueDiagnosticsHistory
 import fyi.punkdev.thymian.domain.location.KeyValueLocationPreferenceStore
 import fyi.punkdev.thymian.domain.location.LocationPreference
 import fyi.punkdev.thymian.domain.location.LocationPreferenceStore
@@ -28,6 +30,7 @@ import java.time.Instant
 object CompositionRoot {
     private const val WEATHER_PREFERENCES_NAME = "weather_snapshot"
     private const val LOCATION_PREFERENCES_NAME = "location_preference"
+    private const val DIAGNOSTICS_PREFERENCES_NAME = "diagnostics"
 
     private val systemClock = TimeSource { Instant.now() }
 
@@ -47,6 +50,9 @@ object CompositionRoot {
             context.resources.configuration.locales[0]
                 .language,
         )
+
+    fun diagnosticsHistory(context: Context): DiagnosticsHistory =
+        KeyValueDiagnosticsHistory(SharedPreferencesKeyValueStore(context.applicationContext, DIAGNOSTICS_PREFERENCES_NAME))
 
     fun refreshThrottle(context: Context): RefreshThrottle =
         RefreshThrottle(

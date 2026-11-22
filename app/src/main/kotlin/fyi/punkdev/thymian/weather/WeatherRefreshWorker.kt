@@ -4,21 +4,28 @@ import android.content.Context
 import android.util.Log
 import androidx.work.Constraints
 import androidx.work.Data
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
+import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import fyi.punkdev.thymian.composition.CompositionRoot
+import fyi.punkdev.thymian.domain.RefreshPolicy
+import fyi.punkdev.thymian.domain.diagnostics.DiagnosticEvent
 import fyi.punkdev.thymian.domain.weather.RefreshOutcome
 import fyi.punkdev.thymian.domain.weather.RefreshTrigger
 import fyi.punkdev.thymian.widget.WidgetUpdater
+import java.time.Instant
+import java.util.concurrent.TimeUnit
 
 /**
- * Runs one weather refresh off the main thread and re-renders every widget,
- * unless the refresh throttle refuses it. The periodic 30 minute schedule
- * arrives in CWE6; for now a refresh runs when a widget's settings are saved.
+ * Runs one weather refresh off the main thread, records the outcome in the
+ * diagnostics history and re-renders every widget, unless the refresh throttle
+ * refuses it. Scheduled every 30 minutes (CWD7) from the settings screen and
+ * after a reboot or update, never from widget callbacks (deviation D10).
  */
 class WeatherRefreshWorker(
     appContext: Context,
@@ -27,12 +34,15 @@ class WeatherRefreshWorker(
     override fun doWork(): Result {
         val trigger =
             RefreshTrigger.entries.firstOrNull { entry -> entry.name == inputData.getString(TRIGGER_KEY) } ?: RefreshTrigger.AUTOMATIC
+        val history = CompositionRoot.diagnosticsHistory(applicationContext)
         if (!CompositionRoot.refreshThrottle(applicationContext).tryStart(trigger)) {
             Log.i(LOG_TAG, "event=weather_refresh outcome=throttled trigger=$trigger")
+            history.recordEvent(DiagnosticEvent(Instant.now(), "throttled", "trigger=$trigger"))
             return Result.success()
         }
         val outcome = CompositionRoot.refreshWeather(applicationContext).refresh(CompositionRoot.locationPreference(applicationContext))
-        Log.i(LOG_TAG, "event=weather_refresh ${describe(outcome)}")
+        Log.i(LOG_TAG, "event=weather_refresh trigger=$trigger ${describe(outcome)}")
+        history.record(Instant.now(), outcome)
         WidgetUpdater.renderAll(applicationContext, reason = "weather_refresh")
         return Result.success()
     }
@@ -56,7 +66,22 @@ class WeatherRefreshWorker(
     companion object {
         private const val LOG_TAG = "Thymian"
         private const val REFRESH_NOW_WORK_NAME = "weather_refresh_now"
+        private const val PERIODIC_WORK_NAME = "weather_refresh_periodic"
         private const val TRIGGER_KEY = "trigger"
+
+        /**
+         * Schedules the 30 minute refresh (CWD7) with a network constraint. `KEEP` leaves
+         * an existing schedule untouched, so calling this again never shifts its timing.
+         */
+        fun ensurePeriodic(context: Context) {
+            val request =
+                PeriodicWorkRequest
+                    .Builder(WeatherRefreshWorker::class.java, RefreshPolicy.REFRESH_INTERVAL.toMinutes(), TimeUnit.MINUTES)
+                    .setInputData(Data.Builder().putString(TRIGGER_KEY, RefreshTrigger.AUTOMATIC.name).build())
+                    .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+                    .build()
+            WorkManager.getInstance(context).enqueueUniquePeriodicWork(PERIODIC_WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, request)
+        }
 
         /** Queues one refresh; a request already queued is kept, so repeated triggers do not pile up. */
         fun refreshNow(

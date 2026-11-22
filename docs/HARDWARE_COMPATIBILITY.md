@@ -43,6 +43,9 @@ a gate was cleared. Rows recording observations by the agent say so.
 | 2026-11-22 | Emulator API 34 and Pixel 10 Pro | CWE5 D2 debug | Widget flickering every second, reported by the owner | Owner, then agent over adb | Refresh loop found and fixed (D10); after the fix one refresh per save and no further activity over 45 s |
 | 2026-11-22 | Pixel 10 Pro | CWE5 D2 debug with loop fix | Location allowed, weather on the widget | Owner | "Steady, weather shows" |
 | 2026-11-22 | Pixel 10 Pro | CWE5 D2 debug with loop fix | Fixed place in another city, weather on the widget | Owner | "Changed correctly" |
+| 2026-11-22 | Emulator API 34 and Pixel 10 Pro | CWE6 B debug | On device tests, 46 | Agent, instrumentation runner | All pass on both |
+| 2026-11-22 | Emulator API 34 and Pixel 10 Pro | CWE6 B debug | Installed over the previous build | Agent, over adb | Update receiver ran on both (`reason=MY_PACKAGE_REPLACED`); its automatic refresh was throttled, a refresh having just run; a WorkManager job with timing and connectivity constraints is scheduled on both |
+| 2026-11-22 | Emulator API 34 | CWE6 B debug | Tap the weather; tap the clock | Agent, over adb | Weather tap refreshed at once (`trigger=USER_REQUESTED`); clock tap opened the Clock app's alarms |
 
 Correction, 22 November 2026: during the CWE2 check the owner reported that no
 Thymian widget had been on the Pixel's home screen, and placed one then. The

@@ -1238,3 +1238,16 @@ precise.
 **Answered 22 November 2026: keep approximate location.** Revisit if the
 phone's user wants a more precise place name once Thymian is in use; any such
 request goes in `docs/FIELD_NOTES.md`.
+
+## 17. CWE6 notes
+
+22 November 2026, batch B: the 30 minute periodic refresh (`KEEP`, network
+constraint) is scheduled from the settings screen's Save and from a receiver for
+`BOOT_COMPLETED` and `MY_PACKAGE_REPLACED`; never from widget callbacks (D10).
+The weather tap goes to a receiver that is not exported, because a user
+requested refresh skips the throttle; an on device test checks it is not
+exported. Installing over the previous build on both devices ran the update
+receiver, whose automatic refresh was throttled because a refresh had just run,
+which is the throttle doing its job. Reboot survival is not yet seen and the
+24 hour unattended run is an owner gate on the Pixel (comparison) and the Xiaomi
+(not available before delivery).

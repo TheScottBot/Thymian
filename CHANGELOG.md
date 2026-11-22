@@ -52,6 +52,10 @@ Project skeleton (CWE1).
   through a two step permission flow with an explanation before each prompt, or
   a fixed place from a bounded Open-Meteo place search; Open-Meteo and GeoNames
   credited beside the preview.
+- Refresh and taps (CWE6): a 30 minute periodic refresh with a network
+  constraint, scheduled from the settings screen and after a reboot or app
+  update; tap the weather to refresh, tap the clock to open alarms; every
+  refresh outcome kept in a bounded diagnostics history.
 
 ### Fixed
 

@@ -1,6 +1,9 @@
 package fyi.punkdev.thymian.widget
 
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
+import android.provider.AlarmClock
 import android.util.SizeF
 import android.util.TypedValue
 import android.view.View
@@ -17,6 +20,7 @@ import fyi.punkdev.thymian.domain.sizing.WeatherBlockSizing
 import fyi.punkdev.thymian.domain.sizing.WidgetSize
 import fyi.punkdev.thymian.domain.weather.TemperatureFormat
 import fyi.punkdev.thymian.domain.weather.WeatherSnapshot
+import fyi.punkdev.thymian.weather.WeatherTapReceiver
 import java.util.Locale
 
 /**
@@ -62,6 +66,7 @@ object WidgetRenderer {
         remoteViews.setClockFormats(R.id.clock_suffix, clockFormats.suffix)
         remoteViews.setClockFormats(R.id.clock_date, clockFormats.date)
         remoteViews.applyAppearance(WidgetAppearance.from(widgetState.settings))
+        remoteViews.applyTapTargets(context)
         remoteViews.setTextViewTextSize(R.id.clock_digits, TypedValue.COMPLEX_UNIT_DIP, sizeLayout.clock.digitsDp.toFloat())
         remoteViews.setTextViewTextSize(R.id.clock_date, TypedValue.COMPLEX_UNIT_DIP, sizeLayout.clock.dateDp.toFloat())
         remoteViews.setTextViewTextSize(R.id.clock_suffix, TypedValue.COMPLEX_UNIT_DIP, sizeLayout.clock.suffixDp.toFloat())
@@ -113,6 +118,26 @@ object WidgetRenderer {
             "${weather.condition.description}, ${TemperatureFormat.spoken(weather.temperatureCelsius, unit)}",
         )
     }
+
+    /**
+     * CWD12: the clock opens the system alarms, the weather asks for a refresh.
+     * Both pending intents are immutable with explicit targets, as Android 14 requires.
+     */
+    private fun RemoteViews.applyTapTargets(context: Context) {
+        val showAlarms = Intent(AlarmClock.ACTION_SHOW_ALARMS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        setOnClickPendingIntent(
+            R.id.clock_block,
+            PendingIntent.getActivity(context, ALARMS_REQUEST_CODE, showAlarms, PendingIntent.FLAG_IMMUTABLE),
+        )
+        val refreshWeather = Intent(context, WeatherTapReceiver::class.java)
+        setOnClickPendingIntent(
+            R.id.weather_block,
+            PendingIntent.getBroadcast(context, REFRESH_REQUEST_CODE, refreshWeather, PendingIntent.FLAG_IMMUTABLE),
+        )
+    }
+
+    private const val ALARMS_REQUEST_CODE = 1
+    private const val REFRESH_REQUEST_CODE = 2
 
     private fun visibleWhen(shown: Boolean): Int = if (shown) View.VISIBLE else View.GONE
 
