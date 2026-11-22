@@ -14,6 +14,11 @@ Status of the Plan stage: **open**. CWP1, CWP4 (source half) and CWP6 have
 evidence. CWP2, CWP3, CWP5 and CWP7 need the two phones and are blocked on the
 tooling gaps in section 1. Questions for the author are batched in section 10.
 
+(Status update, 22 November 2026: every decision is answered, see 10.0. CWP2 and
+CWP5 have emulator and Pixel evidence. Still open: the CWP7 Pixel soak results
+(9.1), a light wallpaper check on the Pixel for CWP3, and the CWP4 size bucket
+thresholds. Every Xiaomi item is not available before delivery, per CWD30.)
+
 ## 1. Development environment
 
 Read on 22 November 2026 by running commands on the development Mac.
@@ -587,6 +592,35 @@ visibility declaration.
 
 Batched for the Plan stage, in the five part form of datum 0.3. New decisions
 continue the specification's numbering from CWD14.
+
+### 10.0 Answers, 22 November 2026
+
+Every recommendation below was accepted on 22 November 2026, with CWD3 taking
+the revised recommendation. The questions are kept as asked, as history.
+
+| Decision | Answer |
+|---|---|
+| CWD3 | System `sans-serif-light` for all widget text; JetBrains Mono kept open as a later field experiment through the shared style |
+| CWD14 | Plan record is this file only; the specification is amended to match |
+| CWD15 | Specification opening names datum version 2 and no Part 4 modules; Part 0 reduced to a datum reference plus project rules |
+| CWD16 | README.md, TESTING.md, IMPLEMENTATION_DEVIATIONS.md, CHANGELOG.md, LICENSE, NOTICE, DEPENDENCIES.md, PRIVACY.md, SECURITY.md, HARDWARE_COMPATIBILITY.md, FIELD_NOTES.md (CWD30) and this record |
+| CWD17 | Datum typography scope, mechanically checked and proven against planted violations, vendored font and icon paths excluded by explicit list |
+| CWD18 | Builds installed and screenshots taken over adb; appearance, TalkBack and soak judgements, and every gate row, belong to the owner of the project |
+| CWD19 | Responses over 64 KiB refused before parsing; used fields required and range checked; unknown fields tolerated and counted; recorded in IMPLEMENTATION_DEVIATIONS.md |
+| CWD20 | Memory analysis not applicable (Kotlin on the JVM); a seeded mutation test over recorded fixtures in plain JUnit on every push |
+| CWD21 | Attribution on the settings screen beside the live preview, crediting Open-Meteo and GeoNames with links, and in the README |
+| CWD22 | Meteocons 3.0.0-next.10, pinned by version and per file digests |
+| CWD23 | Monochrome style tinted to the text colour; precipitation uses the `partly-cloudy-day-` and `partly-cloudy-night-` compounds |
+| CWD24 | Original SVGs vendored verbatim; one time conversion with a pinned tool recorded in DEPENDENCIES.md; a check that every condition has its drawables |
+| CWD25 | Platform LocationManager, last known fix first, fresh fix when one arrives |
+| CWD26 | ktlint, Android lint and Kotlin warnings as errors |
+| CWD27 | Closed: the SDK was installed (3.4) |
+| CWD28 | `/Users/wash/Keystores/thymian-release.jks`; alias and password sources asked with CWE1 |
+| CWD29 | Specification added as `docs/SPECIFICATION.md` |
+| CWD30 | No Xiaomi testing before delivery; emulator added; field use recorded in FIELD_NOTES.md |
+| CWD31 | Bounded in app event history and a Copy diagnostics button, added to scope |
+| CWD32 | The Xiaomi only receives release builds signed with the release keystore |
+| CWD33 | App and widget icon is Thyme's icon (8.6), decided when first raised |
 
 ### CWD3. Font rendering approach (still blocked on the CWP2 spike)
 
