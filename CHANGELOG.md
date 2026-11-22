@@ -9,6 +9,10 @@ tag also names the gates cleared at that commit.
 
 ## [1.0.3] - 2026-11-22
 
+Tagged `v1.0.3` at commit b91ae81. Release APK `thymian-1.0.3.apk`, SHA-256
+1d7f1be140f58abda80e9955b58cad1c26e40175e2eb1ff95ce9e30f6694f7de, signed with
+the same certificate as 1.0.0.
+
 Supported: Android 14 (API 34) and later. Built against API 37. It installs
 over 1.0.2.
 

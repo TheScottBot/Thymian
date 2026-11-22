@@ -62,6 +62,7 @@ a gate was cleared. Rows recording observations by the agent say so.
 | 2026-11-22 | Pixel 10 Pro | Unreleased debug, over 0.1.0 debug | Both taps; weather tap opening Google Weather | Owner | "Pixel works nicely"; Google Weather opened from the weather tap |
 | 2026-11-22 | None, checked from the release page | Releases 1.0.1 and 1.0.2 | Published APKs downloaded and checked | Agent | Both signed with the 1.0.0 certificate (v2); 1.0.2 is versionCode 3, minimum API 34, target 37 |
 | 2026-11-22 | Pixel 10 Pro | Unreleased 1.0.3 debug | Clock tap opening a chosen app | Owner | Works; the chosen app opened from the time |
+| 2026-11-22 | None, checked from the release page | Release 1.0.3 | Published APK downloaded and checked | Agent | Signed with the 1.0.0 certificate (v2); versionCode 4, minimum API 34, target 37 |
 
 Correction, 22 November 2026: during the CWE2 check the owner reported that no
 Thymian widget had been on the Pixel's home screen, and placed one then. The
