@@ -683,6 +683,7 @@ the revised recommendation. The questions are kept as asked, as history.
 | CWD37 | Approximate location only, as specified; revisit from field use (section 16) |
 | CWD38 | Only the fixture timestamp of the CWE5 TalkBack test changes, to the current time; assertions unchanged (section 17) |
 | CWD39 | Refreshes run without a network constraint, deviation D11 (section 17) |
+| CWD40 | First release is 1.0.0, versionCode 1 (section 19.4) |
 
 ### CWD3. Font rendering approach (still blocked on the CWP2 spike)
 
@@ -1419,3 +1420,5 @@ release, and its version number, are the owner's (CWD40).
 (22 November 2026: as directed, the installing steps moved into the README's
 Install section and `docs/INSTALLING.md` was removed; earlier mentions of it
 above are history.)
+
+**Answered 22 November 2026: 1.0.0**, with versionCode 1.

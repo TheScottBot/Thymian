@@ -7,7 +7,29 @@ tag also names the gates cleared at that commit.
 
 ## [Unreleased]
 
-Project skeleton (CWE1).
+## [1.0.0] - 2026-11-22
+
+First release for daily use: the transparent clock and weather widget, built
+through the specification's CWE1 to CWE7.
+
+Supported: Android 14 (API 34) and later. Built against API 37.
+
+Known limitations:
+
+- Not yet seen on HyperOS. The battery guidance names Autostart and No
+  restrictions without exact menu paths, and the widget shows its plain initial
+  layout after the app is force stopped, until the next refresh.
+- Widget text uses the system light sans serif, not JetBrains Mono (CWD3).
+- On launchers that round widgets, corner radii below the launcher's own have
+  no visible effect (CWD35).
+- Location is approximate, so the place name can be a neighbouring area (CWD37).
+
+Gates cleared at this release, by the owner on the Pixel 10 Pro: widget placed,
+clock judged by eye, resizing, two independent widgets, weather with automatic
+location and with a fixed place, and TalkBack. Gates still open: every Xiaomi
+item, the Pixel midnight, airplane mode, reboot and 24 hour checks, and the
+release installed over a previous release. Decisions CWD1 to CWD40 are
+answered; deviations are D1 to D12 in docs/IMPLEMENTATION_DEVIATIONS.md.
 
 ### Added
 
