@@ -2,6 +2,7 @@ package fyi.punkdev.thymian.settings
 
 import android.content.Context
 import android.text.format.DateUtils
+import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -17,8 +18,9 @@ import java.time.Instant
 /**
  * The diagnostics section (specification 1.3, CWD31): last refresh, last error,
  * location source, next scheduled refresh and recent events, plus Copy
- * diagnostics, which hands the plain report text to [onCopy]. Nothing here
- * shows or copies coordinates or weather values (datum 0.15).
+ * diagnostics, which hands the plain report text to [onCopy]. Closed by
+ * default behind its heading, so the settings above Save stay short. Nothing
+ * here shows or copies coordinates or weather values (datum 0.15).
  */
 class DiagnosticsSection(
     private val context: Context,
@@ -59,10 +61,11 @@ class DiagnosticsSection(
                 ).reversed()
                 .joinToString(separator = "\n") { event -> "${describeTime(event.occurredAt)} ${event.kind} ${event.detail}" }
         val reportText = DiagnosticsReport.asText(appVersion, events)
-        view =
+        val details =
             LinearLayout(context).apply {
                 orientation = LinearLayout.VERTICAL
-                addView(TextView(context).apply { text = context.getString(R.string.diagnostics_heading) })
+                tag = DETAILS_TAG
+                visibility = View.GONE
                 lines.forEach { line -> addView(TextView(context).apply { text = line }) }
                 if (recent.isNotEmpty()) {
                     addView(
@@ -78,6 +81,27 @@ class DiagnosticsSection(
                         setOnClickListener { onCopy(reportText) }
                     },
                 )
+            }
+        val heading =
+            TextView(context).apply {
+                tag = HEADING_TAG
+                text = context.getString(R.string.diagnostics_show)
+                isClickable = true
+                isFocusable = true
+                minHeight = (MINIMUM_TOUCH_DP * context.resources.displayMetrics.density).toInt()
+                gravity = Gravity.CENTER_VERTICAL
+                setTextAppearance(android.R.style.TextAppearance_DeviceDefault_Medium)
+                setOnClickListener {
+                    val opening = details.visibility != View.VISIBLE
+                    details.visibility = if (opening) View.VISIBLE else View.GONE
+                    text = context.getString(if (opening) R.string.diagnostics_hide else R.string.diagnostics_show)
+                }
+            }
+        view =
+            LinearLayout(context).apply {
+                orientation = LinearLayout.VERTICAL
+                addView(heading)
+                addView(details)
             }
     }
 
@@ -99,7 +123,12 @@ class DiagnosticsSection(
             },
         )
 
-    private companion object {
-        const val RECENT_EVENTS_SHOWN = 10
+    companion object {
+        const val HEADING_TAG = "diagnostics_heading"
+        const val DETAILS_TAG = "diagnostics_details"
+        private const val RECENT_EVENTS_SHOWN = 10
+
+        // Android's recommended minimum touch target.
+        private const val MINIMUM_TOUCH_DP = 48
     }
 }

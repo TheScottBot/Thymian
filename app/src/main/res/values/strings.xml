@@ -8,6 +8,8 @@
     <string name="colour_hex_description">%1$s as six hex digits</string>
     <string name="weather_stale_suffix">, last updated over an hour ago</string>
     <string name="diagnostics_heading">Diagnostics</string>
+    <string name="diagnostics_show">Show diagnostics</string>
+    <string name="diagnostics_hide">Hide diagnostics</string>
     <string name="diagnostics_last_refresh">Last refresh: %1$s</string>
     <string name="diagnostics_location_source">Location source: %1$s</string>
     <string name="diagnostics_last_error">Last error: %1$s</string>

@@ -100,4 +100,20 @@ class DiagnosticsSectionTest {
             assertTrue(reportText.contains("weather_unavailable failure=NETWORK"))
             assertFalse(reportText.contains("Berlin"))
         }
+
+    @Test
+    fun `the details start closed and open from the heading`() =
+        onMainThread {
+            val section = DiagnosticsSection(themedContext, "0.1.0", snapshot, events, nextRefresh = null) { }
+            val heading = section.view.findViewWithTag<TextView>(DiagnosticsSection.HEADING_TAG)
+            val details = section.view.findViewWithTag<View>(DiagnosticsSection.DETAILS_TAG)
+
+            assertTrue(details.visibility == View.GONE)
+            assertTrue(heading.text.toString() == "Show diagnostics")
+
+            heading.performClick()
+
+            assertTrue(details.visibility == View.VISIBLE)
+            assertTrue(heading.text.toString() == "Hide diagnostics")
+        }
 }
