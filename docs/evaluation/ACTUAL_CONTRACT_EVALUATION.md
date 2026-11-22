@@ -1012,3 +1012,19 @@ so no password is written to disk or seen by the agent.
 | targetSdk 35 or later forces edge to edge | Confirmed, and the opt out is gone from 36 |
 | Pixel 10 Pro runs Android 16 or later | Confirmed on the phone: Android 17, API 37 (37.1), build CP3A.261005.005 |
 | AlarmClock show alarms works on both phones | API confirmed; device check in CWE6 |
+
+## 12. CWE1 progress notes
+
+22 November 2026. Debug build of the empty widget (batch 3) installed on the
+API 34 emulator and the Pixel 10 Pro. On the emulator it was found in the picker
+with the Thyme icon, its preview and the description, and placed with adb input
+(evidence in `docs/evaluation/evidence/cwe1/`). On the Pixel it is registered
+with the widget service (`dumpsys appwidget` lists
+`fyi.punkdev.thymian/fyi.punkdev.thymian.widget.ThymianWidgetProvider`).
+Placement on the Pixel, in the owner's words: "All fine, placed it." Nothing
+else was written down for that gate.
+
+During the Pixel attempt a run of adb taps was sent without a fresh screenshot
+after the home screen layout had changed; a long press put the owner's weather
+widget into resize mode. The owner confirmed afterwards that nothing had moved.
+From then on every adb tap on the Pixel follows a fresh screenshot.
