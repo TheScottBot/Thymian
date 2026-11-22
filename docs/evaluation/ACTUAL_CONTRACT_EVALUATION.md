@@ -1142,3 +1142,25 @@ CWE4 Done when (dragging through every size never clips, overlaps or leaves text
 unreadably small): emulator, seen by the agent; Pixel, owed to the owner; Xiaomi,
 not available before delivery.
 (Pixel result, 22 November 2026, in the owner's words: "Looks fine".)
+
+## 16. CWE5 notes
+
+22 November 2026, batch A (domain only): the weather condition table for every
+documented WMO code with its Meteocons day and night icons (all 23 icon names
+confirmed present in the 3.0.0-next.10 monochrome set), temperature formatting
+from one Celsius value per refresh, and the location fallback chain with a
+recent last known fix used as it is (CWD25).
+
+### CWD36. One location for all widgets, or one per widget
+
+1. Blocked: whether automatic or fixed location is chosen once for the app or
+   separately for each widget.
+2. Why: specification 1.3 keeps appearance settings per widget, but says nothing
+   about location being per widget, and CWE3 left location settings to CWE5.
+3. Options: one location for the whole app, set from any widget's settings
+   screen; or a location per widget, so two widgets can show two places.
+4. Trade offs: one location means one weather request per refresh for every
+   widget and one permission flow. Per widget allows a second city but
+   multiplies requests and complicates the fallback and diagnostics.
+5. Recommendation: one location for the whole app; temperature unit stays per
+   widget, since conversion is local.
