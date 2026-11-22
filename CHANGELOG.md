@@ -9,6 +9,12 @@ tag also names the gates cleared at that commit.
 
 ## [1.0.0] - 2026-11-22
 
+Tagged `v1.0.0` at commit 2059b3b. Release APK `thymian-1.0.0.apk`, SHA-256
+3c5e2031d85c43c015c12a93d4c2137f52dbf3a80b131cc276d3030557838778, signed with
+the certificate whose SHA-256 is
+641c000dfd24bd4411fb21399bb5b4e00b7f78b8f906bf1d6869a89436ea7c88. Every later
+release must carry the same certificate.
+
 First release for daily use: the transparent clock and weather widget, built
 through the specification's CWE1 to CWE7.
 

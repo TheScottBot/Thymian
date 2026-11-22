@@ -1432,3 +1432,17 @@ own property, assigning it to itself. The pre build guard had checked only the
 environment variables. Fixed by renaming the values and making the guard read
 the signing config; the stronger guard was seen to fail on the bug before the
 rename and pass after, with dummy passwords. No real password was used.
+
+### 19.5 Release 1.0.0
+
+Published by the owner on 22 November 2026 at 15:24 UTC: release "Thymian
+1.0.0", tag `v1.0.0` at commit 2059b3b, not a draft or prerelease, with one
+asset, `thymian-1.0.0.apk`, 7,237,654 bytes, SHA-256
+3c5e2031d85c43c015c12a93d4c2137f52dbf3a80b131cc276d3030557838778 (GitHub's
+digest and a local hash agree). Checked read only by the agent: apksigner
+verifies the APK with signature scheme v2; signer CN=Wash Gust, OU=punkdev,
+O=punkdev, C=GB, certificate SHA-256
+641c000dfd24bd4411fb21399bb5b4e00b7f78b8f906bf1d6869a89436ea7c88; package
+fyi.punkdev.thymian, versionCode 1, versionName 1.0.0, minimum API 34, target
+API 37. It installed fresh on the API 34 emulator, replacing the debug build
+there after an uninstall.

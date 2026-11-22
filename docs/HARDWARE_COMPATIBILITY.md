@@ -57,6 +57,7 @@ a gate was cleared. Rows recording observations by the agent say so.
 | 2026-11-22 | Pixel 10 Pro | CWE7 debug | TalkBack over the widget | Owner | "Reads correctly" |
 | 2026-11-22 | Emulator API 34 | Verify debug | Reboot | Agent, over adb | Widget returned with settings and weather; `refresh_schedule_ensured reason=BOOT_COMPLETED` |
 | 2026-11-22 | Emulator API 34 | Verify debug | Clock set by hand to 23:59:30 | Agent, over adb | Date rolled to Mon, November 23; the 12:00 tick was missed, 11:59 shown until 12:01 |
+| 2026-11-22 | Emulator API 34 | Release 1.0.0 | Published APK downloaded and installed fresh | Agent, over adb | Signature verifies (v2), versionName 1.0.0, minimum API 34, widget provider registered |
 
 Correction, 22 November 2026: during the CWE2 check the owner reported that no
 Thymian widget had been on the Pixel's home screen, and placed one then. The
