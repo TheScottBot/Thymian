@@ -659,7 +659,7 @@ the revised recommendation. The questions are kept as asked, as history.
 | CWD3 | System `sans-serif-light` for all widget text; JetBrains Mono kept open as a later field experiment through the shared style |
 | CWD14 | Plan record is this file only; the specification is amended to match |
 | CWD15 | Specification opening names datum version 2 and no Part 4 modules; Part 0 reduced to a datum reference plus project rules |
-| CWD16 | README.md, TESTING.md, IMPLEMENTATION_DEVIATIONS.md, CHANGELOG.md, LICENSE, NOTICE, DEPENDENCIES.md, PRIVACY.md, SECURITY.md, HARDWARE_COMPATIBILITY.md, FIELD_NOTES.md (CWD30) and this record |
+| CWD16 | (DEPENDENCIES.md, IMPLEMENTATION_DEVIATIONS.md, HARDWARE_COMPATIBILITY.md and FIELD_NOTES.md live in `docs/`, the rest at the root, as directed 22 November 2026.) README.md, TESTING.md, IMPLEMENTATION_DEVIATIONS.md, CHANGELOG.md, LICENSE, NOTICE, DEPENDENCIES.md, PRIVACY.md, SECURITY.md, HARDWARE_COMPATIBILITY.md, FIELD_NOTES.md (CWD30) and this record |
 | CWD17 | Datum typography scope, mechanically checked and proven against planted violations, vendored font and icon paths excluded by explicit list |
 | CWD18 | Builds installed and screenshots taken over adb; appearance, TalkBack and soak judgements, and every gate row, belong to the owner of the project |
 | CWD19 | Responses over 64 KiB refused before parsing; used fields required and range checked; unknown fields tolerated and counted; recorded in IMPLEMENTATION_DEVIATIONS.md |

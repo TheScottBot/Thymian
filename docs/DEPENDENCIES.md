@@ -1,0 +1,98 @@
+# Dependencies
+
+Every third party component, font and icon set, with the facts datum 0.13
+requires before adding one. Versions are pinned in `gradle/libs.versions.toml`
+or, for CI actions, by commit hash in `.github/workflows/ci.yml`. Read on
+22 November 2026 unless stated.
+
+## Shipped in the app
+
+Nothing third party is compiled into the app yet beyond the Kotlin standard
+library, which AGP's built in Kotlin adds.
+
+| Component | Version | Licence | Why the platform is not enough |
+|---|---|---|---|
+| Kotlin standard library | 2.4.21 | Apache 2.0 | Kotlin is the required language (specification 2.3); the library is part of it |
+
+The debug APK is 2,701,916 bytes as built on 22 November 2026.
+
+Planned, recorded in full when added: WorkManager 2.12.0 (CWE6, specification
+2.3 guidance), Meteocons 3.0.0-next.10 icons (CWE5, CWD22). JetBrains Mono is
+not used (CWD3).
+
+## Material derived from other projects
+
+| Material | Source | Licence | Notes |
+|---|---|---|---|
+| App and widget icon | Thyme `internal/render/appicon.go` and `internal/theme/theme.go` at commit 01823cb9e7a296d501131b3958fae30871fc4b8c | MIT, Copyright (c) 2026 TheScottBot | Geometry and colours redrawn as an Android vector drawable (CWD33); no file copied |
+
+## Build and test tools
+
+These run on the developer's Mac and in CI. None ships in the app.
+
+### Android Gradle Plugin 9.5.1
+
+- **Provides:** the Android build, resource processing, built in Kotlin compilation and Android lint.
+- **Why:** the only supported way to build an Android app.
+- **Maintenance:** Google; 9.5.1 is the newest patch listed in the release notes on 22 November 2026.
+- **Licence:** Apache 2.0.
+- **Platform support:** compileSdk up to 37; needs Gradle 9.6.0 or later and JDK 17 or later.
+- **Security:** build time only; resolved from Google's Maven repository.
+- **Test strategy:** every build, locally and in CI.
+- **Replacement cost:** none realistic.
+
+### Kotlin Gradle plugin 2.4.21
+
+- **Provides:** compilation of the pure JVM modules (`domain`, `tools/typography-check`).
+- **Why:** the domain must build without Android (specification 2.1).
+- **Maintenance:** JetBrains; newest stable release, 8 October 2026.
+- **Licence:** Apache 2.0.
+- **Security:** build time only, from the Gradle Plugin Portal.
+- **Test strategy:** every build.
+- **Replacement cost:** none realistic.
+
+### Gradle 9.9.2 (wrapper)
+
+- **Provides:** the build tool, downloaded by `gradlew` and checked against the pinned `distributionSha256Sum`.
+- **Licence:** Apache 2.0.
+- **Security:** the distribution checksum is pinned; CI also validates the wrapper jar.
+- **Replacement cost:** none realistic.
+
+### JUnit 6.1.3
+
+- **Provides:** the unit test framework for the JVM modules.
+- **Why:** Kotlin and the JDK have no test runner.
+- **Maintenance:** the JUnit team; newest stable release on Maven Central.
+- **Licence:** Eclipse Public License 2.0. Test scope only, never distributed.
+- **Replacement cost:** low; the tests use plain assertions.
+
+### ktlint 1.8.0
+
+- **Provides:** the Kotlin formatter and style check required by datum 0.5 (CWD26).
+- **Why:** neither Kotlin nor AGP enforces a formatting standard.
+- **How it runs:** its self contained command line jar (`ktlint-cli`, shadowed variant, 71,470,431 bytes) through the root `ktlintCheck` and `ktlintFormat` tasks, so no Gradle plugin has to keep pace with AGP.
+- **Maintenance:** Pinterest and contributors; newest release on Maven Central.
+- **Licence:** MIT.
+- **Security:** build time only.
+- **Replacement cost:** low; ktfmt is the alternative.
+
+## Continuous integration actions
+
+Each is pinned to the full commit hash of its release.
+
+| Action | Release | Commit | Licence | Use |
+|---|---|---|---|---|
+| actions/checkout | v7.0.1 | 3d3c42e5aac5ba805825da76410c181273ba90b1 | MIT | Check out without keeping credentials |
+| actions/setup-java | v6.3.0 | d1374f8ac74474200d16ef8ecee22c7ae7a51880 | MIT | Temurin JDK 25 |
+| gradle/actions (setup-gradle) | v6.4.1 | 8da46b539cd8fe6ab27ca75128919a18d757604c | MIT, with a proprietary caching component | Wrapper validation and caching |
+| actions/upload-artifact | v7.0.2 | cf430e030ddbb5b0abf93d22962f4752f3646cd9 | MIT | Keep the debug APK |
+
+setup-gradle's default `enhanced` cache is `gradle-actions-caching`, which its
+repository marks as proprietary. The workflow sets `cache-provider: basic`,
+the MIT licensed implementation, so no proprietary component runs.
+
+## Android SDK packages
+
+Installed by the Android Studio setup wizard on the Mac and by `sdkmanager` in
+CI: SDK Platform 37 (`platforms;android-37.0`), build tools 36.0.0. Licensed
+under the Android Software Development Kit License Agreement.

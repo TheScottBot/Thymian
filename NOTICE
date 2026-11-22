@@ -1,0 +1,32 @@
+Thymian
+Copyright (c) 2026 TheScottBot
+Licensed under the MIT License; see LICENSE.
+
+This notice lists third party material shipped in the app. It grows as each
+item arrives; docs/DEPENDENCIES.md records build tools and why each is used.
+
+Shipped now
+
+Thyme app icon
+  The app and widget icon redraws the clock face of Thyme
+  (https://github.com/TheScottBot/Thyme, internal/render/appicon.go and
+  internal/theme/theme.go) as an Android vector drawable.
+  Copyright (c) 2026 TheScottBot. MIT License.
+
+Arriving in later phases
+
+Weather data by Open-Meteo.com (https://open-meteo.com/), under Creative
+Commons Attribution 4.0 International
+(https://creativecommons.org/licenses/by/4.0/). Shown on the settings screen
+from CWE5 (CWD21).
+
+Location names from GeoNames (https://www.geonames.org/) through the
+Open-Meteo geocoding API, under Creative Commons Attribution 4.0. Shown with
+the Open-Meteo credit from CWE5.
+
+Meteocons weather icons by Bas Milius (https://github.com/basmilius/meteocons),
+version 3.0.0-next.10. Copyright (c) 2020-present Bas Milius. MIT License.
+Vendored from CWE5 (CWD22).
+
+JetBrains Mono is not shipped: widget text uses the system sans-serif-light
+family (CWD3).
