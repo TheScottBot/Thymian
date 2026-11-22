@@ -31,16 +31,17 @@ tasks.test {
     }
 }
 
-val checkTypography = tasks.register<JavaExec>("checkTypography") {
-    group = "verification"
-    description = "Fails on em dashes, en dashes and hyphen runs anywhere in the repository (datum 0.8)."
-    classpath = sourceSets["main"].runtimeClasspath
-    mainClass.set("fyi.punkdev.thymian.typography.TypographyCheckMainKt")
-    val repositoryRoot = rootProject.layout.projectDirectory
-    args(repositoryRoot.asFile.absolutePath, repositoryRoot.file("config/typography-excluded-paths.txt").asFile.absolutePath)
-    // The repository contents change without Gradle seeing them, so the scan always runs.
-    outputs.upToDateWhen { false }
-}
+val checkTypography =
+    tasks.register<JavaExec>("checkTypography") {
+        group = "verification"
+        description = "Fails on em dashes, en dashes and hyphen runs anywhere in the repository (datum 0.8)."
+        classpath = sourceSets["main"].runtimeClasspath
+        mainClass.set("fyi.punkdev.thymian.typography.TypographyCheckMainKt")
+        val repositoryRoot = rootProject.layout.projectDirectory
+        args(repositoryRoot.asFile.absolutePath, repositoryRoot.file("config/typography-excluded-paths.txt").asFile.absolutePath)
+        // The repository contents change without Gradle seeing them, so the scan always runs.
+        outputs.upToDateWhen { false }
+    }
 
 tasks.check {
     dependsOn(checkTypography)

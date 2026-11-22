@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Thyme theme colours, from Thyme internal/theme/theme.go (CWD33). -->
+    <color name="thyme_panel_fill">#FF12131C</color>
+    <color name="thyme_time_text">#FFF894F8</color>
+</resources>

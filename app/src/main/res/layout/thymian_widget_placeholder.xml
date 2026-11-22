@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- CWE1 placeholder: proves the widget registers and places; the clock block replaces it in CWE2. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:shadowColor="#99000000"
+        android:shadowDy="1"
+        android:shadowRadius="4"
+        android:text="@string/app_name"
+        android:textColor="#FFFFFFFF"
+        android:textSize="20sp" />
+</FrameLayout>

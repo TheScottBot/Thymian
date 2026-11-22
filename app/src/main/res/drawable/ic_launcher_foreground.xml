@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Thyme's clock face (CWD33), redrawn from Thyme internal/render/appicon.go.
+    Thyme sizes everything from its tile; here the tile is the 72 dp adaptive
+    icon safe zone, so: face radius 0.27 of the tile (19.44), stroke 0.08
+    (5.76), minute hand 0.17 up and hour hand 0.12 right of centre, both with
+    round ends. Thyme's square outline is left out because launchers mask the
+    icon to their own shape.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:pathData="M54,34.56 A19.44,19.44 0 1,1 54,73.44 A19.44,19.44 0 1,1 54,34.56 Z"
+        android:strokeWidth="5.76"
+        android:strokeColor="@color/thyme_time_text" />
+
+    <path
+        android:pathData="M54,54 L54,44.64 M54,54 L59.76,54"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="5.76"
+        android:strokeColor="@color/thyme_time_text" />
+</vector>

@@ -32,15 +32,17 @@ fun main(arguments: Array<String>) {
 
 private fun listRepositoryFiles(repositoryRoot: File): List<String> {
     // Read only git: lists files without touching the index or history (datum 0.1).
-    val gitProcess = ProcessBuilder("git", "ls-files", "--cached", "--others", "--exclude-standard", "-z")
-        .directory(repositoryRoot)
-        .redirectError(ProcessBuilder.Redirect.INHERIT)
-        .start()
+    val gitProcess =
+        ProcessBuilder("git", "ls-files", "--cached", "--others", "--exclude-standard", "-z")
+            .directory(repositoryRoot)
+            .redirectError(ProcessBuilder.Redirect.INHERIT)
+            .start()
     val listing = gitProcess.inputStream.bufferedReader().readText()
     check(gitProcess.waitFor(60, TimeUnit.SECONDS) && gitProcess.exitValue() == 0) {
         "git ls-files failed in ${repositoryRoot.absolutePath}"
     }
     // A path deleted from the working tree but still in the index has nothing to scan.
-    return listing.split('\u0000')
+    return listing
+        .split('\u0000')
         .filter { listedPath -> listedPath.isNotEmpty() && File(repositoryRoot, listedPath).isFile }
 }

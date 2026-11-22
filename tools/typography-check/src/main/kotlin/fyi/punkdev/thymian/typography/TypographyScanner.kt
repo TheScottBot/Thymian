@@ -3,7 +3,9 @@ package fyi.punkdev.thymian.typography
 import java.io.File
 
 /** The datum 0.8 rules that can be checked mechanically. */
-enum class TypographyRule(val description: String) {
+enum class TypographyRule(
+    val description: String,
+) {
     EM_DASH("em dash (U+2014)"),
     EN_DASH("en dash (U+2013)"),
     HYPHEN_RUN("double or triple hyphen run"),
@@ -20,7 +22,6 @@ data class TypographyViolation(
 }
 
 object TypographyScanner {
-
     private const val EM_DASH = '\u2014'
     private const val EN_DASH = '\u2013'
 
@@ -32,7 +33,10 @@ object TypographyScanner {
     // A command line flag token such as --no-daemon, exempted by the datum.
     private val flagPrefixCharacters = setOf(' ', '\t', '(', '`', '"', '\'')
 
-    fun scanText(relativePath: String, text: String): List<TypographyViolation> =
+    fun scanText(
+        relativePath: String,
+        text: String,
+    ): List<TypographyViolation> =
         text.split('\n').flatMapIndexed { lineIndex, rawLine ->
             val line = rawLine.removeSuffix("\r")
             findViolationsInLine(line).map { (columnIndex, rule) ->
@@ -59,27 +63,34 @@ object TypographyScanner {
             }
 
     private fun findViolationsInLine(line: String): List<Pair<Int, TypographyRule>> {
-        val dashViolations = line.withIndex().mapNotNull { (characterIndex, character) ->
-            when (character) {
-                EM_DASH -> characterIndex to TypographyRule.EM_DASH
-                EN_DASH -> characterIndex to TypographyRule.EN_DASH
-                else -> null
+        val dashViolations =
+            line.withIndex().mapNotNull { (characterIndex, character) ->
+                when (character) {
+                    EM_DASH -> characterIndex to TypographyRule.EM_DASH
+                    EN_DASH -> characterIndex to TypographyRule.EN_DASH
+                    else -> null
+                }
             }
-        }
         if (tableSeparatorRowPattern.matches(line)) return dashViolations
-        val hyphenRunViolations = hyphenRunPattern.findAll(line)
-            .filterNot { hyphenRun -> isExemptHyphenRun(line, hyphenRun.range) }
-            .map { hyphenRun -> hyphenRun.range.first to TypographyRule.HYPHEN_RUN }
-            .toList()
+        val hyphenRunViolations =
+            hyphenRunPattern
+                .findAll(line)
+                .filterNot { hyphenRun -> isExemptHyphenRun(line, hyphenRun.range) }
+                .map { hyphenRun -> hyphenRun.range.first to TypographyRule.HYPHEN_RUN }
+                .toList()
         return (dashViolations + hyphenRunViolations).sortedBy { (columnIndex, _) -> columnIndex }
     }
 
-    private fun isExemptHyphenRun(line: String, runRange: IntRange): Boolean {
+    private fun isExemptHyphenRun(
+        line: String,
+        runRange: IntRange,
+    ): Boolean {
         if (runRange.count() != 2) return false
         val characterBefore = line.getOrNull(runRange.first - 1)
         val characterAfter = line.getOrNull(runRange.last + 1)
-        val isFlagToken = (characterBefore == null || characterBefore in flagPrefixCharacters) &&
-            characterAfter != null && characterAfter.isLetter()
+        val isFlagToken =
+            (characterBefore == null || characterBefore in flagPrefixCharacters) &&
+                characterAfter != null && characterAfter.isLetter()
         val isXmlCommentOpener = line.regionMatches(runRange.first - 2, "<!", 0, 2)
         val isXmlCommentCloser = characterAfter == '>'
         return isFlagToken || isXmlCommentOpener || isXmlCommentCloser
@@ -88,11 +99,11 @@ object TypographyScanner {
 
 /** The explicit list of paths the scan skips, one per line, `#` for comments. */
 object ExcludedPathList {
-
     private val patternCharacters = setOf('*', '?', '[')
 
     fun parse(listText: String): Set<String> =
-        listText.lineSequence()
+        listText
+            .lineSequence()
             .map { listLine -> listLine.trim() }
             .filter { listLine -> listLine.isNotEmpty() && !listLine.startsWith("#") }
             .onEach { listedPath ->
@@ -100,6 +111,5 @@ object ExcludedPathList {
                 require(listedPath.none { pathCharacter -> pathCharacter in patternCharacters }) {
                     "excluded path must be explicit, not a pattern: $listedPath"
                 }
-            }
-            .toSet()
+            }.toSet()
 }

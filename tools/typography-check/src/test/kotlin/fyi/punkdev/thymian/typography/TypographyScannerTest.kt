@@ -11,7 +11,6 @@ import java.io.File
  * the scan it tests. Each planted case proves a rule can fail (datum 0.4).
  */
 class TypographyScannerTest {
-
     private val emDash = "\u2014"
     private val enDash = "\u2013"
     private val doubleHyphen = "-".repeat(2)
@@ -19,7 +18,7 @@ class TypographyScannerTest {
 
     @Test
     fun `em dash is reported with line and column`() {
-        val violations = TypographyScanner.scanText("notes.md", "first line\nsecond ${emDash} line\n")
+        val violations = TypographyScanner.scanText("notes.md", "first line\nsecond $emDash line\n")
 
         assertEquals(listOf(TypographyViolation("notes.md", 2, 8, TypographyRule.EM_DASH)), violations)
     }
@@ -33,7 +32,7 @@ class TypographyScannerTest {
 
     @Test
     fun `double hyphen in prose is reported`() {
-        val violations = TypographyScanner.scanText("README.md", "It works ${doubleHyphen} mostly.")
+        val violations = TypographyScanner.scanText("README.md", "It works $doubleHyphen mostly.")
 
         assertEquals(listOf(TypographyViolation("README.md", 1, 10, TypographyRule.HYPHEN_RUN)), violations)
     }
@@ -47,7 +46,7 @@ class TypographyScannerTest {
 
     @Test
     fun `markdown table separator row is exempt`() {
-        val tableText = "| Name | Value |\n|${tripleHyphen}|:${tripleHyphen}:|\n| a | b |\n"
+        val tableText = "| Name | Value |\n|$tripleHyphen|:$tripleHyphen:|\n| a | b |\n"
 
         assertEquals(emptyList<TypographyViolation>(), TypographyScanner.scanText("table.md", tableText))
     }
@@ -61,8 +60,8 @@ class TypographyScannerTest {
 
     @Test
     fun `xml comment delimiters are exempt but a hyphen run inside the comment is not`() {
-        val cleanComment = "<!${doubleHyphen} Explains the layout. ${doubleHyphen}>"
-        val dirtyComment = "<!${doubleHyphen} Explains ${doubleHyphen} badly. ${doubleHyphen}>"
+        val cleanComment = "<!$doubleHyphen Explains the layout. $doubleHyphen>"
+        val dirtyComment = "<!$doubleHyphen Explains $doubleHyphen badly. $doubleHyphen>"
 
         assertEquals(emptyList<TypographyViolation>(), TypographyScanner.scanText("layout.xml", cleanComment))
         assertEquals(
@@ -86,16 +85,19 @@ class TypographyScannerTest {
     }
 
     @Test
-    fun `binary files are skipped and excluded paths are not read`(@TempDir repositoryRoot: File) {
+    fun `binary files are skipped and excluded paths are not read`(
+        @TempDir repositoryRoot: File,
+    ) {
         File(repositoryRoot, "image.png").writeBytes(byteArrayOf(0x50, 0x00, 0x2D, 0x2D, 0x41))
-        File(repositoryRoot, "gradlew").writeText("exec java ${doubleHyphen} \"\$@\"\n")
+        File(repositoryRoot, "gradlew").writeText("exec java $doubleHyphen \"\$@\"\n")
         File(repositoryRoot, "notes.md").writeText("clean${emDash}not\n")
 
-        val violations = TypographyScanner.scanFiles(
-            repositoryRoot,
-            relativePaths = listOf("image.png", "gradlew", "notes.md"),
-            excludedPaths = setOf("gradlew"),
-        )
+        val violations =
+            TypographyScanner.scanFiles(
+                repositoryRoot,
+                relativePaths = listOf("image.png", "gradlew", "notes.md"),
+                excludedPaths = setOf("gradlew"),
+            )
 
         assertEquals(listOf(TypographyViolation("notes.md", 1, 6, TypographyRule.EM_DASH)), violations)
     }
@@ -109,9 +111,10 @@ class TypographyScannerTest {
 
     @Test
     fun `exclusion list refuses a pattern because the datum requires explicit paths`() {
-        val failure = assertThrows(IllegalArgumentException::class.java) {
-            ExcludedPathList.parse("third_party/*\n")
-        }
+        val failure =
+            assertThrows(IllegalArgumentException::class.java) {
+                ExcludedPathList.parse("third_party/*\n")
+            }
 
         assertEquals("excluded path must be explicit, not a pattern: third_party/*", failure.message)
     }

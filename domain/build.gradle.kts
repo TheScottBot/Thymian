@@ -3,6 +3,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 // Pure Kotlin on the JVM: no Android on the classpath, so domain tests run in seconds (2.1).
 plugins {
     alias(libs.plugins.kotlin.jvm)
+    // Lets the app's lint analyse domain sources instead of treating them as an external jar.
+    alias(libs.plugins.android.lint)
 }
 
 java {
@@ -29,4 +31,9 @@ tasks.test {
         events("failed")
         exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
     }
+}
+
+lint {
+    warningsAsErrors = true
+    abortOnError = true
 }

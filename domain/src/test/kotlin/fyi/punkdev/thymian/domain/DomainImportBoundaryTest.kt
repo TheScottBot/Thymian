@@ -13,7 +13,6 @@ import java.io.File
  * the planted violation tests prove it can fail (datum 0.4).
  */
 class DomainImportBoundaryTest {
-
     @Test
     fun `scanner reports an android import planted in a source tree`(
         @TempDir plantedSourceRoot: File,
