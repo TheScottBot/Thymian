@@ -1,0 +1,11 @@
+# Build and tool state, recreated by the documented Gradle commands.
+.gradle/
+.kotlin/
+build/
+local.properties
+.idea/
+*.iml
+
+# Signing material never enters the repository (CWD8).
+*.jks
+*.keystore
