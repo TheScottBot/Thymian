@@ -6,5 +6,21 @@
     <string name="settings_save">Save</string>
     <string name="setting_value_with_unit">%1$s: %2$d %3$s</string>
     <string name="colour_hex_description">%1$s as six hex digits</string>
+    <string name="location_heading">Location, for all widgets</string>
+    <string name="location_mode_automatic">Follow the phone</string>
+    <string name="location_mode_fixed">Fixed place</string>
+    <string name="location_permission_explain_approximate">Thymian uses your approximate location to show the weather where you are. Next, Android asks whether to share it.</string>
+    <string name="location_permission_explain_background">To keep the weather right while you are not using the app, choose Allow all the time on the next screen.</string>
+    <string name="location_permission_granted">Location is allowed all the time.</string>
+    <string name="location_permission_continue">Continue</string>
+    <string name="location_search_hint">Search for a place</string>
+    <string name="location_search">Search</string>
+    <string name="location_searching">Searching</string>
+    <string name="location_search_too_short">Type at least two letters.</string>
+    <string name="location_search_failed">Search failed. Check the connection and try again.</string>
+    <string name="location_search_nothing_found">No places found.</string>
+    <string name="location_chosen_place">Chosen place: %1$s</string>
+    <string name="location_no_place_chosen">No place chosen yet.</string>
+    <string name="settings_attribution"><![CDATA[<a href="https://open-meteo.com/">Weather data by Open-Meteo.com</a>, licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Place search by <a href="https://www.geonames.org/">GeoNames</a>.]]></string>
     <string name="settings_preview_description">Preview of the widget with these settings</string>
 </resources>

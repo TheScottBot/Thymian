@@ -35,6 +35,7 @@ before it is trusted.
 | Android lint | Reported three real issues on first run, 22 November 2026, before they were fixed |
 | Release signing guard | Run without the variables, 22 November 2026 |
 | Open-Meteo mutation test | With the temperature range check removed it passed at first, because random byte changes never formed an out of range number; boundary number substitution was added, and it then failed with "temperature 99.0", 22 November 2026 |
+| Place search mutation test | With the coordinate check removed from the place search parser it failed, 22 November 2026 |
 | Weather icon conversion | A one dp change planted in a committed drawable was not caught at first because Gradle called the tests up to date; the drawables, lookup and SVGs were declared as test inputs, and the planted change then failed the test, 22 November 2026 |
 | On device tests | Failed first because nothing they call existed; then the en-GB date test failed on real locale data (below), 22 November 2026 |
 

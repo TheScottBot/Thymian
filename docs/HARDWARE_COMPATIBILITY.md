@@ -37,6 +37,9 @@ a gate was cleared. Rows recording observations by the agent say so.
 | 2026-11-22 | Pixel 10 Pro | CWE4 debug | Widget dragged through several sizes, checked for clipping | Owner | "Looks fine" |
 | 2026-11-22 | Emulator API 34 | CWE5 D1 debug | On device tests, 39 | Agent, Gradle connected run | All pass |
 | 2026-11-22 | Emulator API 34 | CWE5 D1 debug | Refresh after placing a widget, location granted by adb | Agent, over adb | Worker ran; no fix on the emulator, so `location_unavailable reason=NO_FIX` logged and the widget kept rendering |
+| 2026-11-22 | Emulator API 34 | CWE5 D2 debug | On device tests, 44 | Agent, Gradle connected run | All pass |
+| 2026-11-22 | Pixel 10 Pro | CWE5 D2 debug | On device tests, 44 | Agent, instrumentation runner | All pass |
+| 2026-11-22 | Emulator API 34 | CWE5 D2 debug | Live place search for Berlin, fixed place saved, refresh | Agent, over adb | 10 candidates; weather fetched (status 200, 390 bytes); widget shows Berlin, overcast day icon tinted white, 5° |
 
 Correction, 22 November 2026: during the CWE2 check the owner reported that no
 Thymian widget had been on the Pixel's home screen, and placed one then. The

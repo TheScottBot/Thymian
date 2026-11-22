@@ -18,7 +18,7 @@ decision that allowed it, and the covering test. Newest last.
 - **Instead:** responses over 64 KiB are refused before parsing; the fields used are required and range checked; unknown fields are tolerated and counted in the log.
 - **Why:** Open-Meteo is a third party contract that already returns metadata Thymian does not use and may add more; rejecting them would blank the weather until a new build is sideloaded.
 - **Decision:** CWD19, 22 November 2026.
-- **Covering test:** `OpenMeteoForecastTest`, `unknown fields are tolerated and counted`, and the size bound in `a body over 64 KiB is refused before parsing`.
+- **Covering test:** `OpenMeteoForecastTest`, `unknown fields are tolerated and counted`, and the size bound in `a body over 64 KiB is refused before parsing`. The place search parser follows the same rule (`OpenMeteoGeocodingTest`).
 
 ## D3. No sanitiser or fuzzing engine
 

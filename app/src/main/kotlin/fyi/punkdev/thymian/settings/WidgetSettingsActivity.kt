@@ -4,11 +4,14 @@ import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.os.Bundle
+import android.text.Html
+import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.TextView
 import fyi.punkdev.thymian.R
 import fyi.punkdev.thymian.composition.CompositionRoot
 import fyi.punkdev.thymian.domain.WidgetState
@@ -29,6 +32,10 @@ class WidgetSettingsActivity : Activity() {
     private lateinit var settingsStore: WidgetSettingsStore
     private lateinit var currentSettings: WidgetSettings
     private lateinit var previewContainer: FrameLayout
+    private lateinit var locationSection: LocationSettingsSection
+    private val searchExecutor =
+        java.util.concurrent.Executors
+            .newSingleThreadExecutor()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +55,20 @@ class WidgetSettingsActivity : Activity() {
         currentSettings = settingsStore.load(appWidgetId)
         previewContainer = findViewById(R.id.settings_preview)
 
+        findViewById<TextView>(R.id.settings_attribution).apply {
+            text = Html.fromHtml(getString(R.string.settings_attribution), Html.FROM_HTML_MODE_COMPACT)
+            movementMethod = LinkMovementMethod.getInstance()
+        }
+        locationSection =
+            LocationSettingsSection(
+                context = this,
+                initialPreference = CompositionRoot.locationPreference(this),
+                placeSearch = CompositionRoot.placeSearch(this),
+                backgroundExecutor = searchExecutor,
+                mainExecutor = mainExecutor,
+            ) { permission -> requestPermissions(arrayOf(permission), LOCATION_PERMISSION_REQUEST) }
+        findViewById<LinearLayout>(R.id.settings_location).addView(locationSection.view)
+
         val controlsContainer = findViewById<LinearLayout>(R.id.settings_controls)
         SettingControls(this) { updatedSettings ->
             currentSettings = updatedSettings
@@ -55,6 +76,20 @@ class WidgetSettingsActivity : Activity() {
         }.build(currentSettings).forEach { control -> controlsContainer.addView(control) }
         findViewById<View>(R.id.settings_save).setOnClickListener { saveAndFinish() }
         refreshPreview()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray,
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST) locationSection.refreshPermissionState()
+    }
+
+    override fun onDestroy() {
+        searchExecutor.shutdownNow()
+        super.onDestroy()
     }
 
     private fun refreshPreview() {
@@ -68,6 +103,8 @@ class WidgetSettingsActivity : Activity() {
 
     private fun saveAndFinish() {
         settingsStore.save(appWidgetId, currentSettings)
+        // Location is one choice for the whole app (CWD36), saved from whichever widget's screen is open.
+        CompositionRoot.locationPreferenceStore(this).save(locationSection.preference())
         AppWidgetManager.getInstance(this).updateAppWidget(appWidgetId, renderedWidget())
         setResult(RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId))
         Log.i(LOG_TAG, "event=widget_settings_saved")
@@ -93,5 +130,6 @@ class WidgetSettingsActivity : Activity() {
 
     private companion object {
         const val LOG_TAG = "Thymian"
+        const val LOCATION_PERMISSION_REQUEST = 1
     }
 }

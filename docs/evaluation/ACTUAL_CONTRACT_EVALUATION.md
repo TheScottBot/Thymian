@@ -1185,3 +1185,10 @@ granted through adb, a refresh ran when a widget was placed and logged
 location provider, as in the Plan spike (7.2), so the success path waits for
 the fixed place (batch D2) on the emulator and the permission flow on the Pixel.
 WorkManager joined the dependencies here for the one off refresh.
+
+22 November 2026, batch D2: location settings, place search, the permission
+flow and the attribution (CWD21) beside the preview. On the API 34 emulator a
+live search for Berlin returned 10 candidates; choosing Berlin, Germany as the
+fixed place and saving gave a refresh with `location_source=FIXED_CHOSEN`, and
+the widget showed "Berlin", the overcast day icon tinted white, and "5°", in
+the reference layout. The Pixel permission flow is the owner's to run.

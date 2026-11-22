@@ -48,6 +48,10 @@ Project skeleton (CWE1).
   refreshes, a one off refresh when a widget is placed or saved, and the weather
   block showing place, tinted icon and temperature in each widget's unit with a
   spoken description.
+- Location settings (CWE5): one location for all widgets, following the phone
+  through a two step permission flow with an explanation before each prompt, or
+  a fixed place from a bounded Open-Meteo place search; Open-Meteo and GeoNames
+  credited beside the preview.
 - Project documents: README, BUILDING, LICENSE, NOTICE, DEPENDENCIES, TESTING,
   IMPLEMENTATION_DEVIATIONS, PRIVACY, SECURITY, HARDWARE_COMPATIBILITY and
   FIELD_NOTES.
