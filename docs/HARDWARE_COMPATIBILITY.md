@@ -25,6 +25,8 @@ a gate was cleared. Rows recording observations by the agent say so.
 | 2026-11-22 | Pixel 10 Pro | CWE2 debug | On device tests, 6 | Agent, instrumentation runner | All pass |
 | 2026-11-22 | Emulator API 34 | CWE2 debug | Clock block placed; minute boundary; device switched to 24 hour; time zone to Berlin | Agent, over adb | Ticked 13:10 to 13:11; showed 13:11 without the suffix; showed 14:11 at once |
 | 2026-11-22 | Pixel 10 Pro | CWE2 debug | Clock block placed and judged by eye | Owner | "Looks good. It wasn't placed anywhere so I've placed it and its good" |
+| 2026-11-22 | Emulator API 34 | CWE3 batch B debug | On device tests, 13 | Agent, Gradle connected run | All pass |
+| 2026-11-22 | Pixel 10 Pro | CWE3 batch B debug | On device tests, 13 | Agent, instrumentation runner | All pass |
 
 Correction, 22 November 2026: during the CWE2 check the owner reported that no
 Thymian widget had been on the Pixel's home screen, and placed one then. The

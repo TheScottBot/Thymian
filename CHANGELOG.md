@@ -26,6 +26,10 @@ Project skeleton (CWE1).
   in the shared sans-serif-light text style with the fixed shadow; 12 hour,
   24 hour and follow device modes; the date pattern from the device locale;
   re-rendered when the locale changes; on device tests.
+- Widget settings (CWE3): every setting declared once with its default, bounds
+  and label; stored per widget in SharedPreferences with clamping, a length
+  bound and a schema version; background colour, opacity, corner radius, text
+  colour and date visibility rendered; settings deleted with their widget.
 - Project documents: README, BUILDING, LICENSE, NOTICE, DEPENDENCIES, TESTING,
   IMPLEMENTATION_DEVIATIONS, PRIVACY, SECURITY, HARDWARE_COMPATIBILITY and
   FIELD_NOTES.

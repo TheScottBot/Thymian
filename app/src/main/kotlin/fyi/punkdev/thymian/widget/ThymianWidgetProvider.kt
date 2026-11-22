@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import fyi.punkdev.thymian.composition.CompositionRoot
 import fyi.punkdev.thymian.domain.WidgetState
 
 /**
@@ -22,6 +23,15 @@ class ThymianWidgetProvider : AppWidgetProvider() {
         appWidgetIds: IntArray,
     ) {
         renderAll(context, appWidgetManager, appWidgetIds, reason = "update")
+    }
+
+    override fun onDeleted(
+        context: Context,
+        appWidgetIds: IntArray,
+    ) {
+        val settingsStore = CompositionRoot.widgetSettingsStore(context)
+        appWidgetIds.forEach { appWidgetId -> settingsStore.delete(appWidgetId) }
+        Log.i(LOG_TAG, "event=widget_settings_deleted instance_count=${appWidgetIds.size}")
     }
 
     override fun onReceive(
@@ -43,9 +53,10 @@ class ThymianWidgetProvider : AppWidgetProvider() {
         reason: String,
     ) {
         val locale = context.resources.configuration.locales[0]
+        val settingsStore = CompositionRoot.widgetSettingsStore(context)
         for (appWidgetId in appWidgetIds) {
-            // Settings per instance arrive in CWE3; until then every instance uses the defaults.
-            appWidgetManager.updateAppWidget(appWidgetId, WidgetRenderer.render(context, WidgetState(), locale))
+            val widgetState = WidgetState(settingsStore.load(appWidgetId))
+            appWidgetManager.updateAppWidget(appWidgetId, WidgetRenderer.render(context, widgetState, locale))
         }
         Log.i(LOG_TAG, "event=widgets_rendered reason=$reason instance_count=${appWidgetIds.size}")
     }
