@@ -35,6 +35,7 @@ before it is trusted.
 | Android lint | Reported three real issues on first run, 22 November 2026, before they were fixed |
 | Release signing guard | Run without the variables, 22 November 2026 |
 | Open-Meteo mutation test | With the temperature range check removed it passed at first, because random byte changes never formed an out of range number; boundary number substitution was added, and it then failed with "temperature 99.0", 22 November 2026 |
+| Widget layout accessibility | With the weather icon's decorative marking removed, it failed naming the icon in the wide and tall layouts, 22 November 2026. The check was written after the layouts, which already met it, so its proof is the planted violation |
 | On device test name rule | A comma planted in an on device test name was reported at its line, 22 November 2026 |
 | Place search mutation test | With the coordinate check removed from the place search parser it failed, 22 November 2026 |
 | Weather icon conversion | A one dp change planted in a committed drawable was not caught at first because Gradle called the tests up to date; the drawables, lookup and SVGs were declared as test inputs, and the planted change then failed the test, 22 November 2026 |

@@ -1304,3 +1304,25 @@ is not available before delivery. On the emulator, offline refreshes recorded
 `failure=NETWORK` and showed the stale symbol, and refreshes succeeded again
 once the network returned; diagnostics showed both. A 24 hour Pixel run of the
 real refresh, for comparison, is owed to the owner.
+
+## 18. CWE7 notes
+
+22 November 2026: the widget layout accessibility test inflates the small,
+wide and tall layouts and fails on any non container view that has no text, no
+description and no decorative marking; text views describe themselves. Its
+second test first assumed the time digits had no description; AOSP
+`TextClock.onTimeChanged` sets the description from the shown time on every
+tick, so the test now checks the description matches the time. Removing the
+weather icon's decorative marking made it fail for the wide and tall layouts.
+
+Attribution (CWD21) is on the settings screen beside the preview since CWE5;
+the app icon has been in place since CWE1 (deviation D5). Owed to the owner:
+TalkBack on the Pixel, and the BUILDING.md steps from a clean checkout once the
+work is committed.
+
+Clean checkout, 22 November 2026: a fresh clone of commit d9c1fe7 into the
+scratch directory ran `./gradlew check assembleDebug` successfully (266 files,
+0 typography violations) and the APK installed on the emulator with
+`adb install -r`, following `docs/BUILDING.md`. The debug APK is now 9,071,708
+bytes, up from 2,701,916 in CWE1, from WorkManager, kotlinx-serialization and
+the drawables, with no shrinking on debug builds.

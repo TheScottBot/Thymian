@@ -16,7 +16,7 @@ library, which AGP's built in Kotlin adds.
 | kotlinx-serialization-json (with kotlinx-serialization-core) | 1.13.0 | Apache 2.0 | See below |
 | androidx.work:work-runtime | 2.12.0 | Apache 2.0 | See below |
 
-The debug APK is 2,701,916 bytes as built on 22 November 2026.
+The debug APK was 2,701,916 bytes after CWE1 and 9,071,708 bytes after CWE6, both on 22 November 2026; debug builds are not shrunk.
 
 JetBrains Mono is not used (CWD3).
 

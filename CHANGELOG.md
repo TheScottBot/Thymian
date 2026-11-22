@@ -67,6 +67,8 @@ Project skeleton (CWE1).
 - HyperOS battery guidance (CWE6): on Xiaomi, Redmi and POCO phones only, a
   closed section naming Autostart and No restrictions with a button to the
   app's system settings.
+- Accessibility check (CWE7): every view in every widget layout is described
+  or marked decorative, proven against a planted violation.
 
 ### Fixed
 
