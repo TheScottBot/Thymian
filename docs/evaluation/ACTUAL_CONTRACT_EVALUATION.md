@@ -677,6 +677,7 @@ the revised recommendation. The questions are kept as asked, as history.
 | CWD31 | Bounded in app event history and a Copy diagnostics button, added to scope |
 | CWD32 | The Xiaomi only receives release builds signed with the release keystore |
 | CWD33 | App and widget icon is Thyme's icon (8.6), decided when first raised |
+| CWD34 | Date line keeps the locale's punctuation, including the comma on API 34 en-GB (section 13) |
 
 ### CWD3. Font rendering approach (still blocked on the CWP2 spike)
 
@@ -1062,3 +1063,21 @@ while the Pixel was on mobile data without Wi-Fi.
    keeps other locales untouched at the cost of a locale check.
 5. Recommendation: follow the locale exactly, as CWD13 decided; the comma is
    the Xiaomi's own convention for British English.
+
+**Answered 22 November 2026: keep the comma.** The date line follows the device
+locale exactly, as CWD13 decided, so the Xiaomi on API 34 will most likely read
+"Sun, 22 November".
+
+CWE2 Done when, 22 November 2026:
+
+| Check | Pixel 10 Pro | API 34 emulator | Xiaomi 11T Pro |
+|---|---|---|---|
+| Matches the reference layout | Owner, by eye: "Looks good" | Agent screenshot | Not available before delivery |
+| Ticks across a minute boundary | Not separately recorded | Seen, 13:10 to 13:11 | Not available |
+| Survives a time zone change | Not run (owner's phone settings left alone) | Seen, London to Berlin | Not available |
+| Switches between 12 and 24 hour | Not run on the device; forced modes covered by on device tests | Seen, device setting 12 to 24 | Not available |
+
+(Correction, 22 November 2026: section 12 records the owner's CWE1 words "All
+fine, placed it" for the Pixel, but during this check the owner said no
+Thymian widget had been placed and placed one then. See
+`docs/HARDWARE_COMPATIBILITY.md`.)
