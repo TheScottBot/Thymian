@@ -7,6 +7,18 @@ tag also names the gates cleared at that commit.
 
 ## [Unreleased]
 
+## [1.0.3] - 2026-11-22
+
+Supported: Android 14 (API 34) and later. Built against API 37. It installs
+over 1.0.2.
+
+### Fixed
+
+- Touching the clock still did nothing on the Xiaomi. The phone says it can
+  show the alarm list but then refuses to open it. The tap now moves on to the
+  clock app when that happens. Copy diagnostics logs each step, with
+  `tap_fallback` for the app it moved on to.
+
 ## [1.0.2] - 2026-11-22
 
 Tagged `v1.0.2` at commit 3a1d653. Release APK `thymian-1.0.2.apk`, SHA-256

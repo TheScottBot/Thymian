@@ -41,6 +41,14 @@ class TapEventsTest {
     }
 
     @Test
+    fun `a clock tap that moves on to another target records the target it moved to`() {
+        assertEquals(
+            DiagnosticEvent(tappedAt, "tap_fallback", "side=clock target=clock_app package=com.android.deskclock"),
+            TapEvents.clockFellBack(tappedAt, ClockTapTarget.ClockApp("com.android.deskclock")),
+        )
+    }
+
+    @Test
     fun `a failed tap counts as the last error in diagnostics`() {
         val failure = TapEvents.tapFailed(tappedAt, TapSide.CLOCK, "SecurityException")
 

@@ -22,6 +22,12 @@ object TapEvents {
         action: WeatherTapAction,
     ): DiagnosticEvent = DiagnosticEvent(tappedAt, "tapped", "side=weather action=${action.diagnosticName}")
 
+    /** The clock tap moved on to [target] after the previous target refused to open. */
+    fun clockFellBack(
+        tappedAt: Instant,
+        target: ClockTapTarget,
+    ): DiagnosticEvent = DiagnosticEvent(tappedAt, "tap_fallback", "side=clock ${target.detail}")
+
     /** [reason] is kept only when it is one word, such as an exception's class name. */
     fun tapFailed(
         tappedAt: Instant,

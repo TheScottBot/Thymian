@@ -8,6 +8,7 @@ import fyi.punkdev.thymian.domain.tap.ClockTapTarget
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -20,6 +21,15 @@ class ClockTapResolverTest {
     fun `a phone with a clock app finds a target for the clock tap`() {
         // The test devices carry the Google clock, which answers show alarms; the manifest must make it visible.
         assertNotEquals(ClockTapTarget.NoTarget, ClockTapResolver.target(context))
+    }
+
+    @Test
+    fun `every clock tap candidate on the phone has an intent to open`() {
+        // A refused target moves on to the next one, so each must lead somewhere.
+        val candidates = ClockTapResolver.candidates(context)
+
+        assertTrue(candidates.isNotEmpty())
+        assertTrue(candidates.all { target -> ClockTapResolver.intentFor(context, target) != null })
     }
 
     @Test

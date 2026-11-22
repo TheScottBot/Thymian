@@ -8,7 +8,10 @@ import fyi.punkdev.thymian.domain.tap.ClockTapTarget
 
 /** Asks the phone what can answer the clock tap. The manifest's queries make these apps visible to the check. */
 object ClockTapResolver {
-    fun target(context: Context): ClockTapTarget {
+    fun target(context: Context): ClockTapTarget = candidates(context).firstOrNull() ?: ClockTapTarget.NoTarget
+
+    /** Every target worth trying, best first; a target that refuses to start moves the tap on to the next. */
+    fun candidates(context: Context): List<ClockTapTarget> {
         val packageManager = context.packageManager
         val showAlarmsHandled =
             packageManager.resolveActivity(
@@ -19,7 +22,7 @@ object ClockTapResolver {
             ClockTapTarget.KNOWN_CLOCK_PACKAGES
                 .filter { packageName -> packageManager.getLaunchIntentForPackage(packageName) != null }
                 .toSet()
-        return ClockTapTarget.choose(showAlarmsHandled, launchableClockPackages)
+        return ClockTapTarget.candidates(showAlarmsHandled, launchableClockPackages)
     }
 
     fun intentFor(

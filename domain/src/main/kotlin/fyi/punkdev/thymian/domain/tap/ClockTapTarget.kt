@@ -36,20 +36,25 @@ sealed interface ClockTapTarget {
                 "com.coloros.alarmclock",
             )
 
+        /**
+         * Every target worth trying, best first: the alarm list, then each installed
+         * known clock app. On the Xiaomi the alarm list resolved but refused to start
+         * (reported 22 November 2026), so the tap must be able to move on.
+         */
+        fun candidates(
+            showAlarmsHandled: Boolean,
+            launchableClockPackages: Set<String>,
+        ): List<ClockTapTarget> =
+            buildList {
+                if (showAlarmsHandled) add(ShowAlarms)
+                KNOWN_CLOCK_PACKAGES
+                    .filter { packageName -> packageName in launchableClockPackages }
+                    .forEach { packageName -> add(ClockApp(packageName)) }
+            }
+
         fun choose(
             showAlarmsHandled: Boolean,
             launchableClockPackages: Set<String>,
-        ): ClockTapTarget =
-            when {
-                showAlarmsHandled -> {
-                    ShowAlarms
-                }
-
-                else -> {
-                    KNOWN_CLOCK_PACKAGES
-                        .firstOrNull { packageName -> packageName in launchableClockPackages }
-                        ?.let { packageName -> ClockApp(packageName) } ?: NoTarget
-                }
-            }
+        ): ClockTapTarget = candidates(showAlarmsHandled, launchableClockPackages).firstOrNull() ?: NoTarget
     }
 }

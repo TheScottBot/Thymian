@@ -34,3 +34,20 @@ now has a `clock_tap target=` line saying which. Every touch on either side
 is now logged as `tapped side=clock` or `tapped side=weather`, with
 `tap_failed` and a reason when opening fails, so the next report shows
 whether touches reach the app at all. Still to confirm on the Xiaomi.
+
+## 22 November 2026, 1.0.2: weather tap works; time tap refused
+
+Seen: touching the weather refreshed and opened the chosen app. Touching the
+time still did nothing. Diagnostics showed `clock_tap target=show_alarms`, and
+every clock touch logged `tapped side=clock target=show_alarms` followed at
+once by `tap_failed side=clock reason=SecurityException`.
+
+Cause: the phone answers the alarm list request, so the clock app fallback
+was never used, but starting that screen is refused. The earlier guess that
+nothing answered the request was wrong.
+
+Changed: the clock tap tries the alarm list, then each installed clock app in
+turn, logging `tap_failed` for each refusal and `tap_fallback` for the next
+target. On the Xiaomi it should log the refusal, then
+`tap_fallback side=clock target=clock_app package=com.android.deskclock`, and
+open the Clock app. Still to confirm on the Xiaomi.

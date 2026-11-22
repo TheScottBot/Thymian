@@ -40,6 +40,34 @@ class ClockTapTargetTest {
     }
 
     @Test
+    fun `the clock app follows the alarm list so a refused alarm list still opens something`() {
+        // Reported 22 November 2026: on the Xiaomi the alarm list resolved but refused to start with a SecurityException.
+        assertEquals(
+            listOf(ClockTapTarget.ShowAlarms, ClockTapTarget.ClockApp("com.android.deskclock")),
+            ClockTapTarget.candidates(showAlarmsHandled = true, launchableClockPackages = setOf("com.android.deskclock")),
+        )
+    }
+
+    @Test
+    fun `every installed known clock app is a candidate in order of preference`() {
+        assertEquals(
+            listOf(ClockTapTarget.ClockApp("com.google.android.deskclock"), ClockTapTarget.ClockApp("com.sec.android.app.clockpackage")),
+            ClockTapTarget.candidates(
+                showAlarmsHandled = false,
+                launchableClockPackages = setOf("com.sec.android.app.clockpackage", "com.google.android.deskclock"),
+            ),
+        )
+    }
+
+    @Test
+    fun `with nothing to open there are no candidates`() {
+        assertEquals(
+            emptyList<ClockTapTarget>(),
+            ClockTapTarget.candidates(showAlarmsHandled = false, launchableClockPackages = emptySet()),
+        )
+    }
+
+    @Test
     fun `the Xiaomi clock is among the known clock apps`() {
         assertTrue("com.android.deskclock" in ClockTapTarget.KNOWN_CLOCK_PACKAGES)
     }
