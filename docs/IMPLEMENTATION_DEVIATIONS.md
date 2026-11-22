@@ -83,3 +83,11 @@ decision that allowed it, and the covering test. Newest last.
 - **Why:** a live loop (WorkManager scheduling toggles the app's components, Android answers with a widget update, the update scheduled a refresh) was calling Open-Meteo once a second from both test devices, and force stopping did not end it. Stopping live traffic to a third party came before the test.
 - **Decision:** taken in the moment and reported to the owner the same turn.
 - **Covering test:** `RefreshThrottleTest`, which keeps any future loop to one automatic refresh per 10 minutes; the loop itself was confirmed gone on both devices by watching the log after the fix.
+
+## D11. The refresh has no network constraint
+
+- **Rule:** specification CWE6: "30 minute periodic refresh with a network constraint".
+- **Instead:** the periodic refresh and the one off refreshes run without a network constraint.
+- **Why:** WorkManager holds constrained work until a network appears, so while offline nothing ran, nothing re-rendered, the stale indicator never appeared and diagnostics never recorded the failure; CWE6's Done when needs both. Offline, an attempt now fails within the throttle and records `failure=NETWORK`.
+- **Decision:** CWD39, 22 November 2026.
+- **Covering test:** none automated; on the API 34 emulator with the network off, a tap logged `failure=NETWORK` and the widget showed the stale symbol over the last good weather (evidence in `docs/evaluation/evidence/cwe6/`).

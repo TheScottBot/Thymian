@@ -18,9 +18,11 @@ import fyi.punkdev.thymian.domain.sizing.SizeBucket
 import fyi.punkdev.thymian.domain.sizing.SizeLayoutPolicy
 import fyi.punkdev.thymian.domain.sizing.WeatherBlockSizing
 import fyi.punkdev.thymian.domain.sizing.WidgetSize
+import fyi.punkdev.thymian.domain.weather.Staleness
 import fyi.punkdev.thymian.domain.weather.TemperatureFormat
 import fyi.punkdev.thymian.domain.weather.WeatherSnapshot
 import fyi.punkdev.thymian.weather.WeatherTapReceiver
+import java.time.Instant
 import java.util.Locale
 
 /**
@@ -72,7 +74,7 @@ object WidgetRenderer {
         remoteViews.setTextViewTextSize(R.id.clock_suffix, TypedValue.COMPLEX_UNIT_DIP, sizeLayout.clock.suffixDp.toFloat())
         val dateShown = widgetState.settings[SettingDeclarations.SHOW_DATE] && sizeLayout.clock.dateFits
         remoteViews.setViewVisibility(R.id.clock_date, if (dateShown) View.VISIBLE else View.GONE)
-        sizeLayout.weather?.let { weatherSizing -> remoteViews.applyWeather(widgetState, weatherSizing) }
+        sizeLayout.weather?.let { weatherSizing -> remoteViews.applyWeather(context, widgetState, weatherSizing) }
         return remoteViews
     }
 
@@ -82,6 +84,7 @@ object WidgetRenderer {
      * first refresh, and when every element in it is switched off.
      */
     private fun RemoteViews.applyWeather(
+        context: Context,
         widgetState: WidgetState,
         weatherSizing: WeatherBlockSizing,
     ) {
@@ -112,10 +115,16 @@ object WidgetRenderer {
         setViewVisibility(R.id.weather_temperature, visibleWhen(temperatureShown))
         setTextViewText(R.id.weather_temperature, TemperatureFormat.format(weather.temperatureCelsius, unit))
         setTextViewTextSize(R.id.weather_temperature, TypedValue.COMPLEX_UNIT_DIP, weatherSizing.temperatureDp.toFloat())
+        // Decided at render time; every refresh attempt, failed or not, re-renders, so the symbol appears
+        // with the first attempt after the threshold (specification 1.3).
+        val stale = Staleness.isStale(snapshot.fetchedAt, Instant.now())
+        setViewVisibility(R.id.weather_stale, visibleWhen(stale))
+        setInt(R.id.weather_stale, "setColorFilter", WidgetAppearance.from(settings).textArgb)
         // The icon is not read on its own, so the temperature carries the condition (specification 1.4).
+        val staleSuffix = if (stale) context.getString(R.string.weather_stale_suffix) else ""
         setContentDescription(
             R.id.weather_temperature,
-            "${weather.condition.description}, ${TemperatureFormat.spoken(weather.temperatureCelsius, unit)}",
+            "${weather.condition.description}, ${TemperatureFormat.spoken(weather.temperatureCelsius, unit)}$staleSuffix",
         )
     }
 

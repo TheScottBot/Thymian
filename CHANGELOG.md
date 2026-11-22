@@ -56,6 +56,9 @@ Project skeleton (CWE1).
   constraint, scheduled from the settings screen and after a reboot or app
   update; tap the weather to refresh, tap the clock to open alarms; every
   refresh outcome kept in a bounded diagnostics history.
+- Stale indicator (CWE6): a small clock symbol before the temperature once the
+  weather is over an hour old, tinted to the text colour and read out by
+  TalkBack; refreshes run offline too, so it appears and the failure is logged.
 
 ### Fixed
 

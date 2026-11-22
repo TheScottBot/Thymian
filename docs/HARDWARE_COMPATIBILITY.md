@@ -46,6 +46,9 @@ a gate was cleared. Rows recording observations by the agent say so.
 | 2026-11-22 | Emulator API 34 and Pixel 10 Pro | CWE6 B debug | On device tests, 46 | Agent, instrumentation runner | All pass on both |
 | 2026-11-22 | Emulator API 34 and Pixel 10 Pro | CWE6 B debug | Installed over the previous build | Agent, over adb | Update receiver ran on both (`reason=MY_PACKAGE_REPLACED`); its automatic refresh was throttled, a refresh having just run; a WorkManager job with timing and connectivity constraints is scheduled on both |
 | 2026-11-22 | Emulator API 34 | CWE6 B debug | Tap the weather; tap the clock | Agent, over adb | Weather tap refreshed at once (`trigger=USER_REQUESTED`); clock tap opened the Clock app's alarms |
+| 2026-11-22 | Emulator API 34 and Pixel 10 Pro | CWE6 C1 debug | On device tests, 49 | Agent, instrumentation runner | All pass on both after CWD38 |
+| 2026-11-22 | Emulator API 34 | CWE6 C1 debug | Weather aged 75 minutes, network off, weather tapped | Agent, over adb | `failure=NETWORK` logged; last good weather kept with the stale symbol beside the temperature |
+| 2026-11-22 | Emulator API 34 | CWE6 C1 debug | Force stop | Agent, over adb | The launcher fell back to the initial layout (no weather, no tap actions) until the next update; force stop also cancels scheduled work |
 
 Correction, 22 November 2026: during the CWE2 check the owner reported that no
 Thymian widget had been on the Pixel's home screen, and placed one then. The

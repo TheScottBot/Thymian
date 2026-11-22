@@ -681,6 +681,8 @@ the revised recommendation. The questions are kept as asked, as history.
 | CWD35 | Corner radius keeps 0 to 32 dp, with a note under the slider that the home screen may round corners further (section 14) |
 | CWD36 | One location for the whole app; temperature unit stays per widget (section 16) |
 | CWD37 | Approximate location only, as specified; revisit from field use (section 16) |
+| CWD38 | Only the fixture timestamp of the CWE5 TalkBack test changes, to the current time; assertions unchanged (section 17) |
+| CWD39 | Refreshes run without a network constraint, deviation D11 (section 17) |
 
 ### CWD3. Font rendering approach (still blocked on the CWP2 spike)
 
@@ -1251,3 +1253,34 @@ receiver, whose automatic refresh was throttled because a refresh had just run,
 which is the throttle doing its job. Reboot survival is not yet seen and the
 24 hour unattended run is an owner gate on the Pixel (comparison) and the Xiaomi
 (not available before delivery).
+
+22 November 2026, batch C1 (stale indicator) raised two questions.
+
+### CWD38. An earlier test made time dependent by the stale indicator
+
+1. Blocked: `WidgetRendererWeatherTest`, `talkback hears the condition and the temperature with its unit`, written in CWE5, now fails on both devices.
+2. Why: its sample weather is stamped 2026-11-22T12:00Z. Once that is more than an hour in the past, the new stale rule correctly appends ", last updated over an hour ago" to the description, so the test's expectation no longer holds. The behaviour is right; the fixture became time dependent. Datum 0.4 forbids editing an earlier phase's test without raising it.
+3. Options: change only that test's fixture timestamp to the current time, leaving every assertion as written; or have the renderer take the current time from its caller, so tests set it, which changes how that test and the new ones build their state.
+4. Trade offs: the fixture change is one line and keeps the assertion. Passing the time in is the cleaner design, matching the domain's TimeSource, but touches more code and more earlier tests.
+5. Recommendation: change only the fixture timestamp to the current time; record it here and in TESTING.md.
+
+### CWD39. Refreshing with no network
+
+1. Blocked: whether the periodic refresh and the weather tap keep their network constraint.
+2. Why: with the network off on the emulator, a weather tap was received but its work never ran, because WorkManager holds work with a network constraint until a network appears. With nothing running, nothing re-renders, so the stale symbol never appears while offline, and diagnostics never records the network failure. CWE6's Done when needs both: the stale indicator after the threshold in airplane mode, and diagnostics that explain every failure.
+3. Options: keep the constraint (no stale symbol and no record while offline); drop it, so a refresh runs, fails with a network failure, records it and re-renders with the symbol; or keep the constraint on the network refresh and add a second periodic job with no constraint that only re-renders and records "offline".
+4. Trade offs: dropping it costs one quick failed attempt every 30 minutes while offline, within the throttle, and is a deviation from CWE6's wording "with a network constraint". The second job keeps that wording but adds a schedule and more moving parts.
+5. Recommendation: drop the network constraint and record it as deviation D11.
+
+**Answered 22 November 2026: accept both.** With D11 in place, the emulator
+with its weather aged 75 minutes and the network off logged
+`failure=NETWORK exception=UnknownHostException` on a weather tap and showed
+the stale symbol beside the last good temperature.
+
+Found during the same check: force stopping the app makes the launcher drop
+the app's last views and show the provider's initial layout (no weather, no
+tap actions) until the app updates the widget again, and force stop also
+cancels its scheduled work until the app is next started. HyperOS memory
+cleaning is widely reported to force stop apps; that is unverified here and is
+what the battery guidance (Autostart, No restrictions) is meant to prevent.
+Recorded for the guidance screen (batch C3) and for field use.

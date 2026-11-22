@@ -57,6 +57,11 @@ pattern was `EEE, d MMMM` on the API 34 emulator and `EEE d MMMM` on the Pixel
 (API 37). The date test therefore checks field order and month width, with
 the comma optional.
 
+CWD38, 22 November 2026: the CWE5 test `talkback hears the condition and the
+temperature with its unit` had a fixed weather timestamp that became more than
+an hour old, so the CWE6 stale rule changed its description. Only that fixture
+timestamp was changed, to the current time; its assertions are as written.
+
 ## Testing deviations
 
 - Memory and undefined behaviour analysis does not apply: Kotlin on the JVM is

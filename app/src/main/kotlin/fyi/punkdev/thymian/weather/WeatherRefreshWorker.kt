@@ -2,11 +2,9 @@ package fyi.punkdev.thymian.weather
 
 import android.content.Context
 import android.util.Log
-import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
-import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
@@ -70,7 +68,9 @@ class WeatherRefreshWorker(
         private const val TRIGGER_KEY = "trigger"
 
         /**
-         * Schedules the 30 minute refresh (CWD7) with a network constraint. `KEEP` leaves
+         * Schedules the 30 minute refresh (CWD7) with no network constraint: offline, the
+         * attempt fails fast, is recorded and re-renders, so the stale symbol and diagnostics
+         * stay truthful (CWD39, deviation D11). `KEEP` leaves
          * an existing schedule untouched, so calling this again never shifts its timing.
          */
         fun ensurePeriodic(context: Context) {
@@ -78,7 +78,6 @@ class WeatherRefreshWorker(
                 PeriodicWorkRequest
                     .Builder(WeatherRefreshWorker::class.java, RefreshPolicy.REFRESH_INTERVAL.toMinutes(), TimeUnit.MINUTES)
                     .setInputData(Data.Builder().putString(TRIGGER_KEY, RefreshTrigger.AUTOMATIC.name).build())
-                    .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
                     .build()
             WorkManager.getInstance(context).enqueueUniquePeriodicWork(PERIODIC_WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, request)
         }
@@ -92,7 +91,6 @@ class WeatherRefreshWorker(
                 OneTimeWorkRequest
                     .Builder(WeatherRefreshWorker::class.java)
                     .setInputData(Data.Builder().putString(TRIGGER_KEY, trigger.name).build())
-                    .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
                     .build()
             WorkManager.getInstance(context).enqueueUniqueWork(REFRESH_NOW_WORK_NAME, ExistingWorkPolicy.KEEP, request)
         }

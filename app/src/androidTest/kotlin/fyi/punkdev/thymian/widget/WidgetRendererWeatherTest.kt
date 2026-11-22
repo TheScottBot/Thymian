@@ -33,7 +33,8 @@ class WidgetRendererWeatherTest {
             CurrentWeather(temperatureCelsius = 4.5, condition = WeatherCondition.PARTLY_CLOUDY, isDay = true),
             placeName = "Berlin",
             locationSource = LocationSourceUsed.DEVICE_RECENT,
-            fetchedAt = Instant.parse("2026-11-22T12:00:00Z"),
+            // CWD38: fresh weather, so the CWE6 stale rule does not apply; the assertions are unchanged.
+            fetchedAt = Instant.now(),
         )
 
     private fun applyWith(
