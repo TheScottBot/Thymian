@@ -69,6 +69,8 @@ Project skeleton (CWE1).
   app's system settings.
 - Accessibility check (CWE7): every view in every widget layout is described
   or marked decorative, proven against a planted violation.
+- Releases: `scripts/release.sh` builds, signs and publishes a GitHub release
+  with the APK attached; installing steps for the phone in the README.
 
 ### Fixed
 

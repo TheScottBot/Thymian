@@ -54,13 +54,34 @@ which deletes widget settings. The Xiaomi only ever receives release builds
 Release builds are signed only on the release Mac, with the key `thymian` in
 `~/Keystores/thymian-release.jks`. The passwords are never stored in the
 repository or in Gradle files; the build reads `THYMIAN_KEYSTORE_PASSWORD`
-and `THYMIAN_KEY_PASSWORD` from the environment of `./gradlew assembleRelease`.
-Set them only for that command and keep them out of shell history and files.
-A release script that reads both from Dashlane is planned and will replace
-this paragraph with the exact command.
+and `THYMIAN_KEY_PASSWORD` from its environment and stops before compiling if
+either, or the keystore, is missing.
 
-The build stops before compiling if either variable or the keystore is
-missing. The signed APK is `app/build/outputs/apk/release/app-release.apk`.
+To publish a release that the phone can download (installing steps are in the README):
+
+1. Raise `versionCode` and set `versionName` in `app/build.gradle.kts`. Every
+   release needs a higher `versionCode`, or Android will not install it over
+   the previous one.
+2. In `CHANGELOG.md`, rename `## [Unreleased]` to the new version, for example
+   `## [1.0.0]`, and add a fresh empty `## [Unreleased]` above it.
+3. Commit and push both changes.
+4. Run:
+
+```bash
+./scripts/release.sh
+```
+
+It checks that the tree is clean and matches the pushed `origin/main`, that
+the version has a changelog section and no release yet, asks for the two
+passwords without echoing them unless both variables are already set, runs
+every check, builds and signs the APK, prints the signing certificate's
+fingerprint, and publishes a GitHub release `v` plus the version with the APK
+attached as `thymian-` plus the version `.apk`. Publishing creates the tag on
+GitHub.
+
+The APK is published as a release asset rather than a GitHub package:
+GitHub Packages holds libraries and container images, and an APK is a file to
+download, which releases serve directly.
 
 ## Repository layout
 
@@ -70,5 +91,6 @@ missing. The signed APK is `app/build/outputs/apk/release/app-release.apk`.
 | `domain/` | Pure Kotlin value types and rules, no Android imports |
 | `tools/typography-check/` | The datum 0.8 typography scan, run by `check` |
 | `config/` | The typography check's explicit exclusion list |
+| `scripts/` | `release.sh`, which builds, signs and publishes a release |
 | `docs/` | Specification, Plan record and evidence, and the project records |
 | `spikes/` | Plan stage experiments, deleted once the Pixel soak is read |

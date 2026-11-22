@@ -1391,3 +1391,31 @@ defect Thymian can act on; a natural midnight on the Pixel would settle it.
 - Pixel: items 4 (midnight, time zone), 6 (taps), 7, 8 and 12.
 - Release build installed over a previous release build (CWE1).
 - Every Xiaomi item: not available before delivery.
+
+### 19.4 Release publishing
+
+22 November 2026, as directed: the README drops the sideloaded for one user
+wording and gains install steps linking to `docs/INSTALLING.md`; releases are
+published by `scripts/release.sh`, run by the owner, which builds, signs,
+verifies the signature with apksigner 0.9 and creates a GitHub release with
+the APK attached. GitHub Packages was considered and not used: it serves
+libraries and container images, not downloadable app files. Checked without
+signing or publishing: the script stops on an unclean tree, reads versionName
+0.1.0, and extracts a version's changelog section or nothing. The first
+release, and its version number, are the owner's (CWD40).
+
+### CWD40. First release version
+
+1. Blocked: the version of the first published release.
+2. Why: `versionName` is 0.1.0 from CWE1; the first build for the phone is a
+   public release, and the number is a statement about readiness.
+3. Options: 0.1.0 as it stands; 1.0.0 now that every phase is built.
+4. Trade offs: 0.1.0 signals more snags are expected from field use, which is
+   true; 1.0.0 reads as finished. Either installs the same; later releases
+   just need a higher versionCode.
+5. Recommendation: 1.0.0, with versionCode 1 kept, since it is the first
+   build meant for daily use.
+
+(22 November 2026: as directed, the installing steps moved into the README's
+Install section and `docs/INSTALLING.md` was removed; earlier mentions of it
+above are history.)

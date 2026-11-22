@@ -69,5 +69,7 @@ None yet.
 
 ## Owed
 
+- The first published release, installed on the Xiaomi from the releases page (README, Install).
+
 - Release build installed over a previous release build without losing data (CWE1).
 - Every Xiaomi check: first evidence will come from real use, in FIELD_NOTES.md.
