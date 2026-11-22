@@ -549,6 +549,35 @@ started: they need the phones and, on the Xiaomi, at least 24 hours each under
 default settings and under Autostart with No restrictions. Those observations
 are author gates.
 
+### 9.1 Pixel soak
+
+Source: `spikes/plan-background-refresh` (throwaway, application ID
+`fyi.punkdev.thymian.spike.background`), WorkManager 2.12.0 (`work-runtime`,
+the latest stable on Google Maven, read 22 November 2026). A
+`PeriodicWorkRequest` every 30 minutes with a connected network constraint,
+enqueued with `KEEP`, as the real refresh will be. Each run appends one line to a
+capped log in app storage: local time, minutes since the previous run, app
+standby bucket, power save mode, device idle mode and attempt count. A small
+widget shows the latest run, since the real app always has a placed widget and
+that may affect its standby bucket.
+
+Started 22 November 2026 at 12:17 on the Pixel 10 Pro (3.3) under default
+battery settings: Adaptive Battery on (`adaptive_battery_management_enabled=1`),
+Doze enabled, the app not exempted. The first run happened at 12:17, as soon as
+the work was enqueued, in the active bucket. WorkManager registered its job with
+JobScheduler (`androidx.work.systemjobscheduler`).
+
+Read back after 24 hours, ending no earlier than 23 November 2026 12:17, with:
+
+`adb -s 61310DLCH000ZB shell run-as fyi.punkdev.thymian.spike.background cat files/soak.log`
+
+Results: pending. Reboot survival is not yet tested; it needs the Pixel
+rebooted during the soak.
+
+Found while placing the widget: with no `previewLayout` or `previewImage`, the
+Pixel widget picker shows a generic tile with the app icon, so the real widget
+needs its own preview for the picker (CWE1 or CWE7).
+
 Android 14 rule affecting the alarm tap: a mutable PendingIntent with an implicit
 intent throws, so the clock tap uses an immutable PendingIntent.
 `ACTION_SHOW_ALARMS` needs no permission and `startActivity` needs no package

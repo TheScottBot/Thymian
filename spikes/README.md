@@ -9,3 +9,4 @@ before CWE1 begins. Findings live in
 |---|---|
 | `plan-font-clock-transparency` | CWP2 (font, shadow, TextClock) and CWP3 (transparency) |
 | `plan-location-geocoder` | CWP5 (location permissions, fixes, Geocoder) |
+| `plan-background-refresh` | CWP7 (30 minute WorkManager soak on the Pixel) |
