@@ -1,0 +1,80 @@
+package fyi.punkdev.thymian.domain.settings
+
+import fyi.punkdev.thymian.domain.ClockMode
+import fyi.punkdev.thymian.domain.TemperatureUnit
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+
+/** Defaults and bounds of every declared setting (specification 1.3 and 2.2). */
+class SettingDeclarationsTest {
+    @Test
+    fun `every setting is declared once with a unique key`() {
+        val keys = SettingDeclarations.all.map { declaration -> declaration.key }
+
+        assertEquals(keys.toSet().size, keys.size, "duplicate keys in $keys")
+    }
+
+    @Test
+    fun `a new widget is fully transparent with white text`() {
+        val defaults = WidgetSettings.defaults()
+
+        assertEquals(0, defaults[SettingDeclarations.BACKGROUND_OPACITY_PERCENT])
+        assertEquals(0xFFFFFF, defaults[SettingDeclarations.TEXT_COLOUR])
+        assertEquals(0x000000, defaults[SettingDeclarations.BACKGROUND_COLOUR])
+    }
+
+    @Test
+    fun `a new widget follows the device clock and uses celsius`() {
+        val defaults = WidgetSettings.defaults()
+
+        assertEquals(ClockMode.FOLLOW_DEVICE, defaults[SettingDeclarations.CLOCK_MODE])
+        assertEquals(TemperatureUnit.CELSIUS, defaults[SettingDeclarations.TEMPERATURE_UNIT])
+    }
+
+    @Test
+    fun `every optional element is shown on a new widget`() {
+        val defaults = WidgetSettings.defaults()
+
+        for (elementSetting in SettingDeclarations.elementVisibility) {
+            assertEquals(true, defaults[elementSetting], elementSetting.key)
+        }
+        assertEquals(4, SettingDeclarations.elementVisibility.size)
+    }
+
+    @Test
+    fun `opacity runs from 0 to 100 percent and corner radius from 0 to 32 dp`() {
+        assertEquals(0..100, SettingDeclarations.BACKGROUND_OPACITY_PERCENT.bounds)
+        assertEquals(0..32, SettingDeclarations.CORNER_RADIUS_DP.bounds)
+        assertEquals(16, WidgetSettings.defaults()[SettingDeclarations.CORNER_RADIUS_DP])
+    }
+
+    @Test
+    fun `out of range numbers are clamped to their bounds`() {
+        val settings =
+            WidgetSettings
+                .defaults()
+                .with(SettingDeclarations.BACKGROUND_OPACITY_PERCENT, 140)
+                .with(SettingDeclarations.CORNER_RADIUS_DP, -3)
+
+        assertEquals(100, settings[SettingDeclarations.BACKGROUND_OPACITY_PERCENT])
+        assertEquals(0, settings[SettingDeclarations.CORNER_RADIUS_DP])
+    }
+
+    @Test
+    fun `colours keep only their red green and blue channels`() {
+        val settings = WidgetSettings.defaults().with(SettingDeclarations.TEXT_COLOUR, 0x7F112233)
+
+        assertEquals(0x112233, settings[SettingDeclarations.TEXT_COLOUR])
+    }
+
+    @Test
+    fun `changing one setting leaves the others alone`() {
+        val defaults = WidgetSettings.defaults()
+        val changed = defaults.with(SettingDeclarations.SHOW_DATE, false)
+
+        assertEquals(false, changed[SettingDeclarations.SHOW_DATE])
+        for (declaration in SettingDeclarations.all.filterNot { other -> other == SettingDeclarations.SHOW_DATE }) {
+            assertEquals(defaults.valueOf(declaration), changed.valueOf(declaration), declaration.key)
+        }
+    }
+}
