@@ -378,10 +378,69 @@ measured on the Xiaomi during the spike.
   (API 33) exist. The documentation does not name the backend; with no backend
   it returns nothing.
 
-### 7.2 Still to run on both phones
+### 7.2 Spike
 
-The permission flow, the settings page wording, whether `Geocoder.isPresent()`
-is true, and whether the returned place names are correct. Blocked on section 1.
+Source: `spikes/plan-location-geocoder` (throwaway, application ID
+`fyi.punkdev.thymian.spike.location`), same toolchain as 4.4. It requests
+`ACCESS_COARSE_LOCATION` only, then `ACCESS_BACKGROUND_LOCATION` separately,
+asks the platform `LocationManager.getCurrentLocation` for one fix (30 second
+limit), lists last known fixes per provider, reverse geocodes three fixed
+reference points with the asynchronous Geocoder, and runs the same fix from a
+platform `JobService` with no activity visible. Coordinates are never logged or
+shown; the device's own place name was shown on screen only and is not
+recorded here. Run 22 November 2026 on the API 34 emulator and the Pixel 10 Pro
+(details in 3.3 and 3.4). Evidence in `docs/evaluation/evidence/cwp5/`.
+
+| Check | API 34 emulator | Pixel 10 Pro |
+|---|---|---|
+| Foreground dialog | Approximate only; While using the app, Only this time, Don't allow | same three choices |
+| Background request | opens the settings page; Allow all the time is the first option | same; the third option reads "Ask every time or allow when you share" |
+| `getBackgroundPermissionOptionLabel()` | Allow all the time | Allow all the time |
+| Enabled providers once granted | passive, network, fused, gps | passive, network, fused, gps |
+| `Geocoder.isPresent()` | true | true |
+| Fresh fix, fused, `QUALITY_LOW_POWER` | none within 30 s | none within 30 s |
+| Fresh fix, fused, `QUALITY_BALANCED_POWER_ACCURACY` | not run | none within 30 s |
+| Fresh fix, network provider, balanced | not run | none within 30 s, foreground and from the background job |
+| Last known fix | none (emulator has no network location) | every provider had one, accuracy 2000 m (the approximate location grid), 3 to 4 minutes old; gps 95 minutes old |
+| Background job with Allow all the time | ran, no SecurityException, no fix | ran, no SecurityException, no fix |
+| Reverse geocode London 51.5074, -0.1278 | locality null, subAdminArea Greater London, adminArea England, GB | identical |
+| Reverse geocode Berlin 52.52, 13.405 | locality Berlin, adminArea Berlin, DE | identical |
+| Reverse geocode Munich 48.1374, 11.5755 | locality München, subAdminArea Oberbayern, adminArea Bayern, DE | identical |
+
+Conclusions accepted, for these two devices:
+
+- The two step permission flow behaves as documented. The explanation shown
+  before the second request is needed because the second step leaves the app for
+  a settings page.
+- With approximate permission only, the platform `getCurrentLocation` returned
+  no fresh fix within 30 seconds on either device, from any provider or quality
+  tried, while a last known fix a few minutes old was available on the Pixel.
+  The automatic location path therefore has to use the last known fix first and
+  treat a fresh fix as a bonus, which the fallback chain in 1.3 already allows.
+  This is the most important location finding, and it bears on CWD25.
+- The Geocoder works on both devices, but `locality` can be null (London), so the
+  place name needs its own fallback order: locality, then subAdminArea, then
+  adminArea.
+- Place names come back in the local language (München) even with an English
+  locale. On the Xiaomi in Germany that means German names, which is probably
+  right, but it is worth knowing.
+
+Not established: behaviour on the Xiaomi (not available before delivery);
+whether Google Play services' fused location returns fresh approximate fixes
+where the platform did not (CWD25); whether a fresh fix arrives with a longer
+limit, outdoors, or with Wi-Fi scanning on.
+
+### CWD25, updated 22 November 2026
+
+The spike weakens the case for the platform provider: it gave no fresh
+approximate fix on either device. Revised options: platform LocationManager
+using the last known fix first and a fresh fix when one comes; or Google Play
+services fused location (a dependency, present on the Pixel, and on the Xiaomi
+only if its HyperOS build ships Google services, which is likely for a UK
+device but unconfirmed). Revised recommendation, labelled as such: platform,
+last known first, since a 2 km grid fix minutes old is good enough for weather
+and a place name, and no dependency is added. If field use shows stale places,
+Play services is the fix.
 
 ## 8. CWP6: provider check
 
@@ -452,6 +511,31 @@ SIL Open Font Licence 1.1, copyright line "Copyright 2020 The JetBrains Mono
 Project Authors (https://github.com/JetBrains/JetBrainsMono)". Latest release
 v2.304 (14 January 2023) with static TTFs from Thin to ExtraBold. The reference
 time digits are light weight, so Light or ExtraLight is the likely match.
+
+## 8.6 App and widget icon
+
+Direction given 22 November 2026: Thymian uses the icon of Thyme
+(https://github.com/TheScottBot/Thyme, local copy at
+`/Users/wash/Documents/Repo/Thyme`, commit
+01823cb9e7a296d501131b3958fae30871fc4b8c, read 22 November 2026).
+
+Read from source: Thyme ships no icon file. `internal/render/appicon.go` draws it
+in code: a rounded square tile (82.4 percent of the canvas, corner radius 22
+percent of the tile) filled with `PanelFill` `#12131C`, a heavy outline (tile/16)
+in `Outline` `#F59EF3`, and a clock face ring (radius 27 percent of the tile,
+stroke 8 percent) with a minute hand pointing up and an hour hand pointing to
+three o'clock, both in `TimeText` `#F894F8` with rounded ends. Colours from
+`internal/theme/theme.go`. Golden renders at 16, 32, 128 and 256 pixels are in
+`internal/render/testdata/golden/`. Thyme is MIT licensed, copyright 2026
+TheScottBot, the same holder and licence as Thymian.
+
+Plan for CWE7: reproduce the same geometry and colours as an Android vector
+drawable rather than copying a raster, so it stays sharp at every density. An
+Android adaptive icon is masked by the launcher to its own shape, so the dark
+panel becomes the background layer and the ring and hands the foreground layer;
+the pink outline is likely lost to the mask and may be drawn as an inner ring
+instead. The widget picker shows the app icon unless the widget declares its own,
+so one icon covers both. Credit to Thyme goes in NOTICE.
 
 ## 9. CWP7: background behaviour
 
@@ -798,8 +882,8 @@ so no password is written to disk or seen by the agent.
 | Shadow not changeable at runtime | Confirmed from source |
 | TextClock self updates, date at midnight, no app process | Confirmed from source (inferred); device check in CWE2 |
 | Responsive layouts and reconfiguration on API 34 | Confirmed: both API 31 |
-| Background location needs a separate later request | Confirmed |
-| Geocoder present and correct on both phones | Pending spike |
+| Background location needs a separate later request | Confirmed in source and on the emulator and Pixel (7.2) |
+| Geocoder present and correct on both phones | Confirmed on the emulator and Pixel, with locality sometimes null (7.2); Xiaomi not available before delivery |
 | WorkManager minimum 15 minutes | Confirmed |
 | HyperOS needs Autostart and No restrictions | Pending 24 hour observations |
 | Open-Meteo free tier terms | Confirmed, with the monthly limit added and the attribution placement raised as CWD21 |
