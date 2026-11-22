@@ -671,7 +671,7 @@ the revised recommendation. The questions are kept as asked, as history.
 | CWD25 | Platform LocationManager, last known fix first, fresh fix when one arrives |
 | CWD26 | ktlint, Android lint and Kotlin warnings as errors |
 | CWD27 | Closed: the SDK was installed (3.4) |
-| CWD28 | `/Users/wash/Keystores/thymian-release.jks`; alias and password sources asked with CWE1 |
+| CWD28 | `/Users/wash/Keystores/thymian-release.jks`; passwords read from the environment variables `THYMIAN_KEYSTORE_PASSWORD` and `THYMIAN_KEY_PASSWORD` (answered 22 November 2026); key alias `thymian`, a PrivateKeyEntry created 22 November 2026, as listed by `keytool -list` |
 | CWD29 | Specification added as `docs/SPECIFICATION.md` |
 | CWD30 | No Xiaomi testing before delivery; emulator added; field use recorded in FIELD_NOTES.md |
 | CWD31 | Bounded in app event history and a Copy diagnostics button, added to scope |
