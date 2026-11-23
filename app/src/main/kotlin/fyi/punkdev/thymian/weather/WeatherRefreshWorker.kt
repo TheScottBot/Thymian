@@ -33,6 +33,12 @@ class WeatherRefreshWorker(
         val trigger =
             RefreshTrigger.entries.firstOrNull { entry -> entry.name == inputData.getString(TRIGGER_KEY) } ?: RefreshTrigger.AUTOMATIC
         val history = CompositionRoot.diagnosticsHistory(applicationContext)
+        if (trigger == RefreshTrigger.AUTOMATIC) {
+            // Before the throttle, so a throttled run still counts as the schedule having run.
+            CompositionRoot
+                .backgroundWatch(applicationContext)
+                .periodicRunStarted(Instant.now(), CompositionRoot.backgroundObservations(applicationContext))
+        }
         if (!CompositionRoot.refreshThrottle(applicationContext).tryStart(trigger)) {
             Log.i(LOG_TAG, "event=weather_refresh outcome=throttled trigger=$trigger")
             history.recordEvent(DiagnosticEvent(Instant.now(), "throttled", "trigger=$trigger"))

@@ -15,6 +15,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.time.Instant
 
 /** Both sides of the widget go through this screen, which logs each touch before acting on it. */
 @RunWith(AndroidJUnit4::class)
@@ -26,12 +27,13 @@ class WidgetTapActivityTest {
         tapEventsAfter(WidgetTapActivity.weatherTapIntent(context, action)).last()
 
     private fun tapEventsAfter(tapIntent: Intent): List<String> {
-        val history = CompositionRoot.diagnosticsHistory(context)
-        val eventsBefore = history.events().size
+        // By time, not by count: once the history is full, its length stops changing.
+        val tappedFrom = Instant.now()
         ActivityScenario.launch<WidgetTapActivity>(tapIntent).close()
-        return history
+        return CompositionRoot
+            .diagnosticsHistory(context)
             .events()
-            .drop(eventsBefore)
+            .filter { event -> !event.occurredAt.isBefore(tappedFrom) }
             .filter { event -> event.kind in setOf("tapped", "tap_failed", "tap_fallback") }
             .map { event -> "${event.kind} ${event.detail}" }
     }

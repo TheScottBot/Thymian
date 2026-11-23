@@ -18,7 +18,7 @@ a gate was cleared. Rows recording observations by the agent say so.
 | 2026-11-22 | Emulator API 34 | Plan spike | Font, clock, transparency (CWP2, CWP3) | Agent, over adb | Bundled font falls back to Roboto; shadow, spanned am or pm and transparency render |
 | 2026-11-22 | Pixel 10 Pro | Plan spike | Font, clock, transparency over dark and light wallpaper | Agent, over adb | As on the emulator |
 | 2026-11-22 | Emulator API 34 and Pixel 10 Pro | Plan spike | Location permissions and Geocoder (CWP5) | Agent, over adb | Flow as documented; no fresh approximate fix within 30 s; last known fix available on the Pixel; Geocoder works |
-| 2026-11-22 | Pixel 10 Pro | Plan spike | 30 minute WorkManager soak (CWP7), started 12:17 | Agent, over adb | Running; read after 2026-11-23 12:17 |
+| 2026-11-22 | Pixel 10 Pro | Plan spike | 30 minute WorkManager soak (CWP7), started 12:17 | Agent, over adb | Not passed: ran every 30 to 55 minutes from 12:17 to 15:18, then nothing until 15:50 on 23 November (1,472 minutes), with no reboot. Thymian itself refreshed until 20:02 on 22 November, then also not until 15:50. Cause not yet known |
 | 2026-11-22 | Emulator API 34 | CWE1 debug | Empty widget found in the picker and placed | Agent, over adb | Placed, Thyme icon and preview shown |
 | 2026-11-22 | Pixel 10 Pro | CWE1 debug | Empty widget placed | Owner | "All fine, placed it" (see the correction below) |
 | 2026-11-22 | Emulator API 34 | CWE2 debug | On device tests, 6 | Agent, Gradle connected run | All pass |

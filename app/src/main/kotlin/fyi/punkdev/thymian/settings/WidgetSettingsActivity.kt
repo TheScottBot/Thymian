@@ -98,7 +98,11 @@ class WidgetSettingsActivity : Activity() {
             val nextRefresh = runCatching { WeatherRefreshWorker.nextPeriodicRefresh(this) }.getOrNull()
             val weather = CompositionRoot.weatherSnapshotStore(this).load()
             val events = CompositionRoot.diagnosticsHistory(this).events()
-            val deviceFacts = listOf(ClockTapResolver.target(this).diagnosticLine)
+            val deviceFacts =
+                listOf(
+                    ClockTapResolver.target(this).diagnosticLine,
+                    "background ${CompositionRoot.backgroundObservations(this).currentState().detail}",
+                )
             mainExecutor.execute {
                 if (isDestroyed) return@execute
                 val section =

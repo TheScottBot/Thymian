@@ -7,6 +7,17 @@ tag also names the gates cleared at that commit.
 
 ## [Unreleased]
 
+### Added
+
+- Copy diagnostics now records why a scheduled refresh might not have come.
+  It records a `refresh_gap` when scheduled refreshes are more than 90
+  minutes apart, listing the standby buckets the phone moved the app through
+  in between. It records a `process_exit` with the phone's reason whenever the
+  app was stopped, and a `background_state` (standby bucket, battery saver,
+  Doze, background restriction and battery optimisation) whenever that
+  changes. The current state is also shown under the version line. Added
+  after the Pixel ran no refresh for about 20 hours with no reboot.
+
 ## [1.0.3] - 2026-11-22
 
 Tagged `v1.0.3` at commit b91ae81. Release APK `thymian-1.0.3.apk`, SHA-256

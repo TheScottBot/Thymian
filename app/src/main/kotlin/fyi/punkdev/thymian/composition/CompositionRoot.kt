@@ -1,7 +1,10 @@
 package fyi.punkdev.thymian.composition
 
 import android.content.Context
+import fyi.punkdev.thymian.background.PlatformBackgroundObservations
 import fyi.punkdev.thymian.domain.TimeSource
+import fyi.punkdev.thymian.domain.background.BackgroundObservations
+import fyi.punkdev.thymian.domain.background.BackgroundWatch
 import fyi.punkdev.thymian.domain.diagnostics.DiagnosticsHistory
 import fyi.punkdev.thymian.domain.diagnostics.KeyValueDiagnosticsHistory
 import fyi.punkdev.thymian.domain.location.KeyValueLocationPreferenceStore
@@ -53,6 +56,14 @@ object CompositionRoot {
 
     fun diagnosticsHistory(context: Context): DiagnosticsHistory =
         KeyValueDiagnosticsHistory(SharedPreferencesKeyValueStore(context.applicationContext, DIAGNOSTICS_PREFERENCES_NAME))
+
+    fun backgroundWatch(context: Context): BackgroundWatch =
+        BackgroundWatch(
+            SharedPreferencesKeyValueStore(context.applicationContext, DIAGNOSTICS_PREFERENCES_NAME),
+            diagnosticsHistory(context),
+        )
+
+    fun backgroundObservations(context: Context): BackgroundObservations = PlatformBackgroundObservations(context)
 
     fun refreshThrottle(context: Context): RefreshThrottle =
         RefreshThrottle(
