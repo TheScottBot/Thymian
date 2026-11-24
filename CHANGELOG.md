@@ -7,6 +7,11 @@ tag also names the gates cleared at that commit.
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-11-24
+
+Supported: Android 14 (API 34) and later. Built against API 37. It installs
+over 1.0.3.
+
 ### Added
 
 - Copy diagnostics now records why a scheduled refresh might not have come.
