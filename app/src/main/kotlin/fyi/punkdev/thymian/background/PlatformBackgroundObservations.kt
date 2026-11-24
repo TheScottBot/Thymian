@@ -4,6 +4,8 @@ import android.app.ActivityManager
 import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.PowerManager
 import fyi.punkdev.thymian.domain.background.BackgroundNames
 import fyi.punkdev.thymian.domain.background.BackgroundObservations
@@ -23,6 +25,7 @@ class PlatformBackgroundObservations(
     private val usageStatsManager = applicationContext.getSystemService(UsageStatsManager::class.java)
     private val powerManager = applicationContext.getSystemService(PowerManager::class.java)
     private val activityManager = applicationContext.getSystemService(ActivityManager::class.java)
+    private val connectivityManager = applicationContext.getSystemService(ConnectivityManager::class.java)
 
     override fun currentState(): BackgroundState =
         BackgroundState(
@@ -31,7 +34,19 @@ class PlatformBackgroundObservations(
             deviceIdle = powerManager.isDeviceIdleMode,
             backgroundRestricted = activityManager.isBackgroundRestricted,
             batteryOptimised = !powerManager.isIgnoringBatteryOptimizations(applicationContext.packageName),
+            networkBlocked = isNetworkBlocked(),
         )
+
+    // The only synchronous view of whether this app is blocked from the active network, which
+    // is how background data turned off for the app on mobile data shows (24 November 2026).
+    // On screen the limit does not apply, so the answer there says nothing and is left unknown.
+    @Suppress("DEPRECATION")
+    private fun isNetworkBlocked(): Boolean? {
+        val processState = ActivityManager.RunningAppProcessInfo()
+        ActivityManager.getMyMemoryState(processState)
+        if (processState.importance <= ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND_SERVICE) return null
+        return connectivityManager.activeNetworkInfo?.detailedState == NetworkInfo.DetailedState.BLOCKED
+    }
 
     override fun standbyBucketsSince(since: Instant): List<String> {
         val events = usageStatsManager.queryEventsForSelf(since.toEpochMilli(), System.currentTimeMillis()) ?: return emptyList()

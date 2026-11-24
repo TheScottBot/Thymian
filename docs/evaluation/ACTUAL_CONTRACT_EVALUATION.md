@@ -632,8 +632,19 @@ Read back after 24 hours, ending no earlier than 23 November 2026 12:17, with:
 
 `adb -s 61310DLCH000ZB shell run-as fyi.punkdev.thymian.spike.background cat files/soak.log`
 
-Results: pending. Reboot survival is not yet tested; it needs the Pixel
-rebooted during the soak.
+Results, read 23 and 24 November 2026: 22 runs between 22 November 12:17 and
+24 November 00:21, every 30 to 55 minutes whenever a network the app could use
+was present, always in the active bucket, with no power save, no Doze at run
+time and no retries. There were two gaps: 15:18 on 22 November to 15:50 on 23
+November (1,472 minutes), and 00:21 on 24 November onwards. Neither came from
+WorkManager or the standby bucket. Background data was off for the spike on
+mobile data (the phone listed it under `restrict-background-blacklisted`), so
+away from Wi-Fi its network constraint was never met; JobScheduler showed every
+constraint satisfied except `CONNECTIVITY`. Thymian had the same gaps for the
+same reason, through a network requirement left over from before deviation D11
+(fixed 24 November 2026). Reboot survival was not tested. The spike was then
+uninstalled and `spikes/` deleted, closing deviation D4. The full log is kept in
+`docs/evaluation/evidence/cwp7/soak.log`.
 
 Found while placing the widget: with no `previewLayout` or `previewImage`, the
 Pixel widget picker shows a generic tile with the app icon, so the real widget

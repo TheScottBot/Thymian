@@ -35,6 +35,7 @@ decision that allowed it, and the covering test. Newest last.
 - **Why:** deleting the soak spike would stop the 24 hour background refresh measurement (CWP7) that is still running on the Pixel.
 - **Decision:** stated when CWE1 began, 22 November 2026.
 - **Covering test:** none; the deletion itself closes this entry.
+- **Closed, 24 November 2026:** the soak was read (evaluation 9.1), the spike uninstalled from the Pixel, and `spikes/` deleted with its typography exclusions and ktlint fence.
 
 ## D5. App icon added in CWE1 instead of CWE7
 
@@ -98,4 +99,5 @@ decision that allowed it, and the covering test. Newest last.
 - **Instead:** the periodic refresh and the one off refreshes run without a network constraint.
 - **Why:** WorkManager holds constrained work until a network appears, so while offline nothing ran, nothing re-rendered, the stale indicator never appeared and diagnostics never recorded the failure; CWE6's Done when needs both. Offline, an attempt now fails within the throttle and records `failure=NETWORK`.
 - **Decision:** CWD39, 22 November 2026.
+- **Follow up, 24 November 2026:** the schedule was enqueued with `KEEP`, so a phone that had scheduled it before this change kept the network requirement. The Pixel did, and with background data off for the app on mobile data its refresh never ran away from Wi-Fi. The schedule now uses `UPDATE`, covered by `WeatherRefreshScheduleTest`.
 - **Covering test:** none automated; on the API 34 emulator with the network off, a tap logged `failure=NETWORK` and the widget showed the stale symbol over the last good weather (evidence in `docs/evaluation/evidence/cwe6/`).

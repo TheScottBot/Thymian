@@ -16,7 +16,23 @@ tag also names the gates cleared at that commit.
   app was stopped, and a `background_state` (standby bucket, battery saver,
   Doze, background restriction and battery optimisation) whenever that
   changes. The current state is also shown under the version line. Added
-  after the Pixel ran no refresh for about 20 hours with no reboot.
+  after the Pixel ran no refresh for about 20 hours with no reboot. The
+  background state includes `network_blocked`, which is true when the app
+  may not use the network from the background, and `unknown` for a run made
+  while the app was on screen, where that limit does not apply.
+- When the last scheduled refresh found background data blocked, the
+  settings screen says so at the top, with an Allow background data button
+  that opens the phone's page for it, or the app's own system settings page
+  where the phone has none.
+
+### Fixed
+
+- An existing refresh schedule is now brought up to date when the app
+  schedules it again. Before, it was kept as first stored. A phone that ran
+  a build from before the network requirement was removed kept that
+  requirement. With background data off for the app on mobile data, its
+  refresh then never ran away from Wi-Fi. Release installs are not affected,
+  because the requirement was removed before 1.0.0.
 
 ## [1.0.3] - 2026-11-22
 

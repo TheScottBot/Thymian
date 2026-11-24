@@ -35,7 +35,9 @@ Android 14 or later.
 Tap the clock to open your alarms, or the clock app if the phone won't open
 the alarm list, and tap the weather to refresh it. In the widget's settings,
 the clock can open an app of your choice instead, and the weather can open one
-as well as refreshing. The
+as well as refreshing. If the settings say Thymian isn't allowed to use mobile
+data in the background, tap Allow background data, or the weather only updates
+on Wi-Fi. The
 Thymian icon in the app list opens the widget's settings, or offers to add the
 widget if none is placed.
 

@@ -70,14 +70,15 @@ class WeatherRefreshWorker(
     companion object {
         private const val LOG_TAG = "Thymian"
         private const val REFRESH_NOW_WORK_NAME = "weather_refresh_now"
-        private const val PERIODIC_WORK_NAME = "weather_refresh_periodic"
+        internal const val PERIODIC_WORK_NAME = "weather_refresh_periodic"
         private const val TRIGGER_KEY = "trigger"
 
         /**
          * Schedules the 30 minute refresh (CWD7) with no network constraint: offline, the
          * attempt fails fast, is recorded and re-renders, so the stale symbol and diagnostics
-         * stay truthful (CWD39, deviation D11). `KEEP` leaves
-         * an existing schedule untouched, so calling this again never shifts its timing.
+         * stay truthful (CWD39, deviation D11). `UPDATE` brings an existing schedule in line
+         * with this request without shifting its timing. `KEEP` was used until 24 November 2026,
+         * and it left the Pixel's schedule holding the network requirement D11 had removed.
          */
         fun ensurePeriodic(context: Context) {
             val request =
@@ -85,7 +86,7 @@ class WeatherRefreshWorker(
                     .Builder(WeatherRefreshWorker::class.java, RefreshPolicy.REFRESH_INTERVAL.toMinutes(), TimeUnit.MINUTES)
                     .setInputData(Data.Builder().putString(TRIGGER_KEY, RefreshTrigger.AUTOMATIC.name).build())
                     .build()
-            WorkManager.getInstance(context).enqueueUniquePeriodicWork(PERIODIC_WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, request)
+            WorkManager.getInstance(context).enqueueUniquePeriodicWork(PERIODIC_WORK_NAME, ExistingPeriodicWorkPolicy.UPDATE, request)
         }
 
         /** When the periodic refresh next runs, or null when it is not scheduled. Blocking. */

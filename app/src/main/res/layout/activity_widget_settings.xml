@@ -28,6 +28,14 @@
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small" />
 
         <LinearLayout
+            android:id="@+id/settings_background_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:orientation="vertical"
+            android:visibility="gone" />
+
+        <LinearLayout
             android:id="@+id/settings_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

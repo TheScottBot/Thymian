@@ -14,11 +14,16 @@ data class BackgroundState(
     val deviceIdle: Boolean,
     val backgroundRestricted: Boolean,
     val batteryOptimised: Boolean,
+    /**
+     * The network is up but this app may not use it from the background, such as background
+     * data off on mobile. Null while the app is on screen, where the limit does not apply.
+     */
+    val networkBlocked: Boolean?,
 ) {
     val detail: String
         get() =
             "bucket=$standbyBucket power_save=$powerSave device_idle=$deviceIdle " +
-                "background_restricted=$backgroundRestricted battery_optimised=$batteryOptimised"
+                "background_restricted=$backgroundRestricted battery_optimised=$batteryOptimised network_blocked=${networkBlocked ?: "unknown"}"
 }
 
 /** The phone stopped the app's process, with the phone's reason in one word. */

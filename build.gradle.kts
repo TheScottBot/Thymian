@@ -21,7 +21,7 @@ dependencies {
 // ktlint's bundled Kotlin compiler uses sun.misc.Unsafe, which JDK 25 warns about on every run.
 val ktlintJvmArguments = listOf("--sun-misc-unsafe-memory-access=allow")
 
-val ktlintSourceGlobs = listOf("**/src/**/*.kt", "**/*.kts", "!**/build/**", "!spikes/**")
+val ktlintSourceGlobs = listOf("**/src/**/*.kt", "**/*.kts", "!**/build/**")
 
 val ktlintCheck =
     tasks.register<JavaExec>("ktlintCheck") {

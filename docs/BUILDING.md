@@ -93,4 +93,3 @@ download, which releases serve directly.
 | `config/` | The typography check's explicit exclusion list |
 | `scripts/` | `release.sh`, which builds, signs and publishes a release |
 | `docs/` | Specification, Plan record and evidence, and the project records |
-| `spikes/` | Plan stage experiments, deleted once the Pixel soak is read |

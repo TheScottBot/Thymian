@@ -2,6 +2,7 @@ package fyi.punkdev.thymian.settings
 
 import android.app.Activity
 import android.appwidget.AppWidgetManager
+import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
@@ -21,6 +22,7 @@ import android.widget.Toast
 import fyi.punkdev.thymian.R
 import fyi.punkdev.thymian.composition.CompositionRoot
 import fyi.punkdev.thymian.domain.WidgetState
+import fyi.punkdev.thymian.domain.background.BackgroundDataNotice
 import fyi.punkdev.thymian.domain.settings.WidgetSettings
 import fyi.punkdev.thymian.domain.settings.WidgetSettingsStore
 import fyi.punkdev.thymian.domain.weather.RefreshTrigger
@@ -92,19 +94,39 @@ class WidgetSettingsActivity : Activity() {
         refreshPreview()
     }
 
+    private fun showBackgroundDataNotice(shouldShow: Boolean) {
+        val noticeContainer = findViewById<LinearLayout>(R.id.settings_background_data)
+        BackgroundDataNoticeSection.forState(this, shouldShow) { openBackgroundDataSettings() }?.let { section ->
+            noticeContainer.addView(section.view)
+            noticeContainer.visibility = View.VISIBLE
+        }
+    }
+
+    /** The background data page where the phone has one, otherwise the app's own system settings page. */
+    private fun openBackgroundDataSettings() {
+        try {
+            startActivity(BackgroundDataNoticeSection.backgroundDataSettingsIntent(this))
+        } catch (missingScreen: ActivityNotFoundException) {
+            Log.w(LOG_TAG, "event=background_data_settings_missing fallback=app_details ${missingScreen::class.java.simpleName}")
+            startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", packageName, null)))
+        }
+    }
+
     /** Reads the scheduler off the main thread, then shows the section. */
     private fun showDiagnostics() {
         searchExecutor.execute {
             val nextRefresh = runCatching { WeatherRefreshWorker.nextPeriodicRefresh(this) }.getOrNull()
             val weather = CompositionRoot.weatherSnapshotStore(this).load()
             val events = CompositionRoot.diagnosticsHistory(this).events()
+            val backgroundState = CompositionRoot.backgroundObservations(this).currentState()
             val deviceFacts =
                 listOf(
                     ClockTapResolver.target(this).diagnosticLine,
-                    "background ${CompositionRoot.backgroundObservations(this).currentState().detail}",
+                    "background ${backgroundState.detail}",
                 )
             mainExecutor.execute {
                 if (isDestroyed) return@execute
+                showBackgroundDataNotice(BackgroundDataNotice.shouldShow(events))
                 val section =
                     DiagnosticsSection(
                         this,

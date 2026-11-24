@@ -3,6 +3,7 @@ package fyi.punkdev.thymian.domain.background
 import fyi.punkdev.thymian.domain.diagnostics.KeyValueDiagnosticsHistory
 import fyi.punkdev.thymian.domain.settings.InMemoryKeyValueStore
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.time.Instant
 
@@ -20,6 +21,7 @@ class BackgroundWatchTest {
             deviceIdle = false,
             backgroundRestricted = false,
             batteryOptimised = true,
+            networkBlocked = false,
         )
 
     private class FakeObservations(
@@ -52,7 +54,9 @@ class BackgroundWatchTest {
         watch.periodicRunStarted(firstRun, FakeObservations(usualState))
 
         assertEquals(
-            listOf("background_state bucket=active power_save=false device_idle=false background_restricted=false battery_optimised=true"),
+            listOf(
+                "background_state bucket=active power_save=false device_idle=false background_restricted=false battery_optimised=true network_blocked=false",
+            ),
             recorded(),
         )
     }
@@ -74,9 +78,28 @@ class BackgroundWatchTest {
         watch.periodicRunStarted(firstRun.plusSeconds(30 * 60), observations)
 
         assertEquals(
-            "background_state bucket=rare power_save=true device_idle=false background_restricted=false battery_optimised=true",
+            "background_state bucket=rare power_save=true device_idle=false background_restricted=false battery_optimised=true network_blocked=false",
             recorded().last(),
         )
+    }
+
+    @Test
+    fun `a network the app may not use in the background is recorded`() {
+        // 24 November 2026: background data was off for Thymian on mobile data, so work needing a network never ran.
+        val observations = FakeObservations(usualState)
+        watch.periodicRunStarted(firstRun, observations)
+        observations.state = usualState.copy(networkBlocked = true)
+        watch.periodicRunStarted(firstRun.plusSeconds(30 * 60), observations)
+
+        assertTrue(recorded().last().endsWith(" network_blocked=true"))
+    }
+
+    @Test
+    fun `a run that cannot tell whether the network is blocked says unknown`() {
+        val observations = FakeObservations(usualState.copy(networkBlocked = null))
+        watch.periodicRunStarted(firstRun, observations)
+
+        assertTrue(recorded().last().endsWith(" network_blocked=unknown"))
     }
 
     @Test
